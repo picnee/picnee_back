@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS `report`;
+DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
@@ -33,6 +34,21 @@ CREATE TABLE `report` (
     `target_type` CHAR(3) NOT NULL,
     `report_type` CHAR(3) NOT NULL,
     `is_visible` BOOLEAN NOT NULL DEFAULT FALSE,
+    `created_at` TIMESTAMP NOT NULL,
+    `modified_at` TIMESTAMP NOT NULL,
     PRIMARY KEY (`report_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
+CREATE TABLE `notification` (
+    `notification_id` VARCHAR(36) NOT NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `target_id` VARCHAR(36) NOT NULL,
+    `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
+    `created_at` TIMESTAMP NOT NULL,
+    `modified_at` TIMESTAMP NOT NULL,
+    `deleted_at` TIMESTAMP NULL,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (`notification_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
