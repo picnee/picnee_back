@@ -34,8 +34,11 @@ public class Notification extends SoftDeleteBaseEntity {
     @Column(name = "notification_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "notification_type")
+    @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
-    @Column(name = "target_id")
+    @UuidGenerator(style = RANDOM)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;
     @Column(name = "is_read")
     private Boolean isRead;

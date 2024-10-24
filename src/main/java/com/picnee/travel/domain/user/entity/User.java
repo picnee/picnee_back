@@ -1,10 +1,7 @@
 package com.picnee.travel.domain.user.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,7 +59,9 @@ public class User extends SoftDeleteBaseEntity {
     @Column(name = "is_alarm")
     private Boolean isAlarm;
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
     @Column(name = "state")
+    @Enumerated(EnumType.STRING)
     private State state;
 }

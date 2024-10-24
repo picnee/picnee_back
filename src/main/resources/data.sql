@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS `report`;
+DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `users_post`;
 DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS `users`;
 
@@ -43,6 +45,7 @@ CREATE TABLE `report` (
 CREATE TABLE `notification` (
     `notification_id` VARCHAR(36) NOT NULL,
     `user_id` VARCHAR(36) NOT NULL,
+    `notification_type` VARCHAR(30) NOT NULL ,
     `target_id` VARCHAR(36) NOT NULL,
     `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL,
@@ -51,4 +54,31 @@ CREATE TABLE `notification` (
     `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`notification_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
+CREATE TABLE `post` (
+    `post_id` VARCHAR(36) NOT NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `content` VARCHAR(255) NOT NULL,
+    `viewed` BIGINT DEFAULT 0,
+    `like` BIGINT DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL,
+    `modified_at` TIMESTAMP NOT NULL,
+    `deleted_at` TIMESTAMP NULL,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (`post_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
+CREATE TABLE `users_post`(
+    `user_post_id` VARCHAR(36) NOT NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `post_id` VARCHAR(36) NOT NULL,
+    `is_viewed` BOOLEAN NOT NULL DEFAULT FALSE,
+    `is_liked` BOOLEAN NOT NULL DEFAULT FALSE,
+    `created_at` TIMESTAMP NOT NULL,
+    `modified_at` TIMESTAMP NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`)
 );

@@ -1,6 +1,6 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.post.entity;
 
-import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,30 +20,29 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "post")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class Post extends SoftDeleteBaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "post_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "target_type")
-    private Character targetType;
-    @Column(name = "report_type")
-    private Character reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "content")
+    private String content;
+    @Column(name = "viewed")
+    private Long viewed;
+    @Column(name = "like")
+    private Long like;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }
