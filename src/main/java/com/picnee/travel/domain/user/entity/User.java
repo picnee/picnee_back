@@ -34,6 +34,8 @@ public class User extends SoftDeleteBaseEntity {
     private UUID id;
     @Column(name = "username")
     private String username;
+    @Column(name = "password")
+    private String password;
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "birth_date")
@@ -43,7 +45,8 @@ public class User extends SoftDeleteBaseEntity {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "gender")
-    private Character gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     @Column(name = "social_root")
     private String socialRoot;
     @Column(name = "password_count")
@@ -64,4 +67,24 @@ public class User extends SoftDeleteBaseEntity {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private State state;
+
+    public void failPasswordCount() {
+        this.passwordCount++;
+    }
+
+    public void resetPasswordCount() {
+        this.passwordCount = 0;
+    }
+
+    public void changeLockedStatus() {
+        this.state = State.LOCKED;
+    }
+
+    public void changeNullState() {
+        this.state = null;
+    }
+
+    public void softDelete() {
+
+    }
 }
