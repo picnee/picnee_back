@@ -1,8 +1,10 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.place.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
-import com.picnee.travel.domain.user.entity.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,36 +16,30 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
-import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "like_place")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class Place extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "place_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "report_target_type")
-    private ReportTargetType reportTargetType;
-    @Column(name = "report_type")
-    private ReportType reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "place_name")
+    private String placeName;
+    @Column(name = "place_type")
+    private PlaceType placeType;
+    @Column(name = "place_point")
+    private String placePoint;
+    @Column(name = "google_place_id")
+    private String googlePlaceId;
 }

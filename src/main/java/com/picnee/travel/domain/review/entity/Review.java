@@ -1,6 +1,7 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.review.entity;
 
-import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
+import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,30 +21,39 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "review")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class Review extends SoftDeleteBaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "report_target_type")
-    private ReportTargetType reportTargetType;
-    @Column(name = "report_type")
-    private ReportType reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "content")
+    private String content;
+    @Column(name = "is_vote_review")
+    private Boolean isVoteReview;
+    @Column(name = "is_smoking")
+    private Boolean isSmoking;
+    @Column(name = "is_card")
+    private Boolean isCard;
+    @Column(name = "is_korean_employee")
+    private Boolean isKoreanEmployee;
+    @Column(name = "is_korean_menu")
+    private Boolean isKoreanMenu;
+    @Column(name = "recommendationStatus")
+    private String recommendationStatus;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
 }

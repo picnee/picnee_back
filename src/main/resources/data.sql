@@ -44,8 +44,8 @@ CREATE TABLE `report` (
     `report_id` VARCHAR(36) NOT NULL,
     `user_id` VARCHAR(36) NOT NULL,
     `target_id` VARCHAR(36) NOT NULL,
-    `target_type` CHAR(3) NOT NULL,
-    `report_type` CHAR(3) NOT NULL,
+    `report_target_type` VARCHAR(30) NOT NULL,
+    `report_type` VARCHAR(30) NOT NULL,
     `is_visible` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
@@ -68,13 +68,13 @@ CREATE TABLE `notification` (
 );
 
 CREATE TABLE `board` (
-    `board_id`	    VARCHAR(36)	    NOT NULL,
-	`region`	    VARCHAR(255)	NOT NULL,
-	`category`	    CHAR(3)	        NOT NULL COMMENT '식당 000/숙소 001 /관광지 002/여행정보 100',
-	`created_at`	TIMESTAMP	    NOT NULL,
-	`modified_at`	TIMESTAMP	    NOT NULL,
-    `deleted_at`    TIMESTAMP       NULL,
-    `is_deleted`    BOOLEAN         NOT NULL DEFAULT FALSE,
+    `board_id`	        VARCHAR(36)	    NOT NULL,
+	`region`	        VARCHAR(255)	NOT NULL,
+	`board_category`    VARCHAR(30)	    NOT NULL    COMMENT '식당 000/숙소 001 /관광지 002/여행정보 100',
+	`created_at`	    TIMESTAMP	    NOT NULL,
+	`modified_at`   	TIMESTAMP	    NOT NULL,
+    `deleted_at`        TIMESTAMP       NULL,
+    `is_deleted`        BOOLEAN         NOT NULL    DEFAULT FALSE,
     PRIMARY KEY (`board_id`)
 );
 
@@ -104,9 +104,11 @@ CREATE TABLE `comment` (
 	`is_deleted`	    BOOLEAN	    NULL	  DEFAULT FALSE,
 	`post_id`	        VARCHAR(36)	NOT NULL,
 	`comment_parent_id`	VARCHAR(36)	NULL,
+    `user_id`           VARCHAR(36) NOT NULL,
     PRIMARY KEY (`comment_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
-    FOREIGN KEY (`comment_parent_id`) REFERENCES `comment`(`comment_id`)
+    FOREIGN KEY (`comment_parent_id`) REFERENCES `comment`(`comment_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 
 CREATE TABLE `users_post`(
@@ -125,7 +127,7 @@ CREATE TABLE `users_post`(
 CREATE TABLE `place` (
     `place_id`	         VARCHAR(36)     NOT NULL,
 	`place_name`	     VARCHAR(255)    NOT NULL,
-	`place_type`	     CHAR(3)	     NOT NULL	 COMMENT '식당 000/숙소 001 /관광지 002',
+	`place_type`	     VARCHAR(30)	 NOT NULL	 COMMENT '식당 000/숙소 001 /관광지 002',
 	`place_point`	     VARCHAR(255)    NOT NULL,
     `google_place_id`    VARCHAR(255)	 NOT NULL,
 	`created_at`	     TIMESTAMP	     NOT NULL,
@@ -207,8 +209,6 @@ CREATE TABLE `users_review` (
 	`score`             INT            NOT NULL     DEFAULT 0,
 	`created_at`        TIMESTAMP      NOT NULL,
 	`modified_at`       TIMESTAMP      NOT NULL,
-	`deleted_at`        TIMESTAMP      NULL,
-	`is_deleted`        BOOLEAN        NOT NULL     DEFAULT FALSE,
 	`user_id`           VARCHAR(36)    NOT NULL,
 	`review_id`         VARCHAR(36)    NOT NULL,
     PRIMARY KEY (`user_review_id`),
@@ -219,7 +219,7 @@ CREATE TABLE `users_review` (
 CREATE TABLE `image` (
 	`image_id`       VARCHAR(36)     NOT NULL,
 	`image_url`      VARCHAR(255)    NOT NULL,
-	`target_type`    CHAR(3)         NOT NULL    COMMENT '리뷰 000/게시글 001',
+	`image_target_type`    VARCHAR(10)         NOT NULL    COMMENT '리뷰 000/게시글 001',
 	`target_id`      VARCHAR(36)     NOT NULL    COMMENT '다른 테이블의 PK인 UUID',
 	`created_at`     TIMESTAMP       NOT NULL,
 	`modified_at`    TIMESTAMP       NOT NULL,

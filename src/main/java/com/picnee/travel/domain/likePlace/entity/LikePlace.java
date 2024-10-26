@@ -1,6 +1,7 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.likePlace.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.likeList.entity.LikeList;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,30 +21,21 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "like_place")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class LikePlace extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "like_place_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "report_target_type")
-    private ReportTargetType reportTargetType;
-    @Column(name = "report_type")
-    private ReportType reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "like_list_id")
+    private LikeList likeList;
+
 }

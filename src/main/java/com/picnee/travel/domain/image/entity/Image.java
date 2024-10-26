@@ -1,8 +1,7 @@
-package com.picnee.travel.domain.post.entity;
+package com.picnee.travel.domain.image.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
-import com.picnee.travel.domain.board.entity.Board;
-import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.user.entity.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -15,37 +14,32 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
-import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "post")
+@Table(name = "image")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Post extends SoftDeleteBaseEntity {
+public class Image extends SoftDeleteBaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "post_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "image_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "content")
-    private String content;
-    @Column(name = "viewed")
-    private Long viewed;
-    @Column(name = "like")
-    private Long like;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "image_target_type")
+    @Enumerated(EnumType.STRING)
+    private ImageTargetType imageTargetType;
+
+    @Column(name = "target_id")
+    private String targetId;
 }

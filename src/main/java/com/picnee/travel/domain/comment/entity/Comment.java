@@ -1,17 +1,17 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.comment.entity;
 
-import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
+import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -20,30 +20,32 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "comment")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class Comment extends SoftDeleteBaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "comment_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "report_target_type")
-    private ReportTargetType reportTargetType;
-    @Column(name = "report_type")
-    private ReportType reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
+    @Column(name = "content")
+    private String content;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "comment_parent_id")
+    private Comment parent;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+    @Builder.Default
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
 }

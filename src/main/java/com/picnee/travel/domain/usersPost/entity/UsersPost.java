@@ -1,4 +1,4 @@
-package com.picnee.travel.domain.userpost.entity;
+package com.picnee.travel.domain.usersPost.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.post.entity.Post;
@@ -21,7 +21,8 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class UserPost extends BaseEntity {
+public class UsersPost extends BaseEntity{
+
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
@@ -40,5 +41,4 @@ public class UserPost extends BaseEntity {
     @Builder.Default
     @Column(name = "is_viewed")
     private boolean isViewed = false;
-
 }

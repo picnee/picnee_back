@@ -1,4 +1,4 @@
-package com.picnee.travel.domain.report.entity;
+package com.picnee.travel.domain.likeList.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.user.entity.User;
@@ -20,30 +20,23 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "report")
+@Table(name = "like_list")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Report extends BaseEntity {
+public class LikeList extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "like_list_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
-    private UUID targetId;
-    @Column(name = "report_target_type")
-    private ReportTargetType reportTargetType;
-    @Column(name = "report_type")
-    private ReportType reportType;
-    @Column(name = "is_visible")
-    private Boolean isVisible;
+    @Column(name = "like_list_name")
+    private String likeListName;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }
