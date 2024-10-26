@@ -48,7 +48,7 @@ public class Review extends SoftDeleteBaseEntity {
     private Boolean isKoreanEmployee;
     @Column(name = "is_korean_menu")
     private Boolean isKoreanMenu;
-    @Column(name = "recommendationStatus")
+    @Column(name = "recommendation_status")
     private String recommendationStatus;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")

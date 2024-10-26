@@ -25,13 +25,12 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class ReviewVoteRestaurant extends BaseEntity {
+public class ReviewVoteRestaurant {
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "review_vote_restaurant_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "is_taste_positive")
     private Boolean isTastePositive;

@@ -21,18 +21,17 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "Review_vote_touristspot")
+@Table(name = "review_vote_touristspot")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class ReviewVoteTouristspot extends BaseEntity {
+public class ReviewVoteTouristspot {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "Review_vote_touristspot_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "is_accessibility_positive")
     private Boolean isAccessibilityPositive;

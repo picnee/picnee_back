@@ -2,6 +2,7 @@ package com.picnee.travel.domain.likePlace.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.likeList.entity.LikeList;
+import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,7 @@ public class LikePlace extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "like_list_id")
     private LikeList likeList;
-
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
 }

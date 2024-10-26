@@ -38,8 +38,10 @@ public class Report extends BaseEntity {
     @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;
     @Column(name = "report_target_type")
+    @Enumerated(EnumType.STRING)
     private ReportTargetType reportTargetType;
     @Column(name = "report_type")
+    @Enumerated(EnumType.STRING)
     private ReportType reportType;
     @Column(name = "is_visible")
     private Boolean isVisible;

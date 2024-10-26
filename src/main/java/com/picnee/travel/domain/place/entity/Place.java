@@ -1,10 +1,7 @@
 package com.picnee.travel.domain.place.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +18,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "like_place")
+@Table(name = "place")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
@@ -37,6 +34,7 @@ public class Place extends BaseEntity {
     @Column(name = "place_name")
     private String placeName;
     @Column(name = "place_type")
+    @Enumerated(EnumType.STRING)
     private PlaceType placeType;
     @Column(name = "place_point")
     private String placePoint;
