@@ -1,7 +1,18 @@
 DROP TABLE IF EXISTS `report`;
-DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `users_post`;
+DROP TABLE IF EXISTS `comment`;
+DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `notification`;
+DROP TABLE IF EXISTS `like_place`;
+DROP TABLE IF EXISTS `like_list`;
+DROP TABLE IF EXISTS `review_vote_restaurant`;
+DROP TABLE IF EXISTS `review_vote_accommodation`;
+DROP TABLE IF EXISTS `review_vote_touristspot`;
+DROP TABLE IF EXISTS `users_review`;
+DROP TABLE IF EXISTS `review`;
+DROP TABLE IF EXISTS `place`;
+DROP TABLE IF EXISTS `image`;
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
@@ -56,9 +67,21 @@ CREATE TABLE `notification` (
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 
+CREATE TABLE `board` (
+    `board_id`	    VARCHAR(36)	    NOT NULL,
+	`region`	    VARCHAR(255)	NOT NULL,
+	`category`	    CHAR(3)	        NOT NULL COMMENT '식당 000/숙소 001 /관광지 002/여행정보 100',
+	`created_at`	TIMESTAMP	    NOT NULL,
+	`modified_at`	TIMESTAMP	    NOT NULL,
+    `deleted_at`    TIMESTAMP       NULL,
+    `is_deleted`    BOOLEAN         NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (`board_id`)
+);
+
 CREATE TABLE `post` (
     `post_id` VARCHAR(36) NOT NULL,
     `user_id` VARCHAR(36) NOT NULL,
+    `board_id` VARCHAR(36) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `content` VARCHAR(255) NOT NULL,
     `viewed` BIGINT DEFAULT 0,
@@ -68,7 +91,22 @@ CREATE TABLE `post` (
     `deleted_at` TIMESTAMP NULL,
     `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`post_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`board_id`) REFERENCES `board`(`board_id`)
+);
+
+CREATE TABLE `comment` (
+    `comment_id`	    VARCHAR(36)	NOT NULL,
+	`content`	        LONGTEXT	NOT NULL,
+	`created_at`	    TIMESTAMP	NOT NULL,
+	`modified_at`	    TIMESTAMP	NOT NULL,
+	`deleted_at`	    TIMESTAMP	NULL,
+	`is_deleted`	    BOOLEAN	    NULL	  DEFAULT FALSE,
+	`post_id`	        VARCHAR(36)	NOT NULL,
+	`comment_parent_id`	VARCHAR(36)	NULL,
+    PRIMARY KEY (`comment_id`),
+    FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
+    FOREIGN KEY (`comment_parent_id`) REFERENCES `comment`(`comment_id`)
 );
 
 CREATE TABLE `users_post`(
@@ -79,6 +117,113 @@ CREATE TABLE `users_post`(
     `is_liked` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
+    PRIMARY KEY (`user_post_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`)
+);
+
+CREATE TABLE `place` (
+    `place_id`	         VARCHAR(36)     NOT NULL,
+	`place_name`	     VARCHAR(255)    NOT NULL,
+	`place_type`	     CHAR(3)	     NOT NULL	 COMMENT '식당 000/숙소 001 /관광지 002',
+	`place_point`	     VARCHAR(255)    NOT NULL,
+    `google_place_id`    VARCHAR(255)	 NOT NULL,
+	`created_at`	     TIMESTAMP	     NOT NULL,
+	`modified_at`	     TIMESTAMP	     NOT NULL,
+    PRIMARY KEY (`place_id`)
+);
+
+CREATE TABLE `like_list` (
+	`like_list_id`	 VARCHAR(36)	NOT NULL,
+	`like_list_name` VARCHAR(255)	NOT NULL	COMMENT '미입력 시, 서비스 단에서 임의 생성해주기',
+	`created_at`     TIMESTAMP      NOT NULL,
+    `modified_at`    TIMESTAMP      NOT NULL,
+	`user_id`	     VARCHAR(36)	NOT NULL,
+    PRIMARY KEY (`like_list_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
+CREATE TABLE `like_place` (
+	`like_place_id`	 VARCHAR(36)	NOT NULL,
+	`like_list_id`   VARCHAR(255)	NOT NULL,
+    `place_id`       VARCHAR(255)	NOT NULL,
+	`created_at`     TIMESTAMP      NOT NULL,
+    `modified_at`    TIMESTAMP      NOT NULL,
+    PRIMARY KEY (`like_place_id`),
+    FOREIGN KEY (`like_list_id`) REFERENCES `like_list`(`like_list_id`),
+    FOREIGN KEY (`place_id`) REFERENCES `place`(`place_id`)
+);
+
+CREATE TABLE `review` (
+    `review_id`               VARCHAR(36)    NOT NULL,
+	`title`                   VARCHAR(255)   NULL,
+	`content`                 LONGTEXT       NULL,
+	`is_vote_review`          BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`is_smoking`              BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`is_card`                 BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`is_korean_employee`      BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`is_korean_menu`          BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`recommendationStatus`    VARCHAR(15)    NOT NULL    COMMENT '추천/보통/비추천',
+	`craeted_at`              TIMESTAMP      NOT NULL,
+	`modified_at`             TIMESTAMP      NOT NULL,
+	`deleted_at`              TIMESTAMP      NULL,
+	`is_deleted`              BOOLEAN	     NULL	     DEFAULT FALSE,
+	`user_id`                 VARCHAR(36)    NOT NULL,
+	`place_id`                VARCHAR(36)    NOT NULL,
+    PRIMARY KEY (`review_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`place_id`) REFERENCES `place`(`place_id`)
+);
+
+CREATE TABLE `review_vote_restaurant` (
+	`review_id`               VARCHAR(36)    NOT NULL,
+	`is_taste_positive`       BOOLEAN        NOT NULL,
+	`is_ambience_positive`    BOOLEAN        NOT NULL,
+	`is_service_positive`     BOOLEAN        NOT NULL,
+    PRIMARY KEY (`review_id`),
+    FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
+);
+
+CREATE TABLE `review_vote_accommodation` (
+	`review_id`                    VARCHAR(36)    NOT NULL,
+	`is_cleanliness_positive`      BOOLEAN        NOT NULL,
+	`is_accessibility_positive`    BOOLEAN        NOT NULL,
+	`is_service_positive`          BOOLEAN        NOT NULL,
+    PRIMARY KEY (`review_id`),
+    FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
+);
+
+CREATE TABLE `review_vote_touristspot` (
+	`review_id`                    VARCHAR(36)    NOT NULL,
+    `is_accessibility_positive`    BOOLEAN        NOT NULL,
+	`is_crowded`                   BOOLEAN        NOT NULL,
+	`is_experience_positive`       BOOLEAN        NOT NULL,
+    PRIMARY KEY (`review_id`),
+    FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
+);
+
+CREATE TABLE `users_review` (
+    `user_review_id`    VARCHAR(36)    NOT NULL,
+	`score`             INT            NOT NULL     DEFAULT 0,
+	`created_at`        TIMESTAMP      NOT NULL,
+	`modified_at`       TIMESTAMP      NOT NULL,
+	`deleted_at`        TIMESTAMP      NULL,
+	`is_deleted`        BOOLEAN        NOT NULL     DEFAULT FALSE,
+	`user_id`           VARCHAR(36)    NOT NULL,
+	`review_id`         VARCHAR(36)    NOT NULL,
+    PRIMARY KEY (`user_review_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
+);
+
+CREATE TABLE `image` (
+	`image_id`       VARCHAR(36)     NOT NULL,
+	`image_url`      VARCHAR(255)    NOT NULL,
+	`target_type`    CHAR(3)         NOT NULL    COMMENT '리뷰 000/게시글 001',
+	`target_id`      VARCHAR(36)     NOT NULL    COMMENT '다른 테이블의 PK인 UUID',
+	`created_at`     TIMESTAMP       NOT NULL,
+	`modified_at`    TIMESTAMP       NOT NULL,
+	`deleted_at`     TIMESTAMP       NULL,
+	`is_deleted`     BOOLEAN         NOT NULL    DEFAULT FALSE,
+    PRIMARY KEY (`image_id`)
 );
