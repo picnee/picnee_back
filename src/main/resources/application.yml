@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_INCLUDE:local}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
