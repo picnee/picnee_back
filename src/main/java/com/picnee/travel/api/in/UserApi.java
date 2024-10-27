@@ -1,7 +1,6 @@
 package com.picnee.travel.api.in;
 
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
-import com.picnee.travel.global.jwt.dto.JwtTokenRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
