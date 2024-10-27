@@ -4,6 +4,8 @@ import com.picnee.travel.global.jwt.filter.JwtFilter;
 import com.picnee.travel.global.jwt.handler.JwtAccessDeniedHandler;
 import com.picnee.travel.global.jwt.handler.JwtAuthenticationEntryPoint;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
+import com.picnee.travel.global.oauth.CustomOauth2UserService;
+import com.picnee.travel.global.oauth.OAuth2UserSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +34,8 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomOauth2UserService customOauth2UserService;
+    private final OAuth2UserSuccessHandler oAuth2UserSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +56,13 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/users").permitAll()
                         .requestMatchers(POST, "/users/login").permitAll()
                         .anyRequest().permitAll())
+
+                .oauth2Login(
+                        oauth -> oauth
+                                .userInfoEndpoint(config ->
+                                        config.userService(customOauth2UserService))
+                                .successHandler(oAuth2UserSuccessHandler)
+                )
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(STATELESS))

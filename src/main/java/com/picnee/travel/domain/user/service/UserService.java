@@ -56,7 +56,7 @@ public class UserService {
                 .phoneNumber(phoneNumber)
                 .gender(dto.getGender())
                 .birthDate(dto.getBirthDate())
-                .socialRoot(null)
+                .socialRoot(dto.getSocial() == null ? null : dto.getSocial())
                 .passwordCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
