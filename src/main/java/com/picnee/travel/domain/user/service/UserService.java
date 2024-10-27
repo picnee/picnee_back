@@ -5,7 +5,12 @@ import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.user.exception.LoginFailedException;
+import com.picnee.travel.domain.user.exception.LoginLockedException;
+import com.picnee.travel.domain.user.exception.NotFoundEmailException;
+import com.picnee.travel.domain.user.exception.NotFoundUserException;
 import com.picnee.travel.domain.user.repository.UserRepository;
+import com.picnee.travel.global.exception.ErrorCode;
 import com.picnee.travel.global.jwt.dto.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
@@ -23,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.picnee.travel.domain.user.entity.State.*;
+import static com.picnee.travel.global.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -67,7 +73,7 @@ public class UserService {
     /**
      * 로그인
      */
-    @Transactional(noRollbackFor = IllegalAccessError.class)
+    @Transactional(noRollbackFor = LoginFailedException.class)
     public JwtTokenRes login(LoginUserReq dto) {
         User user = findByEmail(dto.getEmail());
         validateUser(user);
@@ -87,7 +93,7 @@ public class UserService {
                 user.changeLockedStatus();
             }
 
-            throw new IllegalArgumentException("하하하하호호호");
+            throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
         }
     }
 
@@ -102,16 +108,16 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()
-                -> new IllegalArgumentException("NOT_FOUND_EMAIL_EXCEPTION"));
+                -> new NotFoundEmailException(NOT_FOUND_EMAIL_EXCEPTION));
     }
 
     public void validateUser(User user) {
         if (user.getIsDeleted()){
-            throw new IllegalArgumentException("INVALID_USER_EXCEPTION");
+            throw new NotFoundUserException(NOT_FOUND_USER_EXCEPTION);
         }
 
         if (user.getState() == LOCKED) {
-            throw new IllegalArgumentException();
+            throw new LoginLockedException(LOGIN_LOCKED_EXCEPTION);
         }
     }
 }

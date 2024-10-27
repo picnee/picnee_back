@@ -2,7 +2,9 @@ package com.picnee.travel.global.security.userdetails;
 
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.user.exception.NotFoundEmailException;
 import com.picnee.travel.domain.user.repository.UserRepository;
+import com.picnee.travel.global.exception.ErrorCode;
 import com.picnee.travel.global.security.adpter.LoginUserAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 
+import static com.picnee.travel.global.exception.ErrorCode.NOT_FOUND_EMAIL_EXCEPTION;
+
 @Slf4j
 @Component
 @Transactional(readOnly = true)
@@ -30,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
                 .map(this::createUserDetails)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotFoundEmailException(NOT_FOUND_EMAIL_EXCEPTION));
     }
 
     private UserDetails createUserDetails(User user) {
