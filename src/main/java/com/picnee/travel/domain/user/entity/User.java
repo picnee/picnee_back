@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,7 @@ public class User extends SoftDeleteBaseEntity {
     private Gender gender;
     @Column(name = "social_root")
     private String socialRoot;
+    @JsonProperty("password_count")
     @Column(name = "password_count")
     private Integer passwordCount;
     @Column(name = "account_lock")
