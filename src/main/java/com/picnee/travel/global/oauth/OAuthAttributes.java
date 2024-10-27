@@ -68,19 +68,5 @@ public class OAuthAttributes {
                 .nameAttributesKey(id)
                 .build();
     }
-
-    // transaction
-    // ouath -> 회원가입 -> 여기서 정보 더받고 -> transaction 종료
-    // 닉네임, 핸드폰번호, 이름, 성별
-    public User toEntity() {
-        return User.builder()
-                .nickname(nickname)
-                .email(email)
-                .password(UUID.randomUUID().toString())
-                .role(Role.USER)
-                .accountLock(false)
-                .build();
-
-    }
 }
 
