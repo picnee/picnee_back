@@ -39,4 +39,5 @@ public class CreateUserReq {
     private Boolean isMarketing;
     @NotNull(message = "알림 수신여부는 필수 입니다.")
     private Boolean isAlarm;
+    private String social;
 }
