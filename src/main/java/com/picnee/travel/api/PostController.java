@@ -2,6 +2,8 @@ package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.PostApi;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
+import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
@@ -9,12 +11,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @Slf4j
 @RestController
@@ -25,10 +27,19 @@ public class PostController implements PostApi {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<Void> createPost(@RequestBody CreatePostReq dto,
+    public ResponseEntity<String> createPost(@RequestBody CreatePostReq dto,
                                            @AuthenticatedUser AuthenticatedUserReq auth) {
-        postService.create(dto, auth);
-        return ResponseEntity.status(CREATED).build();
+        Post post = postService.create(dto, auth);
+        return ResponseEntity.status(CREATED).body(post.getId().toString());
     }
+
+    @PatchMapping("/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable("postId") UUID postId,
+                                           @RequestBody ModifyPostReq dto,
+                                           @AuthenticatedUser AuthenticatedUserReq auth) {
+        Post post = postService.update(postId, dto, auth);
+        return ResponseEntity.status(NO_CONTENT).body(post.getId().toString());
+    }
+
 
 }
