@@ -3,6 +3,7 @@ package com.picnee.travel.api;
 import com.picnee.travel.api.in.PostApi;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -15,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestController
@@ -39,6 +39,13 @@ public class PostController implements PostApi {
                                            @AuthenticatedUser AuthenticatedUserReq auth) {
         Post post = postService.update(postId, dto, auth);
         return ResponseEntity.status(NO_CONTENT).body(post.getId().toString());
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<FindPostRes> findPost(@PathVariable("postId") UUID postId,
+                                                @AuthenticatedUser AuthenticatedUserReq auth) {
+        FindPostRes findPostRes = postService.find(postId, auth);
+        return ResponseEntity.status(OK).body(findPostRes);
     }
 
 

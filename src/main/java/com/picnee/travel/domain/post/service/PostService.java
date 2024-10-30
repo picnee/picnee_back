@@ -4,6 +4,7 @@ import com.picnee.travel.domain.board.entity.Board;
 import com.picnee.travel.domain.board.service.BoardService;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
@@ -51,6 +52,12 @@ public class PostService {
         return post;
     }
 
+    public FindPostRes find(UUID postId, AuthenticatedUserReq auth) {
+        Post post = findByIdNotDeletedPost(postId);
+
+        return FindPostRes.from(post);
+    }
+
     public void checkAuthor(Post post, User user) {
         if (!post.getUser().getId().equals(user.getId())) {
             throw new NotPostAuthorException(NOT_POST_AUTHOR_EXCEPTION);
@@ -77,5 +84,4 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
     }
-
 }

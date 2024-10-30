@@ -2,6 +2,7 @@ package com.picnee.travel.api.in;
 
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,5 +18,8 @@ public interface PostApi {
     public ResponseEntity<String> createPost(CreatePostReq dto, AuthenticatedUserReq auth);
 
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
-    public ResponseEntity<String> updatePost(UUID postId , ModifyPostReq dto, AuthenticatedUserReq auth);
+    public ResponseEntity<String> updatePost(UUID postId, ModifyPostReq dto, AuthenticatedUserReq auth);
+
+    @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
+    public ResponseEntity<FindPostRes> findPost(UUID postId, AuthenticatedUserReq auth);
 }
