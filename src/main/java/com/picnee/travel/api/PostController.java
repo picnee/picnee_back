@@ -41,6 +41,13 @@ public class PostController implements PostApi {
         return ResponseEntity.status(NO_CONTENT).body(post.getId().toString());
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable("postId") UUID postId,
+                                           @AuthenticatedUser AuthenticatedUserReq auth) {
+        postService.delete(postId, auth);
+        return ResponseEntity.status(OK).build();
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<FindPostRes> findPost(@PathVariable("postId") UUID postId,
                                                 @AuthenticatedUser AuthenticatedUserReq auth) {

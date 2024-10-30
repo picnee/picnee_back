@@ -33,6 +33,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardService boardService;
 
+    /**
+     * 게시글 생성
+     */
     @Transactional
     public Post create(CreatePostReq dto, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -41,6 +44,9 @@ public class PostService {
         return postRepository.save(CreatePostReq.toEntity(dto, board, user));
     }
 
+    /**
+     * 게시글 수정
+     */
     @Transactional
     public Post update(UUID postId, ModifyPostReq dto, AuthenticatedUserReq auth) {
         Post post = findByIdNotDeletedPost(postId);
@@ -52,6 +58,23 @@ public class PostService {
         return post;
     }
 
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    public void delete(UUID postId, AuthenticatedUserReq auth) {
+        Post post = findByIdNotDeletedPost(postId);
+        User user = userService.findByEmail(auth.getEmail());
+
+        checkAuthor(post, user);
+
+        post.softDelete();
+        boardService.delete(post);
+    }
+
+    /**
+     * 게시글 단건 조회
+     */
     public FindPostRes find(UUID postId, AuthenticatedUserReq auth) {
         Post post = findByIdNotDeletedPost(postId);
 

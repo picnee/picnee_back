@@ -57,4 +57,11 @@ public class Post extends SoftDeleteBaseEntity {
         this.title = dto.getTitle() == null ? this.title : dto.getTitle();
         this.content = dto.getContent() == null ? this.content : dto.getContent();
     }
+
+    /**
+     * 게시글 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }

@@ -20,6 +20,9 @@ public interface PostApi {
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
     public ResponseEntity<String> updatePost(UUID postId, ModifyPostReq dto, AuthenticatedUserReq auth);
 
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제한다.")
+    public ResponseEntity<Void> deletePost(UUID postId, AuthenticatedUserReq auth);
+
     @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
     public ResponseEntity<FindPostRes> findPost(UUID postId, AuthenticatedUserReq auth);
 }
