@@ -94,6 +94,9 @@ public class PostService {
 
     }
 
+    /**
+     * 게시글 작성자 확인
+     */
     public void checkAuthor(Post post, User user) {
         if (!post.getUser().getId().equals(user.getId())) {
             throw new NotPostAuthorException(NOT_POST_AUTHOR_EXCEPTION);
