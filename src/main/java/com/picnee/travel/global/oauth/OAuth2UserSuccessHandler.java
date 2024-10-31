@@ -64,7 +64,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         createResponseHandler(response, jwtTokenRes);
 
-        response.sendRedirect("/");
+        response.sendRedirect("https://localhost:3000/login_bm");
     }
 
     private void createResponseHandler(HttpServletResponse response, JwtTokenRes jwtTokenRes) throws IOException {
