@@ -2,6 +2,7 @@ package com.picnee.travel.domain.post.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.board.entity.Board;
+import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,12 +41,27 @@ public class Post extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "viewed")
     private Long viewed;
-    @Column(name = "like")
-    private Long like;
+    @Column(name = "likes")
+    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    /**
+     * 게시글 수정
+     */
+    public void update(ModifyPostReq dto) {
+        this.title = dto.getTitle() == null ? this.title : dto.getTitle();
+        this.content = dto.getContent() == null ? this.content : dto.getContent();
+    }
+
+    /**
+     * 게시글 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }

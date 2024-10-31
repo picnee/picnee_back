@@ -1,6 +1,7 @@
 package com.picnee.travel.domain.board.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
+import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -39,4 +40,19 @@ public class Board extends SoftDeleteBaseEntity {
     @Column(name = "board_category")
     @Enumerated(EnumType.STRING)
     private BoardCategory boardCategory;
+
+    /**
+     * 카테고리 수정
+     */
+    public void update(ModifyPostReq dto) {
+        this.region = dto.getRegion() == null ? this.region : dto.getRegion();
+        this.boardCategory = dto.getBoardCategory() == null ? this.boardCategory : dto.getBoardCategory();
+    }
+
+    /**
+     * 카테고리 및 리전 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }
