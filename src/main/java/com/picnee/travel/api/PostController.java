@@ -10,6 +10,7 @@ import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,9 @@ public class PostController implements PostApi {
         return ResponseEntity.status(OK).body(findPostRes);
     }
 
-
+    @GetMapping
+    public ResponseEntity<Page<FindPostRes>> findPosts(@RequestParam(name = "page", defaultValue = "0") int page) {
+        Page<FindPostRes> posts = postService.findPosts(page);
+        return ResponseEntity.status(OK).body(posts);
+    }
 }

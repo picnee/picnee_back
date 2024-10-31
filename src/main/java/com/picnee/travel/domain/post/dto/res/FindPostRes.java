@@ -7,9 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -40,5 +44,16 @@ public class FindPostRes {
                 .createdAt(post.getCreatedAt())
                 .build();
 
+    }
+
+    /**
+     * 페이징 처리
+     */
+    public static Page<FindPostRes> paging(Page<Post> posts) {
+        List<FindPostRes> contents = posts.getContent().stream()
+                .map(FindPostRes::from)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(contents, posts.getPageable(), posts.getTotalElements());
     }
 }

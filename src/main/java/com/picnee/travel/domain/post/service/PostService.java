@@ -16,6 +16,9 @@ import com.picnee.travel.global.exception.ErrorCode;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,6 +82,16 @@ public class PostService {
         Post post = findByIdNotDeletedPost(postId);
 
         return FindPostRes.from(post);
+    }
+
+    /**
+     * 문의 글 전체 조회
+     */
+    public Page<FindPostRes> findPosts(int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<Post> posts = postRepository.findByPosts(pageable);
+        return FindPostRes.paging(posts);
+
     }
 
     public void checkAuthor(Post post, User user) {

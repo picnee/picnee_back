@@ -7,6 +7,7 @@ import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
@@ -25,4 +26,7 @@ public interface PostApi {
 
     @Operation(summary = "게시글 조회", description = "게시글을 조회한다.")
     public ResponseEntity<FindPostRes> findPost(UUID postId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "게시글 전체 조회", description = "게시글을 전체 조회한다.")
+    public ResponseEntity<Page<FindPostRes>> findPosts(int page);
 }
