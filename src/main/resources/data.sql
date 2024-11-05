@@ -227,3 +227,14 @@ CREATE TABLE `image` (
 	`is_deleted`           BOOLEAN         NOT NULL    DEFAULT FALSE,
     PRIMARY KEY (`image_id`)
 );
+
+CREATE TABLE `badge` (
+    `badge_id`                    VARCHAR(36)    NOT NULL,
+    `is_first_post`                BOOLEAN        NOT NULL DEFAULT FALSE,
+    `is_first_review`              BOOLEAN        NOT NULL DEFAULT FALSE,
+    `is_first_review_place`        BOOLEAN        NOT NULL DEFAULT FALSE,
+    `is_star_review`               BOOLEAN        NOT NULL DEFAULT FALSE,
+    `is_hot_review`                BOOLEAN        NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (`badge_id`),
+    FOREIGN KEY (`badge_id`) REFERENCES `review`(`badge_id`)
+);
