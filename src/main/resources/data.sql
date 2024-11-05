@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `badge`;
 DROP TABLE IF EXISTS `report`;
 DROP TABLE IF EXISTS `users_post`;
 DROP TABLE IF EXISTS `comment`;
@@ -229,12 +230,12 @@ CREATE TABLE `image` (
 );
 
 CREATE TABLE `badge` (
-    `badge_id`                    VARCHAR(36)    NOT NULL,
+    `user_id`                    VARCHAR(36)    NOT NULL,
     `is_first_post`                BOOLEAN        NOT NULL DEFAULT FALSE,
     `is_first_review`              BOOLEAN        NOT NULL DEFAULT FALSE,
     `is_first_review_place`        BOOLEAN        NOT NULL DEFAULT FALSE,
     `is_star_review`               BOOLEAN        NOT NULL DEFAULT FALSE,
     `is_hot_review`                BOOLEAN        NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (`badge_id`),
-    FOREIGN KEY (`badge_id`) REFERENCES `review`(`badge_id`)
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
