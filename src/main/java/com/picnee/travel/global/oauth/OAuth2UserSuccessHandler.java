@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.exception.NotFoundEmailException;
 import com.picnee.travel.domain.user.repository.UserRepository;
-import com.picnee.travel.global.exception.ErrorCode;
-import com.picnee.travel.global.jwt.dto.JwtTokenRes;
+import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.filter.JwtFilter;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
@@ -59,7 +58,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-        JwtTokenRes jwtTokenRes = JwtTokenRes.from(accessToken, refreshToken);
+        JwtTokenRes jwtTokenRes = JwtTokenRes.from(accessToken, refreshToken, user);
         redisService.saveValue(user.getEmail(), jwtTokenRes.getRefreshToken());
 
         createResponseHandler(response, jwtTokenRes);
