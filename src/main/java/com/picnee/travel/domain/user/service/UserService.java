@@ -85,7 +85,7 @@ public class UserService {
 
             redisService.saveValue(dto.getEmail(), refreshToken);
             user.resetPasswordCount();
-            return JwtTokenRes.from(accessToken, refreshToken);
+            return JwtTokenRes.from(accessToken, refreshToken, user);
         } catch (BadCredentialsException e) {
             user.failPasswordCount();
 
