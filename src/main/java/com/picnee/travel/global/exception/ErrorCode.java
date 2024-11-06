@@ -22,6 +22,7 @@ public enum ErrorCode {
     LOGIN_LOCKED_EXCEPTION(UNAUTHORIZED, "G002", "비밀번호를 오입력으로 계정이 잠겼습니다. 비밀번호를 변경해주세요."),
     NOT_POST_AUTHOR_EXCEPTION(UNAUTHORIZED, "G003", "게시글의 작성자가 아닙니다. 본인이 작성한 게시글만 수정/삭제가 가능합니다."),
     NOT_LOGIN_EXCEPTION(UNAUTHORIZED, "G004", "로그인이 필요한 서비스입니다."),
+    NOT_VALID_REFRESH_TOKEN_EXCEPTION(UNAUTHORIZED, "005", "유효하지 않은 토큰입니다."),
 
     /**
      * 403

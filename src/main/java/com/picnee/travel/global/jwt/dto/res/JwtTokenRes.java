@@ -1,4 +1,4 @@
-package com.picnee.travel.global.jwt.dto;
+package com.picnee.travel.global.jwt.dto.res;
 
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.User;

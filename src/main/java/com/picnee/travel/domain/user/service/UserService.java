@@ -1,20 +1,17 @@
 package com.picnee.travel.domain.user.service;
 
+import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
-import com.picnee.travel.domain.user.exception.LoginFailedException;
-import com.picnee.travel.domain.user.exception.LoginLockedException;
-import com.picnee.travel.domain.user.exception.NotFoundEmailException;
-import com.picnee.travel.domain.user.exception.NotFoundUserException;
+import com.picnee.travel.domain.user.exception.*;
 import com.picnee.travel.domain.user.repository.UserRepository;
-import com.picnee.travel.global.exception.ErrorCode;
-import com.picnee.travel.global.jwt.dto.JwtTokenRes;
+import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
+import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -104,6 +101,22 @@ public class UserService {
         return authenticationManagerBuilder
                 .getObject()
                 .authenticate(authenticationToken);
+    }
+
+    /**
+     * accessToken 재발급
+     */
+    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken) {
+        String token = redisService.getValue(auth.getEmail());
+
+        if(refreshToken.equals(token)){
+            Authentication authentication = tokenProvider.getAuthentication(token);
+            String accessToken = tokenProvider.generateAccessToken(authentication);
+            return AccessTokenRes.from(accessToken);
+        }
+
+        throw new NotValidRefreshTokenException(NOT_VALID_REFRESH_TOKEN_EXCEPTION);
+
     }
 
     public User findByEmail(String email) {
