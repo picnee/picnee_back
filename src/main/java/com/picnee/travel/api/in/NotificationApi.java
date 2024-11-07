@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "notification", description = "notification API")
+@Tag(name = "notifications", description = "notification API")
 public interface NotificationApi {
 
     @Operation(summary = "안 읽은 알림 목록", description = "안 읽은 알림 목록을 표기한다.")
-    public ResponseEntity<List<GetNotificationRes>> getNotification(AuthenticatedUserReq auth);
+    public ResponseEntity<List<GetNotificationRes>> getUnreadNotifications(AuthenticatedUserReq auth);
 }

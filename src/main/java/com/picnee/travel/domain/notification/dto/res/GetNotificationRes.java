@@ -9,8 +9,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.picnee.travel.domain.post.entity.QPost.post;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -19,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 public class GetNotificationRes {
 
-    private UUID                id;
+    private UUID                notificationId;
     private NotificationType    notificationType;
     private UUID                targetId;
     private boolean             isRead;
@@ -28,11 +31,24 @@ public class GetNotificationRes {
 
     public static GetNotificationRes from(Notification notification) {
         return GetNotificationRes.builder()
-                .id(notification.getId())
+                .notificationId(notification.getId())
                 .notificationType(notification.getNotificationType())
                 .isRead(notification.isRead())
                 .createdAt(notification.getCreatedAt())
                 .userRes(UserRes.from(notification.getUser()))
                 .build();
+    }
+
+    public static List<GetNotificationRes> toNotificationResList(List<Notification> notifications) {
+        return notifications.stream()
+                .map(notification -> GetNotificationRes.builder()
+                        .notificationId(notification.getId())
+                        .notificationType(notification.getNotificationType())
+                        .targetId(notification.getTargetId())
+                        .isRead(notification.isRead())
+                        .userRes(UserRes.from(notification.getUser()))
+                        .createdAt(notification.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 }
