@@ -1,7 +1,6 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.LogAPI;
-import com.picnee.travel.api.in.PostCommentApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
