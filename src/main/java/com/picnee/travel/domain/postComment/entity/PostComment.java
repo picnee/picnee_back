@@ -1,7 +1,8 @@
-package com.picnee.travel.domain.comment.entity;
+package com.picnee.travel.domain.postComment.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.postComment.dto.CreatePostCommentReq;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,24 +21,24 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 
 @Getter
 @Entity
-@Table(name = "comment")
+@Table(name = "post_comment")
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Comment extends SoftDeleteBaseEntity {
+public class PostComment extends SoftDeleteBaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
     @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "comment_id", columnDefinition = "VARCHAR(36)")
+    @Column(name = "post_comment_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "content")
     private String content;
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "comment_parent_id")
-    private Comment parent;
+    @JoinColumn(name = "post_comment_parent_id")
+    private PostComment commentParent;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -45,7 +46,8 @@ public class Comment extends SoftDeleteBaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
     @Builder.Default
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> children = new ArrayList<>();
+    @OneToMany(mappedBy = "commentParent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostComment> children = new ArrayList<>();
+
 
 }
