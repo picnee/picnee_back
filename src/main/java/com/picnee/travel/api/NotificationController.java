@@ -23,7 +23,7 @@ public class NotificationController implements NotificationApi {
 
     private NotificationService notificationService;
 
-    @GetMapping
+    @GetMapping("/unread")
     public ResponseEntity<List<GetNotificationRes>> getUnreadNotifications(AuthenticatedUserReq auth) {
         List<GetNotificationRes> notifications = notificationService.getUnreadNotifications(auth);
         return ResponseEntity.status(OK).body(notifications);
