@@ -41,7 +41,7 @@ public class Notification extends SoftDeleteBaseEntity {
     @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;
     @Column(name = "is_read")
-    private Boolean isRead;
+    private boolean isRead;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
