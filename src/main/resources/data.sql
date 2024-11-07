@@ -85,7 +85,7 @@ CREATE TABLE `post` (
     `title` VARCHAR(255) NOT NULL,
     `content` VARCHAR(255) NOT NULL,
     `viewed` BIGINT DEFAULT 0,
-    `like` BIGINT DEFAULT 0,
+    `likes` BIGINT DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
     `deleted_at` TIMESTAMP NULL,

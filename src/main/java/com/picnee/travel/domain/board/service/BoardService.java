@@ -24,7 +24,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    @Transactional
     public Board create(CreatePostReq dto) {
         Board board = Board.builder()
                 .region(dto.getRegion())
@@ -40,6 +39,11 @@ public class BoardService {
         board.update(dto);
     }
 
+    public void delete(Post post) {
+        Board board = findByBoardId(post.getBoard().getId());
+
+        board.softDelete();
+    }
 
     public Board findByBoardId(UUID boardId) {
         return boardRepository.findById(boardId)

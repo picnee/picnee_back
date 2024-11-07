@@ -4,6 +4,7 @@ import com.picnee.travel.domain.board.entity.Board;
 import com.picnee.travel.domain.board.service.BoardService;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
@@ -15,6 +16,9 @@ import com.picnee.travel.global.exception.ErrorCode;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardService boardService;
 
+    /**
+     * 게시글 생성
+     */
     @Transactional
     public Post create(CreatePostReq dto, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -40,6 +47,9 @@ public class PostService {
         return postRepository.save(CreatePostReq.toEntity(dto, board, user));
     }
 
+    /**
+     * 게시글 수정
+     */
     @Transactional
     public Post update(UUID postId, ModifyPostReq dto, AuthenticatedUserReq auth) {
         Post post = findByIdNotDeletedPost(postId);
@@ -51,6 +61,42 @@ public class PostService {
         return post;
     }
 
+    /**
+     * 게시글 삭제
+     */
+    @Transactional
+    public void delete(UUID postId, AuthenticatedUserReq auth) {
+        Post post = findByIdNotDeletedPost(postId);
+        User user = userService.findByEmail(auth.getEmail());
+
+        checkAuthor(post, user);
+
+        post.softDelete();
+        boardService.delete(post);
+    }
+
+    /**
+     * 게시글 단건 조회
+     */
+    public FindPostRes find(UUID postId, AuthenticatedUserReq auth) {
+        Post post = findByIdNotDeletedPost(postId);
+
+        return FindPostRes.from(post);
+    }
+
+    /**
+     * 문의 글 전체 조회
+     */
+    public Page<FindPostRes> findPosts(int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        Page<Post> posts = postRepository.findByPosts(pageable);
+        return FindPostRes.paging(posts);
+
+    }
+
+    /**
+     * 게시글 작성자 확인
+     */
     public void checkAuthor(Post post, User user) {
         if (!post.getUser().getId().equals(user.getId())) {
             throw new NotPostAuthorException(NOT_POST_AUTHOR_EXCEPTION);
@@ -77,5 +123,4 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
     }
-
 }

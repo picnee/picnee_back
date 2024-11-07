@@ -33,7 +33,7 @@ public class CreatePostReq {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .viewed(0L)
-                .like(0L)
+                .likes(0L)
                 .user(user)
                 .board(board)
                 .build();

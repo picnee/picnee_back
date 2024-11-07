@@ -48,4 +48,11 @@ public class Board extends SoftDeleteBaseEntity {
         this.region = dto.getRegion() == null ? this.region : dto.getRegion();
         this.boardCategory = dto.getBoardCategory() == null ? this.boardCategory : dto.getBoardCategory();
     }
+
+    /**
+     * 카테고리 및 리전 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }

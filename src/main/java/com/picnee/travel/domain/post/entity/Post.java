@@ -41,8 +41,8 @@ public class Post extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "viewed")
     private Long viewed;
-    @Column(name = "`like`")
-    private Long like;
+    @Column(name = "likes")
+    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -56,5 +56,12 @@ public class Post extends SoftDeleteBaseEntity {
     public void update(ModifyPostReq dto) {
         this.title = dto.getTitle() == null ? this.title : dto.getTitle();
         this.content = dto.getContent() == null ? this.content : dto.getContent();
+    }
+
+    /**
+     * 게시글 삭제
+     */
+    public void softDelete() {
+        super.delete();
     }
 }
