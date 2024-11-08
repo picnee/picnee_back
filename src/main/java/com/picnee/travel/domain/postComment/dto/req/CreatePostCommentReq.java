@@ -1,4 +1,4 @@
-package com.picnee.travel.domain.postComment.dto;
+package com.picnee.travel.domain.postComment.dto.req;
 
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.postComment.entity.PostComment;
@@ -18,9 +18,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class CreatePostCommentReq {
+
     @NotNull(message = "본문은 필수입니다.")
     private String content;
-    private UUID commentParentId;
 
     public static PostComment toEntity(CreatePostCommentReq dto, User user, Post post) {
         return PostComment.builder()
@@ -37,9 +37,5 @@ public class CreatePostCommentReq {
                 .content(dto.content)
                 .post(post)
                 .build();
-    }
-
-    public boolean existCommentParent(){
-        return commentParentId != null;
     }
 }

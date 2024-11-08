@@ -2,7 +2,7 @@ package com.picnee.travel.domain.postComment.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.post.entity.Post;
-import com.picnee.travel.domain.postComment.dto.CreatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,5 +49,10 @@ public class PostComment extends SoftDeleteBaseEntity {
     @OneToMany(mappedBy = "commentParent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostComment> children = new ArrayList<>();
 
-
+    /**
+     * 댓글 수정
+     */
+    public void update(UpdatePostCommentReq dto) {
+        this.content = dto.getContent() == null ? this.content : dto.getContent();
+    }
 }
