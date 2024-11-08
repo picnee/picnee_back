@@ -46,4 +46,8 @@ public class Notification extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void updateIsRead() {
+        this.isRead = true;
+    }
 }
