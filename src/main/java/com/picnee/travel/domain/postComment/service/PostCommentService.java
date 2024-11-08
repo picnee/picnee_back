@@ -1,10 +1,10 @@
 package com.picnee.travel.domain.postComment.service;
 
 import com.picnee.travel.domain.post.entity.Post;
-import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.exception.NotFoundCommentException;
 import com.picnee.travel.domain.postComment.exception.NotValidOwnerException;
@@ -12,12 +12,13 @@ import com.picnee.travel.domain.postComment.repository.PostCommentRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
-import com.picnee.travel.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
@@ -32,6 +33,9 @@ public class PostCommentService {
     private final PostService postService;
     private final PostCommentRepository postCommentRepository;
 
+    /**
+     * 댓글 생성
+     */
     @Transactional
     public PostComment create(UUID postId, CreatePostCommentReq dto, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -40,6 +44,9 @@ public class PostCommentService {
         return postCommentRepository.save(CreatePostCommentReq.toEntity(dto, user, post));
     }
 
+    /**
+     * 댓글 수정
+     */
     @Transactional
     public PostComment update(UUID postId, UUID commentId, UpdatePostCommentReq dto, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -54,6 +61,9 @@ public class PostCommentService {
         return postComment;
     }
 
+    /**
+     * 댓글 삭제
+     */
     @Transactional
     public void delete(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -64,6 +74,15 @@ public class PostCommentService {
         validOwner(postComment, user);
 
         postComment.softDelete();
+    }
+
+    /**
+     * 게시글 관련 댓글 전체 조회
+     */
+    public List<GetPostCommentRes> getComments(UUID postId, AuthenticatedUserReq auth) {
+        Post post = postService.findByIdNotDeletedPost(postId);
+        List<PostComment> comments = postCommentRepository.findByCommentsOfPost(post);
+        return GetPostCommentRes.from(comments);
     }
 
     /**

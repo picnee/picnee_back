@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
@@ -24,6 +25,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @Table(name = "post_comment")
 @SuperBuilder
 @AllArgsConstructor
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class PostComment extends SoftDeleteBaseEntity {

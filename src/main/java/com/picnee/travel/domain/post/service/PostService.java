@@ -9,11 +9,10 @@ import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
 import com.picnee.travel.domain.post.repository.PostRepository;
+import com.picnee.travel.domain.postComment.service.PostCommentService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
-import com.picnee.travel.global.exception.ErrorCode;
-import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -80,7 +79,6 @@ public class PostService {
      */
     public FindPostRes find(UUID postId, AuthenticatedUserReq auth) {
         Post post = findByIdNotDeletedPost(postId);
-
         return FindPostRes.from(post);
     }
 
@@ -90,8 +88,8 @@ public class PostService {
     public Page<FindPostRes> findPosts(int page) {
         Pageable pageable = PageRequest.of(page, 8);
         Page<Post> posts = postRepository.findByPosts(pageable);
-        return FindPostRes.paging(posts);
 
+        return FindPostRes.paging(posts);
     }
 
     /**

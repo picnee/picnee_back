@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface PostCommentRepository extends JpaRepository<PostComment, UUID> {
+public interface PostCommentRepository extends JpaRepository<PostComment, UUID>, PostCommentRepositoryCustom{
 }

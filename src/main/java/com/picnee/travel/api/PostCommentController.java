@@ -3,6 +3,7 @@ package com.picnee.travel.api;
 import com.picnee.travel.api.in.PostCommentApi;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.service.PostCommentService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -12,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Fetch;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -51,6 +54,11 @@ public class PostCommentController implements PostCommentApi {
         return ResponseEntity.status(OK).build();
     }
 
-
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<List<GetPostCommentRes>> getPostComment(@PathVariable("postId") UUID postId,
+                                                                  @AuthenticatedUser AuthenticatedUserReq auth) {
+        List<GetPostCommentRes> commentRes = postCommentService.getComments(postId, auth);
+        return ResponseEntity.status(OK).body(commentRes);
+    }
 }
 
