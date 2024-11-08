@@ -54,6 +54,18 @@ public class PostCommentService {
         return postComment;
     }
 
+    @Transactional
+    public void delete(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        PostComment postComment = findByIdNotDeletedPostComment(commentId);
+        // 게시글이 삭제되었는지 확인
+        postService.findByIdNotDeletedPost(postId);
+
+        validOwner(postComment, user);
+
+        postComment.softDelete();
+    }
+
     /**
      * 댓글 주인인지 확인
      */

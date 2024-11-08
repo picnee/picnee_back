@@ -16,5 +16,10 @@ public interface PostCommentApi {
     public ResponseEntity<String> createPostComment(UUID postId, CreatePostCommentReq dto, AuthenticatedUserReq auth);
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정한다.")
-    public ResponseEntity<String> updatePostComment(UUID postId, UUID commentId, UpdatePostCommentReq dto, AuthenticatedUserReq auth);
+    public ResponseEntity<String> updatePostComment(UUID postId, UUID commentId,
+                                                    UpdatePostCommentReq dto,
+                                                    AuthenticatedUserReq auth);
+
+    @Operation(summary = "댓글 삭제", description = "댓글을 삭제한다.")
+    public ResponseEntity<Void> deletePostComment(UUID postId, UUID commentId, AuthenticatedUserReq auth);
 }

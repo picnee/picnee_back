@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestController
@@ -40,8 +39,16 @@ public class PostCommentController implements PostCommentApi {
                                                     @PathVariable("commentId") UUID commentId,
                                                     @Valid @RequestBody UpdatePostCommentReq dto,
                                                     @AuthenticatedUser AuthenticatedUserReq auth) {
-        postCommentService.update(postId, commentId, dto, auth);
-        return ResponseEntity.status(NO_CONTENT).build();
+        PostComment postComment = postCommentService.update(postId, commentId, dto, auth);
+        return ResponseEntity.status(NO_CONTENT).body(postComment.getId().toString());
+    }
+
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> deletePostComment(@PathVariable("postId") UUID postId,
+                                                  @PathVariable("commentId") UUID commentId,
+                                                  @AuthenticatedUser AuthenticatedUserReq auth) {
+        postCommentService.delete(postId, commentId, auth);
+        return ResponseEntity.status(OK).build();
     }
 
 
