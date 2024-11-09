@@ -28,6 +28,7 @@ public class FindPostRes {
     private String content;
     private Long viewed;
     private Long likes;
+    private int commentsCount;
     private BoardRes boardRes;
     private UserRes userRes;
     private LocalDateTime createdAt;
@@ -39,6 +40,7 @@ public class FindPostRes {
                 .content(post.getContent())
                 .viewed(post.getViewed())
                 .likes(post.getLikes())
+                .commentsCount(post.getComments().size())
                 .boardRes(BoardRes.from(post.getBoard()))
                 .userRes(UserRes.from(post.getUser()))
                 .createdAt(post.getCreatedAt())
