@@ -21,6 +21,7 @@ public class GetPostCommentRes {
 
     private String content;
     private UserRes userRes;
+    private List<GetChildrenCommentRes> replies;
     private LocalDateTime createdAt;
 
     public static List<GetPostCommentRes> from(List<PostComment> comments) {
@@ -29,6 +30,7 @@ public class GetPostCommentRes {
                         .content(comment.getContent())
                         .userRes(UserRes.from(comment.getUser()))
                         .createdAt(comment.getCreatedAt())
+                        .replies(GetChildrenCommentRes.from(comment.getChildren()))
                         .build())
                 .collect(Collectors.toList());
     }

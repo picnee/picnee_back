@@ -18,10 +18,14 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
     @Override
     public List<PostComment> findByCommentsOfPost(Post post) {
         QPostComment postComment = QPostComment.postComment;
+        QPostComment childComment = new QPostComment("childComment");
 
         return jpaQueryFactory.selectFrom(postComment)
-                .where(postComment.post.eq(post).
-                        and(postComment.isDeleted.isFalse()))
+                .leftJoin(postComment.children, childComment).fetchJoin()  // Fetch replies (nested comments)
+                .where(postComment.post.eq(post)
+                        .and(postComment.isDeleted.isFalse())
+                        .and(postComment.commentParent.isNull()))  // Fetch only parent comments
+                .orderBy(postComment.createdAt.desc())  // Optional: order by creation time
                 .fetch();
     }
 }
