@@ -30,11 +30,11 @@ public class CreatePostCommentReq {
                 .build();
     }
 
-    //TODO : 대댓글
-    public static PostComment toEntityCoComment(CreatePostCommentReq dto, User user, Post post) {
+    public static PostComment toEntityCoComment(Post post, PostComment postComment, User user, CreatePostCommentReq dto) {
         return PostComment.builder()
                 .user(user)
                 .content(dto.content)
+                .commentParent(postComment)
                 .post(post)
                 .build();
     }

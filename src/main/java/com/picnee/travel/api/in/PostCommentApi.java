@@ -6,6 +6,7 @@ import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -27,4 +28,7 @@ public interface PostCommentApi {
 
     @Operation(summary = "댓글 조회", description = "댓글을 조회한다.")
     public ResponseEntity<List<GetPostCommentRes>> getPostComment(UUID postId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "대댓글 생성", description = "대댓글을 생성한다.")
+    public ResponseEntity<String> createChildrenComment(UUID postId, UUID commentId, CreatePostCommentReq dto, AuthenticatedUserReq auth);
 }
