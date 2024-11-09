@@ -21,11 +21,11 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
         QPostComment childComment = new QPostComment("childComment");
 
         return jpaQueryFactory.selectFrom(postComment)
-                .leftJoin(postComment.children, childComment).fetchJoin()  // Fetch replies (nested comments)
+                .leftJoin(postComment.children, childComment).fetchJoin()
                 .where(postComment.post.eq(post)
                         .and(postComment.isDeleted.isFalse())
-                        .and(postComment.commentParent.isNull()))  // Fetch only parent comments
-                .orderBy(postComment.createdAt.desc())  // Optional: order by creation time
+                        .and(postComment.commentParent.isNull()))
+                .orderBy(postComment.createdAt.desc())
                 .fetch();
     }
 }
