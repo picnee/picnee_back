@@ -14,6 +14,7 @@ import com.picnee.travel.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class NotificationService {
     /**
      * 알림 생성
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void create(NotificationEvent event) {
         User user = findUserByTargetIdAndType(event.getTargetId(), event.getNotificationType());
 
