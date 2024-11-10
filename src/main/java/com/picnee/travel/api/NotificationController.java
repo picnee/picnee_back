@@ -1,7 +1,7 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.NotificationApi;
-import com.picnee.travel.domain.notification.dto.res.GetNotificationRes;
+import com.picnee.travel.domain.notification.dto.res.FindNotificationRes;
 import com.picnee.travel.domain.notification.entity.Notification;
 import com.picnee.travel.domain.notification.service.NotificationService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -22,11 +22,11 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class NotificationController implements NotificationApi {
 
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @GetMapping("/unread")
-    public ResponseEntity<List<GetNotificationRes>> getUnreadNotifications(@AuthenticatedUser AuthenticatedUserReq auth) {
-        List<GetNotificationRes> notifications = notificationService.getUnreadNotifications(auth);
+    public ResponseEntity<List<FindNotificationRes>> getUnreadNotifications(@AuthenticatedUser AuthenticatedUserReq auth) {
+        List<FindNotificationRes> notifications = notificationService.getUnreadNotifications(auth);
         return ResponseEntity.status(OK).body(notifications);
     }
 

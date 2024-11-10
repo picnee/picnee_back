@@ -1,7 +1,7 @@
 package com.picnee.travel.domain.notification.service;
 
 import com.picnee.travel.domain.notification.dto.event.NotificationEvent;
-import com.picnee.travel.domain.notification.dto.res.GetNotificationRes;
+import com.picnee.travel.domain.notification.dto.res.FindNotificationRes;
 import com.picnee.travel.domain.notification.entity.Notification;
 import com.picnee.travel.domain.notification.entity.NotificationType;
 import com.picnee.travel.domain.notification.exception.NotFoundNotificationException;
@@ -60,10 +60,10 @@ public class NotificationService {
     /**
      * 안 읽은 알림 목록
      * */
-    public List<GetNotificationRes> getUnreadNotifications(AuthenticatedUserReq auth) {
+    public List<FindNotificationRes> getUnreadNotifications(AuthenticatedUserReq auth) {
         List<Notification> notifications = notificationRepository.findByUnreadNotifications(auth.getId());
 
-        return GetNotificationRes.toNotificationResList(notifications);
+        return FindNotificationRes.toNotificationResList(notifications);
     }
 
     public Notification findById(UUID notificationId) {
