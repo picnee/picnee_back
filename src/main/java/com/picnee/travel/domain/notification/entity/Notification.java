@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.notification.entity;
 
+import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Notification extends SoftDeleteBaseEntity {
+public class Notification extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
@@ -41,8 +42,12 @@ public class Notification extends SoftDeleteBaseEntity {
     @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;
     @Column(name = "is_read")
-    private Boolean isRead;
+    private boolean isRead;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void updateIsRead() {
+        this.isRead = true;
+    }
 }

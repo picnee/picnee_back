@@ -1,7 +1,7 @@
 package com.picnee.travel.domain.notification.entity;
 
 public enum NotificationType {
-    COMMENT,    // 댓글
-    POST,       // 게시글
-    LIKE        // 좋아요
+    POST_COMMENT,    // 작성한 게시글에 댓글
+    POST_LIKE,       // 작성한 게시글에 좋아요
+    REVIEW_SCORE     // 작성한 리뷰에 별점
 }
