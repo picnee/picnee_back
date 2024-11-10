@@ -48,6 +48,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             responseBody.put("social", oAuth2CustomUser.getSocial());
 
             response.getWriter().write(objectMapper.writeValueAsString(responseBody));
+            response.sendRedirect("http://localhost:3000/oauth/login");
             return;
         }
 
@@ -63,7 +64,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         createResponseHandler(response, jwtTokenRes);
 
-        response.sendRedirect("http://localhost:3000/oauth/kakao");
+        response.sendRedirect("/");
     }
 
     private void createResponseHandler(HttpServletResponse response, JwtTokenRes jwtTokenRes) throws IOException {
