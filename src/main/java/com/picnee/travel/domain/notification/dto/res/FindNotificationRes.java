@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class GetNotificationRes {
+public class FindNotificationRes {
 
     private UUID                notificationId;
     private NotificationType    notificationType;
@@ -28,8 +28,8 @@ public class GetNotificationRes {
     private LocalDateTime       createdAt;
     private UserRes             userRes;
 
-    public static GetNotificationRes from(Notification notification) {
-        return GetNotificationRes.builder()
+    public static FindNotificationRes from(Notification notification) {
+        return FindNotificationRes.builder()
                 .notificationId(notification.getId())
                 .notificationType(notification.getNotificationType())
                 .isRead(notification.isRead())
@@ -38,9 +38,9 @@ public class GetNotificationRes {
                 .build();
     }
 
-    public static List<GetNotificationRes> toNotificationResList(List<Notification> notifications) {
+    public static List<FindNotificationRes> toNotificationResList(List<Notification> notifications) {
         return notifications.stream()
-                .map(notification -> GetNotificationRes.builder()
+                .map(notification -> FindNotificationRes.builder()
                         .notificationId(notification.getId())
                         .notificationType(notification.getNotificationType())
                         .targetId(notification.getTargetId())

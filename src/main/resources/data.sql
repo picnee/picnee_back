@@ -1,18 +1,19 @@
-DROP TABLE IF EXISTS `report`;
-DROP TABLE IF EXISTS `users_post`;
-DROP TABLE IF EXISTS `post_comment`;
-DROP TABLE IF EXISTS `post`;
-DROP TABLE IF EXISTS `board`;
-DROP TABLE IF EXISTS `notification`;
-DROP TABLE IF EXISTS `like_place`;
-DROP TABLE IF EXISTS `like_list`;
 DROP TABLE IF EXISTS `review_vote_restaurant`;
 DROP TABLE IF EXISTS `review_vote_accommodation`;
 DROP TABLE IF EXISTS `review_vote_touristspot`;
+DROP TABLE IF EXISTS `image`;
 DROP TABLE IF EXISTS `users_review`;
 DROP TABLE IF EXISTS `review`;
+DROP TABLE IF EXISTS `like_place`;
+DROP TABLE IF EXISTS `like_list`;
+DROP TABLE IF EXISTS `users_post`;
+DROP TABLE IF EXISTS `post_comment`;
+DROP TABLE IF EXISTS `comment`;
+DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `board`;
+DROP TABLE IF EXISTS `notification`;
+DROP TABLE IF EXISTS `report`;
 DROP TABLE IF EXISTS `place`;
-DROP TABLE IF EXISTS `image`;
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
