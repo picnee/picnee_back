@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.picnee.travel.domain.post.entity.QPost.post;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
