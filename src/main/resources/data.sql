@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `report`;
 DROP TABLE IF EXISTS `users_post`;
-DROP TABLE IF EXISTS `comment`;
+DROP TABLE IF EXISTS `post_comment`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `notification`;
@@ -95,19 +95,19 @@ CREATE TABLE `post` (
     FOREIGN KEY (`board_id`) REFERENCES `board`(`board_id`)
 );
 
-CREATE TABLE `comment` (
-    `comment_id`	    VARCHAR(36)	NOT NULL,
+CREATE TABLE `post_comment` (
+    `post_comment_id`	    VARCHAR(36)	NOT NULL,
 	`content`	        LONGTEXT	NOT NULL,
 	`created_at`	    TIMESTAMP	NOT NULL,
 	`modified_at`	    TIMESTAMP	NOT NULL,
 	`deleted_at`	    TIMESTAMP	NULL,
 	`is_deleted`	    BOOLEAN	    NULL	  DEFAULT FALSE,
 	`post_id`	        VARCHAR(36)	NOT NULL,
-	`comment_parent_id`	VARCHAR(36)	NULL,
+	`post_comment_parent_id`	VARCHAR(36)	NULL,
     `user_id`           VARCHAR(36) NOT NULL,
-    PRIMARY KEY (`comment_id`),
+    PRIMARY KEY (`post_comment_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`),
-    FOREIGN KEY (`comment_parent_id`) REFERENCES `comment`(`comment_id`),
+    FOREIGN KEY (`post_comment_parent_id`) REFERENCES `post_comment`(`post_comment_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );
 

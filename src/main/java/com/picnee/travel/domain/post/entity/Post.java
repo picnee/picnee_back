@@ -3,17 +3,17 @@ package com.picnee.travel.domain.post.entity;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.board.entity.Board;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Table;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -25,6 +25,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @Table(name = "post")
 @SuperBuilder
 @AllArgsConstructor
+@SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class Post extends SoftDeleteBaseEntity {
@@ -49,6 +50,10 @@ public class Post extends SoftDeleteBaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+    @Builder.Default
+    @OneToMany(mappedBy = "post")
+    private List<PostComment> comments = new ArrayList<>();
+
 
     /**
      * 게시글 수정

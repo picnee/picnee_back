@@ -1,4 +1,4 @@
-package com.picnee.travel.global.jwt.dto;
+package com.picnee.travel.global.jwt.dto.res;
 
 import lombok.*;
 
@@ -6,17 +6,15 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class JwtTokenRes {
+public class AccessTokenRes {
 
     private String grantType;
     private String accessToken;
-    private String refreshToken;
 
-    public static JwtTokenRes from(String accessToken, String refreshToken){
-        return JwtTokenRes.builder()
+    public static AccessTokenRes from(String accessToken){
+        return AccessTokenRes.builder()
                 .grantType("Bearer ")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .build();
     }
 }
