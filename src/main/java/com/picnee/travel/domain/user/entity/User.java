@@ -61,6 +61,8 @@ public class User extends SoftDeleteBaseEntity {
     private Boolean isMarketing;
     @Column(name = "is_alarm")
     private Boolean isAlarm;
+    @Column(name = "is_default_nickname")
+    private boolean isDefaultNickname;
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -83,12 +85,4 @@ public class User extends SoftDeleteBaseEntity {
     public void changeNullState() {
         this.state = null;
     }
-
-    public void softDelete() {
-
-    }
-
-    // oauth -> 비밀번호 변경할려면 기존 비밀번호 입력 -> oauth 비밀번호 x -> 구분 값을 넣어줘야함 -> 0 -> 비밀번호 입력없이 바로 설정가능
-    //                                                                             ->
-
 }

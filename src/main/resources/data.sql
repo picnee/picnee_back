@@ -28,6 +28,7 @@ CREATE TABLE `users` (
     `account_lock` BOOLEAN NOT NULL,
     `last_password_expired` TIMESTAMP NOT NULL,
     `profile_image` VARCHAR(255),
+    `is_default_nickname` BOOLEAN NOT NULL,
     `is_marketing` BOOLEAN NOT NULL,
     `is_alarm` BOOLEAN NOT NULL,
     `role` VARCHAR(10) NOT NULL,
