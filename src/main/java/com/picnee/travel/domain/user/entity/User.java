@@ -33,8 +33,6 @@ public class User extends SoftDeleteBaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "username")
-    private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "phone_number")
@@ -89,4 +87,8 @@ public class User extends SoftDeleteBaseEntity {
     public void softDelete() {
 
     }
+
+    // oauth -> 비밀번호 변경할려면 기존 비밀번호 입력 -> oauth 비밀번호 x -> 구분 값을 넣어줘야함 -> 0 -> 비밀번호 입력없이 바로 설정가능
+    //                                                                             ->
+
 }
