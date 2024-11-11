@@ -23,7 +23,7 @@ public class CreateUserReq {
     @NotNull(message = "이메일은 필수입니다.")
     private String email;
     @NotNull(message = "닉네임은 필수입니다.")
-    @Pattern(regexp = "^(?=.*[A-Za-z가-힣])[A-Za-z\\d가-힣]{2,8}$", message = "닉네임은 2자 이상 8자 이하이며, 영어와 한글이 반드시 하나 이상은 포함되어야 합니다.")
+    @Pattern(regexp = "^(?=.*[A-Za-z가-힣])[A-Za-z\\d가-힣]{2,20}$", message = "닉네임은 2자 이상 20자 이하이며, 영어와 한글이 반드시 하나 이상은 포함되어야 합니다.")
     private String nickname;
     @NotNull(message = "비밀번호는 필수입니다.")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,16}$", message = "비밀번호는 8자 이상 16자 이하이며, 영문, 숫자, 특수문자로 이루어져야합니다.")

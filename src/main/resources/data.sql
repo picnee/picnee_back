@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS `like_place`;
 DROP TABLE IF EXISTS `like_list`;
 DROP TABLE IF EXISTS `users_post`;
 DROP TABLE IF EXISTS `post_comment`;
-DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `notification`;
