@@ -60,5 +60,15 @@ public class PostCommentController implements PostCommentApi {
         List<GetPostCommentRes> commentRes = postCommentService.getComments(postId, auth);
         return ResponseEntity.status(OK).body(commentRes);
     }
+
+    @PostMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<String> createChildrenComment(@PathVariable("postId") UUID postId,
+                                                        @PathVariable("commentId") UUID commentId,
+                                                        @Valid @RequestBody CreatePostCommentReq dto,
+                                                        @AuthenticatedUser AuthenticatedUserReq auth) {
+        PostComment childrenComment = postCommentService.createChildrenComment(postId, commentId, dto, auth);
+
+        return ResponseEntity.status(OK).body(childrenComment.getId().toString());
+    }
 }
 

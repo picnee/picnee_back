@@ -86,6 +86,18 @@ public class PostCommentService {
     }
 
     /**
+     * 대댓글 생성
+     */
+    @Transactional
+    public PostComment createChildrenComment(UUID postId, UUID commentId, CreatePostCommentReq dto, AuthenticatedUserReq auth) {
+        Post post = postService.findByIdNotDeletedPost(postId);
+        PostComment postComment = findByIdNotDeletedPostComment(commentId);
+        User user = userService.findByEmail(auth.getEmail());
+
+        return postCommentRepository.save(CreatePostCommentReq.toEntityCoComment(post, postComment, user, dto));
+    }
+
+    /**
      * 댓글 주인인지 확인
      */
     private void validOwner(PostComment postComment, User user) {
