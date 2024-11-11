@@ -6,6 +6,7 @@ import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -51,7 +52,7 @@ public class Post extends SoftDeleteBaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
     @Builder.Default
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
 
 
