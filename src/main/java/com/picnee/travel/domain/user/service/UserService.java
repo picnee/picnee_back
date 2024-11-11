@@ -59,6 +59,7 @@ public class UserService {
                 .profileImage(null)
                 .isMarketing(dto.getIsMarketing())
                 .isAlarm(dto.getIsAlarm())
+                .isDefaultNickname(false)
                 .role(Role.USER)
                 .state(State.ACTIVE)
                 .build();
