@@ -44,7 +44,7 @@ public class OAuthAttributes {
 
         // TODO 중복 로직 메서드로 만들기
         boolean isDefaultNickname = oauthResponse.get("nickname") == null;
-        String nickname = isDefaultNickname ? "user_" + UUID.randomUUID().toString().substring(0, 11) : String.valueOf(oauthResponse.get("nickname"));
+        String nickname = isDefaultNickname ? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(oauthResponse.get("nickname"));
 
         return OAuthAttributes.builder()
                 .nickname(nickname)
@@ -57,7 +57,7 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofGoogle(String id, Map<String, Object> attributes) {
         boolean isDefaultNickname = attributes.get("name") == null;
-        String nickname = isDefaultNickname? "user_" + UUID.randomUUID().toString().substring(0, 11) : String.valueOf(attributes.get("name"));
+        String nickname = isDefaultNickname? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(attributes.get("name"));
 
         return OAuthAttributes.builder()
                 .nickname(nickname)
@@ -73,7 +73,7 @@ public class OAuthAttributes {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
         boolean isDefaultNickname = properties == null || properties.get("nickname") == null;
-        String nickname = isDefaultNickname ? "user_" + UUID.randomUUID().toString().substring(0, 11) : String.valueOf(properties.get("nickname"));
+        String nickname = isDefaultNickname ? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(properties.get("nickname"));
 
         return OAuthAttributes.builder()
                 .nickname(nickname)
