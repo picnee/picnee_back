@@ -44,9 +44,6 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-        log.info("AccessToekn = {}", accessToken);
-        log.info("RefreshToken = {}", refreshToken);
-
         JwtTokenRes jwtTokenRes = JwtTokenRes.from(accessToken, refreshToken, user);
         redisService.saveValue(user.getEmail(), jwtTokenRes.getRefreshToken());
 
@@ -64,6 +61,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private void createResponseHandler(HttpServletResponse response, JwtTokenRes jwtTokenRes) throws IOException {
         response.addHeader(JwtFilter.ACCESS_AUTHORIZATION_HEADER, "Bearer " + jwtTokenRes.getAccessToken());
+        response.addHeader(JwtFilter.REFRESH_AUTHORIZATION_HEADER, "Bearer " + jwtTokenRes.getRefreshToken());
         response.getWriter().write(objectMapper.writeValueAsString(jwtTokenRes));
     }
 }

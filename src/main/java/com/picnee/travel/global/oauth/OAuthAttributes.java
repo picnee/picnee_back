@@ -22,64 +22,23 @@ import java.util.UUID;
 public class OAuthAttributes {
 
     private Map<String, Object> attributes = new HashMap<>();
-    private String nameAttributesKey;
     private String email;
     private String nickname;
+    private String socialRoot;
     private boolean isDefaultNickname;
 
     public static OAuthAttributes of(String socialName, Map<String, Object> attributes) {
-        if("kakao".equalsIgnoreCase(socialName)) {
-            return ofKakao("id", attributes);
-        } else if("google".equalsIgnoreCase(socialName)) {
-            return ofGoogle("id", attributes);
-        } else if("naver".equalsIgnoreCase(socialName)) {
-            return ofNaver("response", attributes);
-        }
+        OAuthInfo oAuthInfo = OAuthInfo.from(socialName);
 
-        throw new IllegalArgumentException("잘못된 소셜 정보입니다.");
-    }
-
-    private static OAuthAttributes ofNaver(String response, Map<String, Object> attributes) {
-        Map<String, Object> oauthResponse = (Map<String, Object>) attributes.get("response");
-
-        // TODO 중복 로직 메서드로 만들기
-        boolean isDefaultNickname = oauthResponse.get("nickname") == null;
-        String nickname = isDefaultNickname ? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(oauthResponse.get("nickname"));
+        String nickname = oAuthInfo.getNickname(attributes);
+        boolean isDefaultNickname = nickname.length() == 21;
+        String email = oAuthInfo.getEmail(attributes);
 
         return OAuthAttributes.builder()
                 .nickname(nickname)
-                .email(String.valueOf(oauthResponse.get("email")))
+                .email(email)
                 .attributes(attributes)
-                .nameAttributesKey(response)
-                .isDefaultNickname(isDefaultNickname)
-                .build();
-    }
-
-    private static OAuthAttributes ofGoogle(String id, Map<String, Object> attributes) {
-        boolean isDefaultNickname = attributes.get("name") == null;
-        String nickname = isDefaultNickname? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(attributes.get("name"));
-
-        return OAuthAttributes.builder()
-                .nickname(nickname)
-                .email(String.valueOf(attributes.get("email")))
-                .attributes(attributes)
-                .nameAttributesKey(id)
-                .isDefaultNickname(isDefaultNickname)
-                .build();
-    }
-
-    private static OAuthAttributes ofKakao(String id, Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
-
-        boolean isDefaultNickname = properties == null || properties.get("nickname") == null;
-        String nickname = isDefaultNickname ? UUID.randomUUID().toString().substring(0, 21) : String.valueOf(properties.get("nickname"));
-
-        return OAuthAttributes.builder()
-                .nickname(nickname)
-                .email(String.valueOf(response.get("email")))
-                .attributes(response)
-                .nameAttributesKey(id)
+                .socialRoot(socialName)
                 .isDefaultNickname(isDefaultNickname)
                 .build();
     }
@@ -91,14 +50,13 @@ public class OAuthAttributes {
                 .password(UUID.randomUUID().toString())
                 .role(Role.USER)
                 .isDefaultNickname(isDefaultNickname)
-//                .socialRoot(dto.getSocial() == null ? null : dto.getSocial()) TODO 어떻게 받아올지 생각하기
+                .socialRoot(socialRoot)
                 .passwordCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
                 .profileImage(null)
                 .isMarketing(false)
                 .isAlarm(false)
-                .role(Role.USER)
                 .state(State.ACTIVE)
                 .build();
     }
