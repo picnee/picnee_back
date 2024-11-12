@@ -41,6 +41,11 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         User user = userRepository.findByEmail(oAuth2CustomUser.getName()).orElseThrow(()
                 -> new NotFoundEmailException(NOT_FOUND_EMAIL_EXCEPTION));
 
+        if (user.isDefaultNickname()) {
+            getRedirectStrategy().sendRedirect(request, response, "/nickname");
+            return;
+        }
+
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
