@@ -1,11 +1,16 @@
 package com.picnee.travel.global.oauth;
 
+import com.picnee.travel.domain.user.exception.NotProvideOAuthException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
+
+import static com.picnee.travel.global.exception.ErrorCode.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -14,30 +19,43 @@ public enum OAuthInfo {
     NAVER("response", null, "nickname", "email"),
     GOOGLE(null, null, "name", "email");
 
-    private final String mainAttributeKey;
-    private final String secondaryAttributeKey;
-    private final String nicknameKey;
-    private final String emailKey;
+    private final String mainAttribute;
+    private final String secondaryAttribute;
+    private final String nickname;
+    private final String email;
 
     public String getNickname(Map<String, Object> attributes) {
-        Map<String, Object> primary = getAttributeMap(attributes, mainAttributeKey);
-        Map<String, Object> secondary = secondaryAttributeKey != null ? getAttributeMap(attributes, secondaryAttributeKey) : primary;
-        return secondary.get(nicknameKey) != null ? secondary.get(nicknameKey).toString() : UUID.randomUUID().toString().substring(0, 21);
+//        Map<String, Object> primary = getAttributeMap(attributes, mainAttribute);
+//        Map<String, Object> secondary = secondaryAttribute != null ? getAttributeMap(attributes, secondaryAttribute) : primary;
+//        return secondary.get(nickname) != null ? secondary.get(nickname).toString() : UUID.randomUUID().toString().substring(0, 20);
+
+        return Optional.ofNullable(secondaryAttribute)
+                .map(attr -> getAttributeMap(attributes, attr))
+                .orElseGet(() -> getAttributeMap(attributes, mainAttribute))
+                .getOrDefault(nickname, UUID.randomUUID().toString().substring(0, 20))
+                .toString();
     }
 
     public String getEmail(Map<String, Object> attributes) {
-        Map<String, Object> primary = getAttributeMap(attributes, mainAttributeKey);
-        return primary.get(emailKey).toString();
+//        Map<String, Object> primary = getAttributeMap(attributes, mainAttribute);
+//        return primary.get(email).toString();
+        return Optional.ofNullable(getAttributeMap(attributes, mainAttribute))
+                .map(map -> map.get(email))
+                .map(Object::toString)
+                .orElse("");
     }
 
     private Map<String, Object> getAttributeMap(Map<String, Object> attributes, String key) {
-        return key != null && attributes.containsKey(key) ? (Map<String, Object>) attributes.get(key) : attributes;
+        return Optional.ofNullable(key)
+                .filter(attributes::containsKey)
+                .map(k -> (Map<String, Object>) attributes.get(k))
+                .orElse(attributes);
     }
 
-    public static OAuthInfo from(String provider) {
+    public static OAuthInfo from(String socialName) {
         return Arrays.stream(OAuthInfo.values())
-                .filter(item -> item.name().equalsIgnoreCase(provider))
+                .filter(oauth -> oauth.name().equalsIgnoreCase(socialName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid provider: " + provider));
+                .orElseThrow(() -> new NotProvideOAuthException(NOT_PROVIDE_OAUTH_EXCEPTION));
     }
 }

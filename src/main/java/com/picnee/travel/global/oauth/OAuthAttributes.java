@@ -31,7 +31,7 @@ public class OAuthAttributes {
         OAuthInfo oAuthInfo = OAuthInfo.from(socialName);
 
         String nickname = oAuthInfo.getNickname(attributes);
-        boolean isDefaultNickname = nickname.length() == 21;
+        boolean isDefaultNickname = nickname.length() == 20;
         String email = oAuthInfo.getEmail(attributes);
 
         return OAuthAttributes.builder()

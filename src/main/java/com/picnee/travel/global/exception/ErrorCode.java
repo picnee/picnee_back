@@ -25,6 +25,7 @@ public enum ErrorCode {
     NOT_VALID_REFRESH_TOKEN_EXCEPTION(UNAUTHORIZED, "005", "유효하지 않은 토큰입니다."),
     NOT_VALID_OWNER_EXCEPTION(UNAUTHORIZED, "G006", "작성자만 삭제/수정이 가능합니다."),
     NOT_NOTIFICATION_RECIPIENT_EXCEPTION(UNAUTHORIZED, "G007", "알림 수신자가 아닙니다. 본인의 알림만 읽을 수 있습니다."),
+    NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G008", "올바르지 않은 소셜 로그인입니다."),
 
     /**
      * 403
