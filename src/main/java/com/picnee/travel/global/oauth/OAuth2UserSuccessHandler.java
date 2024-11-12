@@ -41,18 +41,23 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         User user = userRepository.findByEmail(oAuth2CustomUser.getName()).orElseThrow(()
                 -> new NotFoundEmailException(NOT_FOUND_EMAIL_EXCEPTION));
 
-        if (user.isDefaultNickname()) {
-            getRedirectStrategy().sendRedirect(request, response, "/nickname");
-            return;
-        }
-
         String accessToken = tokenProvider.generateAccessToken(authentication);
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
+
+        log.info("AccessToekn = {}", accessToken);
+        log.info("RefreshToken = {}", refreshToken);
 
         JwtTokenRes jwtTokenRes = JwtTokenRes.from(accessToken, refreshToken, user);
         redisService.saveValue(user.getEmail(), jwtTokenRes.getRefreshToken());
 
         createResponseHandler(response, jwtTokenRes);
+
+        // TODO 로그인 유지되는지 확인
+        if (user.isDefaultNickname()) {
+            response.setHeader("Location", "/nickname");
+            response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+            return;
+        }
 
         response.sendRedirect("/");
     }

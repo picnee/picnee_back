@@ -85,4 +85,9 @@ public class User extends SoftDeleteBaseEntity {
     public void changeNullState() {
         this.state = null;
     }
+
+    public void changeDefaultNickname(String nickname) {
+        this.nickname = nickname;
+        this.isDefaultNickname = false;
+    }
 }
