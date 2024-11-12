@@ -16,7 +16,7 @@ public class OAuth2CustomUser implements OAuth2User, Serializable {
     private String social;
     private Map<String, Object> attributes;
     private List<GrantedAuthority> authorities;
-    private boolean isNewUser;
+    private boolean isDefaultNickname;
     private OAuthAttributes oAuthAttributes;
 
     @Override
@@ -34,8 +34,8 @@ public class OAuth2CustomUser implements OAuth2User, Serializable {
         return this.email;
     }
 
-    public boolean isNewUser() {
-        return isNewUser;
+    public boolean isDefaultNickname() {
+        return isDefaultNickname;
     }
 
     public OAuthAttributes getOAuthAttributes() {

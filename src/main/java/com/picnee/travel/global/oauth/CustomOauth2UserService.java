@@ -26,31 +26,31 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
     private final UserRepository userRepository;
 
     @Override
-    public OAuth2CustomUser loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> service = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = service.loadUser(userRequest);
+        OAuth2User oAuth2User = service.loadUser(userRequest); // OAuth2 정보 가져오기
 
         Map<String, Object> originAttr = oAuth2User.getAttributes();
         String social = userRequest.getClientRegistration().getRegistrationId();
         OAuthAttributes attributes = OAuthAttributes.of(social, originAttr);
 
-        // 사용자 정보 조회
-        Optional<User> existEmail = userRepository.findByEmail(attributes.getEmail());
-        boolean isNewUser = existEmail.isEmpty();
+        User user = getOrCreateUser(attributes);
+        String email = user.getEmail();
 
-        // 기존 사용자이거나, 신규 사용자를 위한 정보를 담은 OAuth2CustomUser 생성
-        List<GrantedAuthority> authorities = existEmail.isPresent()
-                ? getAuthorities(existEmail.get())
-                : Collections.singletonList(new SimpleGrantedAuthority(Role.USER.name()));
+        List<GrantedAuthority> authorities = getAuthorities(user);
 
-        return new OAuth2CustomUser(
-                attributes.getEmail(),
-                social,
-                originAttr,
-                authorities,
-                isNewUser,
-                isNewUser ? attributes : null
-        );
+        return new OAuth2CustomUser(email, social, originAttr, authorities, user.isDefaultNickname(), attributes);
+    }
+
+    private User getOrCreateUser(OAuthAttributes oAuth2User) {
+        Optional<User> existEmail = userRepository.findByEmail(oAuth2User.getEmail());
+
+        if (existEmail.isPresent()) {
+            return existEmail.get();
+        }
+
+        User user = oAuth2User.toEntity();
+        return userRepository.save(user);
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {

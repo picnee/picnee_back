@@ -37,21 +37,6 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2CustomUser oAuth2CustomUser = (OAuth2CustomUser) authentication.getPrincipal();
 
-        // 기존 유저가 아닌 경우 requestBody 값 전달
-        if (oAuth2CustomUser.isNewUser()) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json;charset=UTF-8");
-
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("isNewUser", true);
-            responseBody.put("oauthAttributes", oAuth2CustomUser.getOAuthAttributes());
-            responseBody.put("social", oAuth2CustomUser.getSocial());
-
-            response.getWriter().write(objectMapper.writeValueAsString(responseBody));
-            response.sendRedirect("http://localhost:3000/oauth/login");
-            return;
-        }
-
         // 기존 유저인 경우 로그인 성공 응답 처리
         User user = userRepository.findByEmail(oAuth2CustomUser.getName()).orElseThrow(()
                 -> new NotFoundEmailException(NOT_FOUND_EMAIL_EXCEPTION));
