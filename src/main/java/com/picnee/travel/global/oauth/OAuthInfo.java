@@ -25,10 +25,6 @@ public enum OAuthInfo {
     private final String email;
 
     public String getNickname(Map<String, Object> attributes) {
-//        Map<String, Object> primary = getAttributeMap(attributes, mainAttribute);
-//        Map<String, Object> secondary = secondaryAttribute != null ? getAttributeMap(attributes, secondaryAttribute) : primary;
-//        return secondary.get(nickname) != null ? secondary.get(nickname).toString() : UUID.randomUUID().toString().substring(0, 20);
-
         return Optional.ofNullable(secondaryAttribute)
                 .map(attr -> getAttributeMap(attributes, attr))
                 .orElseGet(() -> getAttributeMap(attributes, mainAttribute))
@@ -37,8 +33,6 @@ public enum OAuthInfo {
     }
 
     public String getEmail(Map<String, Object> attributes) {
-//        Map<String, Object> primary = getAttributeMap(attributes, mainAttribute);
-//        return primary.get(email).toString();
         return Optional.ofNullable(getAttributeMap(attributes, mainAttribute))
                 .map(map -> map.get(email))
                 .map(Object::toString)

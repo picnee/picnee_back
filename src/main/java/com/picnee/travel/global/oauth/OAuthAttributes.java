@@ -60,5 +60,18 @@ public class OAuthAttributes {
                 .state(State.ACTIVE)
                 .build();
     }
+
+    public void updateDefaultNickname(){
+        this.nickname = UUID.randomUUID().toString().substring(0, 20);
+        this.isDefaultNickname = true;
+    }
+
+    public void updateOverNickname() {
+        this.nickname = this.nickname.substring(0, 20);
+    }
+
+    public boolean isOverNickname(){
+        return this.nickname.length() > 20;
+    }
 }
 

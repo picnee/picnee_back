@@ -1,6 +1,5 @@
 package com.picnee.travel.global.oauth;
 
-import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +48,20 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
             return existEmail.get();
         }
 
+        validAndUpdateNickname(oAuth2User);
+
         User user = oAuth2User.toEntity();
         return userRepository.save(user);
+    }
+
+    private void validAndUpdateNickname(OAuthAttributes oAuth2User) {
+        if (oAuth2User.isOverNickname()) {
+            oAuth2User.updateOverNickname();
+        }
+
+        if (userRepository.existsByNickname(oAuth2User.getNickname())) {
+            oAuth2User.updateDefaultNickname();
+        }
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {
