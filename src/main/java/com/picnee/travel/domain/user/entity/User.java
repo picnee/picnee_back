@@ -78,7 +78,7 @@ public class User extends SoftDeleteBaseEntity {
         this.passwordCount = 0;
     }
 
-    public void changeLockedStatus() {
+    public void updateLockedStatus() {
         this.state = State.LOCKED;
     }
 
@@ -86,7 +86,7 @@ public class User extends SoftDeleteBaseEntity {
         this.state = null;
     }
 
-    public void changeDefaultNickname(String nickname) {
+    public void updateDefaultNickname(String nickname) {
         this.nickname = nickname;
         this.isDefaultNickname = false;
     }

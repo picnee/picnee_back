@@ -12,8 +12,6 @@ import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -89,7 +87,7 @@ public class UserService {
             user.failPasswordCount();
 
             if(user.getPasswordCount() >= 5){
-                user.changeLockedStatus();
+                user.updateLockedStatus();
             }
 
             throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
@@ -132,7 +130,7 @@ public class UserService {
             throw new IllegalArgumentException("기존 닉네임과 동일한 닉네임은 사용할 수 없습니다.");
         }
 
-        user.changeDefaultNickname(nickname);
+        user.updateDefaultNickname(nickname);
         return user;
     }
 
