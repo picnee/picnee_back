@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS `like_place`;
 DROP TABLE IF EXISTS `like_list`;
 DROP TABLE IF EXISTS `users_post`;
 DROP TABLE IF EXISTS `post_comment`;
-DROP TABLE IF EXISTS `comment`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `board`;
 DROP TABLE IF EXISTS `notification`;
@@ -19,17 +18,17 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
     `user_id` VARCHAR(36) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
-    `username` VARCHAR(15) NOT NULL,
-    `phone_number` VARCHAR(11) NOT NULL UNIQUE,
-    `birth_date` VARCHAR(6) NOT NULL,
+    `phone_number` VARCHAR(11) UNIQUE,
+    `birth_date` VARCHAR(6),
     `email` VARCHAR(255) NOT NULL UNIQUE,
     `nickname` VARCHAR(255) NOT NULL UNIQUE,
-    `gender` VARCHAR(10) NOT NULL,
+    `gender` VARCHAR(10),
     `social_root` VARCHAR(20),
     `password_count` INT NOT NULL DEFAULT 0,
     `account_lock` BOOLEAN NOT NULL,
     `last_password_expired` TIMESTAMP NOT NULL,
     `profile_image` VARCHAR(255),
+    `is_default_nickname` BOOLEAN NOT NULL DEFAULT 0,
     `is_marketing` BOOLEAN NOT NULL,
     `is_alarm` BOOLEAN NOT NULL,
     `role` VARCHAR(10) NOT NULL,
@@ -62,8 +61,6 @@ CREATE TABLE `notification` (
     `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
-    `deleted_at` TIMESTAMP NULL,
-    `is_deleted` BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (`notification_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
 );

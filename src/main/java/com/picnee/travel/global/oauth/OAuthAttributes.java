@@ -1,6 +1,7 @@
 package com.picnee.travel.global.oauth;
 
 import com.picnee.travel.domain.user.entity.Role;
+import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,52 +22,56 @@ import java.util.UUID;
 public class OAuthAttributes {
 
     private Map<String, Object> attributes = new HashMap<>();
-    private String nameAttributesKey;
     private String email;
     private String nickname;
+    private String socialRoot;
+    private boolean isDefaultNickname;
 
     public static OAuthAttributes of(String socialName, Map<String, Object> attributes) {
-        if("kakao".equalsIgnoreCase(socialName)) {
-            return ofKakao("id", attributes);
-        } else if("google".equalsIgnoreCase(socialName)) {
-            return ofGoogle("id", attributes);
-        } else if("naver".equalsIgnoreCase(socialName)) {
-            return ofNaver("response", attributes);
-        }
+        OAuthInfo oAuthInfo = OAuthInfo.from(socialName);
 
-        throw new IllegalArgumentException("잘못된 소셜 정보입니다.");
-    }
-
-    private static OAuthAttributes ofNaver(String response, Map<String, Object> attributes) {
-        Map<String, Object> oauthResponse = (Map<String, Object>) attributes.get("response");
+        String nickname = oAuthInfo.getNickname(attributes);
+        boolean isDefaultNickname = nickname.length() == 20;
+        String email = oAuthInfo.getEmail(attributes);
 
         return OAuthAttributes.builder()
-                .nickname(String.valueOf(oauthResponse.get("nickname")))
-                .email(String.valueOf(oauthResponse.get("email")))
+                .nickname(nickname)
+                .email(email)
                 .attributes(attributes)
-                .nameAttributesKey(response)
+                .socialRoot(socialName)
+                .isDefaultNickname(isDefaultNickname)
                 .build();
     }
 
-    private static OAuthAttributes ofGoogle(String id, Map<String, Object> attributes) {
-        return OAuthAttributes.builder()
-                .nickname(String.valueOf(attributes.get("name")))
-                .email(String.valueOf(attributes.get("email")))
-                .attributes(attributes)
-                .nameAttributesKey(id)
+    public User toEntity() {
+        return User.builder()
+                .nickname(nickname)
+                .email(email)
+                .password(UUID.randomUUID().toString())
+                .role(Role.USER)
+                .isDefaultNickname(isDefaultNickname)
+                .socialRoot(socialRoot)
+                .passwordCount(0)
+                .accountLock(false)
+                .lastPasswordExpired(LocalDateTime.now())
+                .profileImage(null)
+                .isMarketing(false)
+                .isAlarm(false)
+                .state(State.ACTIVE)
                 .build();
     }
 
-    private static OAuthAttributes ofKakao(String id, Map<String, Object> attributes) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+    public void updateDefaultNickname(){
+        this.nickname = UUID.randomUUID().toString().substring(0, 20);
+        this.isDefaultNickname = true;
+    }
 
-        return OAuthAttributes.builder()
-                .nickname(String.valueOf(properties.get("nickname")))
-                .email(String.valueOf(response.get("email")))
-                .attributes(response)
-                .nameAttributesKey(id)
-                .build();
+    public void updateOverNickname() {
+        this.nickname = this.nickname.substring(0, 20);
+    }
+
+    public boolean isOverNickname(){
+        return this.nickname.length() > 20;
     }
 }
 

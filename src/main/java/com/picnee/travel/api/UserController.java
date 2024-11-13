@@ -4,6 +4,8 @@ import com.picnee.travel.api.in.UserApi;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
+import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
+import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
 import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
@@ -44,6 +46,13 @@ public class UserController implements UserApi {
                                                           @RequestHeader("RefreshToken") String refreshToken) {
         AccessTokenRes res = userService.reissueToken(auth, refreshToken);
         return ResponseEntity.status(OK).body(res);
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<String> updateNickname(@AuthenticatedUser AuthenticatedUserReq auth,
+                                               @Valid @RequestBody UpdateUserNicknameReq dto) {
+        User user = userService.updateNickname(auth, dto.getNickname());
+        return ResponseEntity.status(OK).body(user.getNickname());
     }
 }
 

@@ -47,7 +47,6 @@ public class UserService {
 
         User user = User.builder()
                 .email(dto.getEmail())
-                .username(dto.getUsername())
                 .nickname(dto.getNickname())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .phoneNumber(phoneNumber)
@@ -60,6 +59,7 @@ public class UserService {
                 .profileImage(null)
                 .isMarketing(dto.getIsMarketing())
                 .isAlarm(dto.getIsAlarm())
+                .isDefaultNickname(false)
                 .role(Role.USER)
                 .state(State.ACTIVE)
                 .build();
@@ -87,7 +87,7 @@ public class UserService {
             user.failPasswordCount();
 
             if(user.getPasswordCount() >= 5){
-                user.changeLockedStatus();
+                user.updateLockedStatus();
             }
 
             throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
@@ -117,6 +117,21 @@ public class UserService {
 
         throw new NotValidRefreshTokenException(NOT_VALID_REFRESH_TOKEN_EXCEPTION);
 
+    }
+
+    /**
+     * 닉네임 설정
+     * */
+    @Transactional
+    public User updateNickname(AuthenticatedUserReq auth, String nickname) {
+        User user = findByEmail(auth.getEmail());
+
+        if(user.getNickname().equals(nickname)){
+            throw new IllegalArgumentException("기존 닉네임과 동일한 닉네임은 사용할 수 없습니다.");
+        }
+
+        user.updateDefaultNickname(nickname);
+        return user;
     }
 
     public User findByEmail(String email) {

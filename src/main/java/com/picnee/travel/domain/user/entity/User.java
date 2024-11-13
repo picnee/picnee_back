@@ -33,8 +33,6 @@ public class User extends SoftDeleteBaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "user_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "username")
-    private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "phone_number")
@@ -63,6 +61,8 @@ public class User extends SoftDeleteBaseEntity {
     private Boolean isMarketing;
     @Column(name = "is_alarm")
     private Boolean isAlarm;
+    @Column(name = "is_default_nickname")
+    private boolean isDefaultNickname;
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -78,7 +78,7 @@ public class User extends SoftDeleteBaseEntity {
         this.passwordCount = 0;
     }
 
-    public void changeLockedStatus() {
+    public void updateLockedStatus() {
         this.state = State.LOCKED;
     }
 
@@ -86,7 +86,8 @@ public class User extends SoftDeleteBaseEntity {
         this.state = null;
     }
 
-    public void softDelete() {
-
+    public void updateDefaultNickname(String nickname) {
+        this.nickname = nickname;
+        this.isDefaultNickname = false;
     }
 }

@@ -1,6 +1,7 @@
 package com.picnee.travel.global.oauth;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 @AllArgsConstructor
 public class OAuth2CustomUser implements OAuth2User, Serializable {
 
@@ -16,7 +18,7 @@ public class OAuth2CustomUser implements OAuth2User, Serializable {
     private String social;
     private Map<String, Object> attributes;
     private List<GrantedAuthority> authorities;
-    private boolean isNewUser;
+    private boolean isDefaultNickname;
     private OAuthAttributes oAuthAttributes;
 
     @Override
@@ -34,16 +36,12 @@ public class OAuth2CustomUser implements OAuth2User, Serializable {
         return this.email;
     }
 
-    public boolean isNewUser() {
-        return isNewUser;
+    public boolean isDefaultNickname() {
+        return isDefaultNickname;
     }
 
     public OAuthAttributes getOAuthAttributes() {
         return oAuthAttributes;
-    }
-
-    public String getSocial() {
-        return this.social;
     }
 }
 
