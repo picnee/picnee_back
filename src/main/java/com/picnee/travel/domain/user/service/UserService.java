@@ -3,6 +3,7 @@ package com.picnee.travel.domain.user.service;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
+import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
@@ -12,8 +13,11 @@ import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static com.picnee.travel.domain.user.entity.State.*;
@@ -71,7 +76,7 @@ public class UserService {
      * 로그인
      */
     @Transactional(noRollbackFor = LoginFailedException.class)
-    public JwtTokenRes login(LoginUserReq dto) {
+    public UserRes login(LoginUserReq dto, HttpServletResponse response) {
         User user = findByEmail(dto.getEmail());
         validateUser(user);
 
@@ -80,9 +85,11 @@ public class UserService {
             String accessToken = tokenProvider.generateAccessToken(authentication);
             String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
+            createResponseHandler(response, accessToken, refreshToken);
+
             redisService.saveValue(dto.getEmail(), refreshToken);
             user.resetPasswordCount();
-            return JwtTokenRes.from(accessToken, refreshToken, user);
+            return UserRes.from(user);
         } catch (BadCredentialsException e) {
             user.failPasswordCount();
 
@@ -91,6 +98,9 @@ public class UserService {
             }
 
             throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
+        } catch (IOException e) {
+            log.info("e = {}", e.getMessage());
+            throw new IllegalArgumentException("ggg");
         }
     }
 
@@ -106,17 +116,45 @@ public class UserService {
     /**
      * accessToken 재발급
      */
-    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken) {
+    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response) {
         String token = redisService.getValue(auth.getEmail());
 
         if(refreshToken.equals(token)){
             Authentication authentication = tokenProvider.getAuthentication(token);
             String accessToken = tokenProvider.generateAccessToken(authentication);
+            try {
+                createResponseHandler(response, accessToken, refreshToken);
+            } catch (IOException e){
+                log.info("e = {}", e.getMessage());
+                throw new IllegalArgumentException("ggg");
+            }
             return AccessTokenRes.from(accessToken);
         }
 
         throw new NotValidRefreshTokenException(NOT_VALID_REFRESH_TOKEN_EXCEPTION);
 
+    }
+
+    private void createResponseHandler(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+        Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
+
+        accessTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setHttpOnly(true);
+
+        // path 설정
+        accessTokenCookie.setPath("/");
+        refreshTokenCookie.setPath("/");
+
+        // https 통신용
+//        accessTokenCookie.setSecure(true);
+//        refreshTokenCookie.setSecure(true);
+
+        accessTokenCookie.setMaxAge(24 * 60 * 7);
+        refreshTokenCookie.setMaxAge(24 * 60 * 7);
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
     }
 
     /**
