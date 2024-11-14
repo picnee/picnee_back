@@ -9,6 +9,7 @@ import com.picnee.travel.global.jwt.filter.JwtFilter;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +61,24 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     private void createResponseHandler(HttpServletResponse response, JwtTokenRes jwtTokenRes) throws IOException {
-        response.addHeader(JwtFilter.ACCESS_AUTHORIZATION_HEADER, "Bearer " + jwtTokenRes.getAccessToken());
-        response.addHeader(JwtFilter.REFRESH_AUTHORIZATION_HEADER, "Bearer " + jwtTokenRes.getRefreshToken());
-        response.getWriter().write(objectMapper.writeValueAsString(jwtTokenRes));
+        Cookie accessTokenCookie = new Cookie("AccessToken", jwtTokenRes.getAccessToken());
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", jwtTokenRes.getRefreshToken());
+
+        accessTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setHttpOnly(true);
+
+        // path 설정
+        accessTokenCookie.setPath("/");
+        refreshTokenCookie.setPath("/");
+
+        // https 통신용
+//        accessTokenCookie.setSecure(true);
+//        refreshTokenCookie.setSecure(true);
+
+        accessTokenCookie.setMaxAge(24 * 60 * 7);
+        refreshTokenCookie.setMaxAge(24 * 60 * 7);
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
     }
 }
