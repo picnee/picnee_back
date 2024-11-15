@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -61,24 +63,23 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     private void createResponseHandler(HttpServletResponse response, JwtTokenRes jwtTokenRes) throws IOException {
-        Cookie accessTokenCookie = new Cookie("AccessToken", jwtTokenRes.getAccessToken());
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", jwtTokenRes.getRefreshToken());
+        ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", jwtTokenRes.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(5 * 60)
+                .sameSite("None")
+                .build();
 
-        accessTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setHttpOnly(true);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("REFRESH_TOKEN", jwtTokenRes.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(5 * 60)
+                .sameSite("None")
+                .build();
 
-        // path 설정
-        accessTokenCookie.setPath("/");
-        refreshTokenCookie.setPath("/");
-
-        // https 통신용
-//        accessTokenCookie.setSecure(true);
-//        refreshTokenCookie.setSecure(true);
-
-        accessTokenCookie.setMaxAge(24 * 60 * 7);
-        refreshTokenCookie.setMaxAge(24 * 60 * 7);
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     }
 }

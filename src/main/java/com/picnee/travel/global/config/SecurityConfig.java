@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -30,7 +31,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CorsConfig corsConfig;
+    private final CorsConfigurationSource corsConfigurationSource;
     private final TokenProvider tokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -46,7 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) // csrf 설정 off
-                .addFilterBefore(corsConfig.corsFilter(), UsernamePasswordAuthenticationFilter.class) //CorsFilter
+                .cors(c -> c.configurationSource(corsConfigurationSource))
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(jwtAccessDeniedHandler)
