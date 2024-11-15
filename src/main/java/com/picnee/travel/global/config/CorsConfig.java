@@ -18,7 +18,7 @@ public class CorsConfig {
         config.addAllowedOriginPattern("http://localhost:3000");
         config.addAllowedHeader("*");
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
-        config.addExposedHeader("Accesstoken, Refreshtoken");
+        config.addExposedHeader("Set-Cookie");
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
