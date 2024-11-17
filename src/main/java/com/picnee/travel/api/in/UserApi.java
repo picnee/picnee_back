@@ -20,9 +20,6 @@ public interface UserApi {
     @Operation(summary = "로그인", description = "로그인 한다.")
     public ResponseEntity<UserRes> loginUser(LoginUserReq dto, HttpServletResponse response);
 
-    @Operation(summary = "토큰 재발급", description = "accessToken을 재발급 한다.")
-    public ResponseEntity<AccessTokenRes> reGenerateToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response);
-
     @Operation(summary = "닉네임 설정", description = "OAuth 로그인 한 사람 중 닉네임을 설정하지 않은 사용자의 닉네임을 설정하게 한다.")
     public ResponseEntity<String> updateNickname(AuthenticatedUserReq auth, UpdateUserNicknameReq dto);
 }

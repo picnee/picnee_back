@@ -18,11 +18,19 @@ public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
 
     /**
-     * Redis 값 등록 / 수정
+     * Redis refreshToken 값 등록 / 수정
      */
     public void saveValue(final String key, final String value) {
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, Duration.ofSeconds(jwtProperties.getRefreshValidityInSeconds()));
+    }
+
+    /**
+     * Redis authToken 코드 등록
+     */
+    public void saveAuthValue(final String authToken, final String email) {
+        redisTemplate.opsForValue().set(authToken, email);
+        redisTemplate.expire(authToken, Duration.ofSeconds(jwtProperties.getAuthValidityInSeconds()));
     }
 
     /**
@@ -32,5 +40,9 @@ public class RedisService {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
         if (values.get(key) == null) return "";
         return String.valueOf(values.get(key));
+    }
+
+    public void deleteValue(String key) {
+        redisTemplate.delete(key);
     }
 }

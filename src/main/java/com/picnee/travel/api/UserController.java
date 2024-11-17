@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,16 +41,28 @@ public class UserController implements UserApi {
 
     @PostMapping("/login")
     public ResponseEntity<UserRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
-        UserRes res = userService.login(dto, response);
-        return ResponseEntity.status(OK).body(res);
-    }
+        JwtTokenRes res = userService.login(dto);
 
-    @PostMapping("/reissue")
-    public ResponseEntity<AccessTokenRes> reGenerateToken(@AuthenticatedUser AuthenticatedUserReq auth,
-                                                          @RequestHeader("RefreshToken") String refreshToken,
-                                                          HttpServletResponse response) {
-        AccessTokenRes res = userService.reissueToken(auth, refreshToken, response);
-        return ResponseEntity.status(OK).body(res);
+        ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60)
+                .sameSite("None")
+                .build();
+
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("REFRESH_TOKEN", res.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60 * 7)
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+
+        return ResponseEntity.status(OK).body(res.getUserRes());
     }
 
     @PatchMapping("/nickname")

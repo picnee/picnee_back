@@ -46,18 +46,10 @@ public class UserService {
 
     @Transactional
     public void create(CreateUserReq dto) {
-
-        //TODO : phoneNumber 인코딩 후 저장
-        String phoneNumber = dto.getPhoneNumber().replaceAll("-", "");
-
         User user = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .phoneNumber(phoneNumber)
-                .gender(dto.getGender())
-                .birthDate(dto.getBirthDate())
-                .socialRoot(dto.getSocial() == null ? null : dto.getSocial())
                 .passwordCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
@@ -76,7 +68,7 @@ public class UserService {
      * 로그인
      */
     @Transactional(noRollbackFor = LoginFailedException.class)
-    public UserRes login(LoginUserReq dto, HttpServletResponse response) {
+    public JwtTokenRes login(LoginUserReq dto) {
         User user = findByEmail(dto.getEmail());
         validateUser(user);
 
@@ -85,11 +77,9 @@ public class UserService {
             String accessToken = tokenProvider.generateAccessToken(authentication);
             String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-            createResponseHandler(response, accessToken, refreshToken);
-
             redisService.saveValue(dto.getEmail(), refreshToken);
             user.resetPasswordCount();
-            return UserRes.from(user);
+            return JwtTokenRes.from(accessToken, refreshToken, user);
         } catch (BadCredentialsException e) {
             user.failPasswordCount();
 
@@ -98,9 +88,6 @@ public class UserService {
             }
 
             throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
-        } catch (IOException e) {
-            log.info("e = {}", e.getMessage());
-            throw new IllegalArgumentException("ggg");
         }
     }
 
@@ -111,50 +98,6 @@ public class UserService {
         return authenticationManagerBuilder
                 .getObject()
                 .authenticate(authenticationToken);
-    }
-
-    /**
-     * accessToken 재발급
-     */
-    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response) {
-        String token = redisService.getValue(auth.getEmail());
-
-        if(refreshToken.equals(token)){
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            String accessToken = tokenProvider.generateAccessToken(authentication);
-            try {
-                createResponseHandler(response, accessToken, refreshToken);
-            } catch (IOException e){
-                log.info("e = {}", e.getMessage());
-                throw new IllegalArgumentException("ggg");
-            }
-            return AccessTokenRes.from(accessToken);
-        }
-
-        throw new NotValidRefreshTokenException(NOT_VALID_REFRESH_TOKEN_EXCEPTION);
-
-    }
-
-    private void createResponseHandler(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
-        Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
-
-        accessTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setHttpOnly(true);
-
-        // path 설정
-        accessTokenCookie.setPath("/");
-        refreshTokenCookie.setPath("/");
-
-        // https 통신용
-//        accessTokenCookie.setSecure(true);
-//        refreshTokenCookie.setSecure(true);
-
-        accessTokenCookie.setMaxAge(24 * 60 * 7);
-        refreshTokenCookie.setMaxAge(24 * 60 * 7);
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
     }
 
     /**
