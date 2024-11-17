@@ -68,7 +68,7 @@ public class UserService {
      * 로그인
      */
     @Transactional(noRollbackFor = LoginFailedException.class)
-    public UserRes login(LoginUserReq dto, HttpServletResponse response) {
+    public JwtTokenRes login(LoginUserReq dto) {
         User user = findByEmail(dto.getEmail());
         validateUser(user);
 
@@ -77,11 +77,9 @@ public class UserService {
             String accessToken = tokenProvider.generateAccessToken(authentication);
             String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-            createResponseHandler(response, accessToken, refreshToken);
-
             redisService.saveValue(dto.getEmail(), refreshToken);
             user.resetPasswordCount();
-            return UserRes.from(user);
+            return JwtTokenRes.from(accessToken, refreshToken, user);
         } catch (BadCredentialsException e) {
             user.failPasswordCount();
 
@@ -90,9 +88,6 @@ public class UserService {
             }
 
             throw new LoginFailedException(LOGIN_FAILED_EXCEPTION, "비밀번호 " + user.getPasswordCount());
-        } catch (IOException e) {
-            log.info("e = {}", e.getMessage());
-            throw new IllegalArgumentException("ggg");
         }
     }
 
@@ -103,28 +98,6 @@ public class UserService {
         return authenticationManagerBuilder
                 .getObject()
                 .authenticate(authenticationToken);
-    }
-
-    private void createResponseHandler(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
-        Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
-
-        accessTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setHttpOnly(true);
-
-        // path 설정
-        accessTokenCookie.setPath("/");
-        refreshTokenCookie.setPath("/");
-
-        // https 통신용
-//        accessTokenCookie.setSecure(true);
-//        refreshTokenCookie.setSecure(true);
-
-        accessTokenCookie.setMaxAge(24 * 60 * 7);
-        refreshTokenCookie.setMaxAge(24 * 60 * 7);
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
     }
 
     /**

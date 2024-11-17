@@ -57,7 +57,7 @@ public class TokenController implements TokenApi {
     public ResponseEntity<AccessTokenRes> reGenerateToken(@AuthenticatedUser AuthenticatedUserReq auth,
                                                           @RequestHeader("RefreshToken") String refreshToken,
                                                           HttpServletResponse response) {
-        AccessTokenRes res = tokenService.reissueToken(auth, refreshToken, response);
+        AccessTokenRes res = tokenService.reissueToken(auth, refreshToken);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
                 .httpOnly(true)

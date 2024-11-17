@@ -30,6 +30,9 @@ public class TokenService {
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
+    /**
+     * OAuth 용 Token 발급
+     */
     public JwtTokenRes createOauthToken(CreateOauthToken dto) {
         User user = userService.findByEmail(redisService.getValue(dto.getAuthUUID()));
         // 조회 후 삭제
@@ -44,7 +47,7 @@ public class TokenService {
     /**
      * accessToken 재발급
      */
-    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response) {
+    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken) {
         String token = redisService.getValue(auth.getEmail());
 
         if(refreshToken.equals(token)){
