@@ -4,6 +4,7 @@ import com.picnee.travel.api.in.TokenApi;
 import com.picnee.travel.domain.token.dto.CreateOauthToken;
 import com.picnee.travel.domain.token.service.TokenService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
+import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
@@ -28,7 +29,7 @@ public class TokenController implements TokenApi {
     private final TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<JwtTokenRes> createOauthToken(@RequestBody CreateOauthToken dto, HttpServletResponse response) {
+    public ResponseEntity<UserRes> createOauthToken(@RequestBody CreateOauthToken dto, HttpServletResponse response) {
         JwtTokenRes res = tokenService.createOauthToken(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
@@ -50,7 +51,7 @@ public class TokenController implements TokenApi {
         response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-        return ResponseEntity.status(CREATED).build();
+        return ResponseEntity.status(OK).body(res.getUserRes());
     }
 
     @PostMapping("/reissue")
