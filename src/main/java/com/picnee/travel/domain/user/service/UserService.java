@@ -46,18 +46,10 @@ public class UserService {
 
     @Transactional
     public void create(CreateUserReq dto) {
-
-        //TODO : phoneNumber 인코딩 후 저장
-        String phoneNumber = dto.getPhoneNumber().replaceAll("-", "");
-
         User user = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .phoneNumber(phoneNumber)
-                .gender(dto.getGender())
-                .birthDate(dto.getBirthDate())
-                .socialRoot(dto.getSocial() == null ? null : dto.getSocial())
                 .passwordCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
