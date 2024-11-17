@@ -1,5 +1,7 @@
 package com.picnee.travel.global.jwt.provider;
 
+import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.properties.JwtProperties;
 import com.picnee.travel.global.security.userdetails.CustomUserDetailsService;
 import io.jsonwebtoken.*;
@@ -65,6 +67,32 @@ public class TokenProvider implements InitializingBean {
                 .setExpiration(expireTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    // OAuth 토큰 전달
+    public JwtTokenRes generateOAuthToken(User user) {
+        long now = (new Date()).getTime();
+        long accessTime = (jwtProperties.getRefreshValidityInSeconds() * 1000) + now;
+        Date expireAccessTokenTime = new Date(accessTime);
+
+        long refreshTime = (jwtProperties.getRefreshValidityInSeconds() * 1000) + now;
+        Date expireRefreshTokenTime = new Date(refreshTime);
+
+        String accessToken = Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim(AUTHORITIES_KEY, user.getRole())
+                .setExpiration(expireAccessTokenTime)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        String refreshToken = Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim(AUTHORITIES_KEY, user.getRole())
+                .setExpiration(expireRefreshTokenTime)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtTokenRes.from(accessToken, refreshToken, user);
     }
 
     public Authentication getAuthentication(String token) {

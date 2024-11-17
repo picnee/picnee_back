@@ -3,10 +3,7 @@ package com.picnee.travel.global.oauth;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
