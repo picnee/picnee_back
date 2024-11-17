@@ -43,14 +43,6 @@ public class UserController implements UserApi {
         return ResponseEntity.status(OK).body(res);
     }
 
-    @PostMapping("/reissue")
-    public ResponseEntity<AccessTokenRes> reGenerateToken(@AuthenticatedUser AuthenticatedUserReq auth,
-                                                          @RequestHeader("RefreshToken") String refreshToken,
-                                                          HttpServletResponse response) {
-        AccessTokenRes res = userService.reissueToken(auth, refreshToken, response);
-        return ResponseEntity.status(OK).body(res);
-    }
-
     @PatchMapping("/nickname")
     public ResponseEntity<String> updateNickname(@AuthenticatedUser AuthenticatedUserReq auth,
                                                @Valid @RequestBody UpdateUserNicknameReq dto) {

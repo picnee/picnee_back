@@ -113,28 +113,6 @@ public class UserService {
                 .authenticate(authenticationToken);
     }
 
-    /**
-     * accessToken 재발급
-     */
-    public AccessTokenRes reissueToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response) {
-        String token = redisService.getValue(auth.getEmail());
-
-        if(refreshToken.equals(token)){
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            String accessToken = tokenProvider.generateAccessToken(authentication);
-            try {
-                createResponseHandler(response, accessToken, refreshToken);
-            } catch (IOException e){
-                log.info("e = {}", e.getMessage());
-                throw new IllegalArgumentException("ggg");
-            }
-            return AccessTokenRes.from(accessToken);
-        }
-
-        throw new NotValidRefreshTokenException(NOT_VALID_REFRESH_TOKEN_EXCEPTION);
-
-    }
-
     private void createResponseHandler(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
         Cookie accessTokenCookie = new Cookie("AccessToken", accessToken);
         Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
