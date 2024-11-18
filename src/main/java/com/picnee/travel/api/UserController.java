@@ -1,10 +1,7 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.UserApi;
-import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
-import com.picnee.travel.domain.user.dto.req.CreateUserReq;
-import com.picnee.travel.domain.user.dto.req.LoginUserReq;
-import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
+import com.picnee.travel.domain.user.dto.req.*;
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
@@ -70,6 +67,13 @@ public class UserController implements UserApi {
                                                @Valid @RequestBody UpdateUserNicknameReq dto) {
         User user = userService.updateNickname(auth, dto.getNickname());
         return ResponseEntity.status(OK).body(user.getNickname());
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> updateUser(@AuthenticatedUser AuthenticatedUserReq auth,
+                                             @Valid @RequestBody UpdateUser dto) {
+        User user = userService.updateUser(auth, dto);
+        return ResponseEntity.status(OK).body(user.getId().toString());
     }
 }
 
