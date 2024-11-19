@@ -29,7 +29,7 @@ public class TokenController implements TokenApi {
     private final TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<UserRes> createOauthToken(@RequestBody CreateOauthToken dto, HttpServletResponse response) {
+    public ResponseEntity<JwtTokenRes> createOauthToken(@RequestBody CreateOauthToken dto, HttpServletResponse response) {
         JwtTokenRes res = tokenService.createOauthToken(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
@@ -51,7 +51,7 @@ public class TokenController implements TokenApi {
         response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-        return ResponseEntity.status(OK).body(res.getUserRes());
+        return ResponseEntity.status(OK).body(res);
     }
 
     @PostMapping("/reissue")
@@ -70,6 +70,6 @@ public class TokenController implements TokenApi {
 
         response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
 
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(OK).body(res);
     }
 }

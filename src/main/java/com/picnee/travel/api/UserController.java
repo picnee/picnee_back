@@ -40,7 +40,7 @@ public class UserController implements UserApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
+    public ResponseEntity<JwtTokenRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
         JwtTokenRes res = userService.login(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
@@ -62,7 +62,7 @@ public class UserController implements UserApi {
         response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-        return ResponseEntity.status(OK).body(res.getUserRes());
+        return ResponseEntity.status(OK).body(res);
     }
 
     @PatchMapping("/nickname")

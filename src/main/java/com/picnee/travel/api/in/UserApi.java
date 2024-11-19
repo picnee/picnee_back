@@ -18,7 +18,7 @@ public interface UserApi {
     public ResponseEntity<Void> createUser(CreateUserReq dto);
 
     @Operation(summary = "로그인", description = "로그인 한다.")
-    public ResponseEntity<UserRes> loginUser(LoginUserReq dto, HttpServletResponse response);
+    public ResponseEntity<JwtTokenRes> loginUser(LoginUserReq dto, HttpServletResponse response);
 
     @Operation(summary = "닉네임 설정", description = "OAuth 로그인 한 사람 중 닉네임을 설정하지 않은 사용자의 닉네임을 설정하게 한다.")
     public ResponseEntity<String> updateNickname(AuthenticatedUserReq auth, UpdateUserNicknameReq dto);
