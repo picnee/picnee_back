@@ -14,4 +14,5 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 public class LogRes {
     private Resource resource;
+    private String fileName;
 }

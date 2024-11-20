@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -27,10 +29,12 @@ public class LogController implements LogAPI {
     public ResponseEntity<Resource> getLogFile() {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_PLAIN);
-        headers.setContentDispositionFormData("attachment", "execute_log_" + LocalDateTime.now());
 
         LogRes logRes = logService.getLog();
+
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", logRes.getFileName());
+
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(logRes.getResource());

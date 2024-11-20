@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -27,9 +30,15 @@ public class LogService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        // 파일 리소스 생성
+        String fileName = "execute_log_" +
+                LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul"))
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".txt";
+
         Resource resource = new FileSystemResource(file);
 
-        return new LogRes(resource);
+        return LogRes.builder()
+                .resource(resource)
+                .fileName(fileName)
+                .build();
     }
 }
