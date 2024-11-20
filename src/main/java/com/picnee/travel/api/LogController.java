@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @Slf4j
 @RestController
 @RequestMapping("/log")
@@ -29,8 +31,9 @@ public class LogController implements LogAPI {
         headers.setContentDispositionFormData("attachment", "execute_log_" + LocalDateTime.now());
 
         LogRes logRes = logService.getLog();
-
-        return new ResponseEntity<>(logRes.getResource(), headers, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(logRes.getResource());
     }
 
 }
