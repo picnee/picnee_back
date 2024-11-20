@@ -43,8 +43,6 @@ public class Post extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "viewed")
     private Long viewed;
-    @Column(name = "likes")
-    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;

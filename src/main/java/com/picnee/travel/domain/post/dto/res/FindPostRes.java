@@ -27,7 +27,6 @@ public class FindPostRes {
     private String title;
     private String content;
     private Long viewed;
-    private Long likes;
     private int commentsCount;
     private BoardRes boardRes;
     private UserRes userRes;
@@ -39,7 +38,6 @@ public class FindPostRes {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewed(post.getViewed())
-                .likes(post.getLikes())
                 .commentsCount(post.getComments().size())
                 .boardRes(BoardRes.from(post.getBoard()))
                 .userRes(UserRes.from(post.getUser()))
