@@ -96,6 +96,7 @@ CREATE TABLE `post` (
 CREATE TABLE `post_comment` (
     `post_comment_id`	    VARCHAR(36)	NOT NULL,
 	`content`	        LONGTEXT	NOT NULL,
+    `likes`             BIGINT DEFAULT 0,
 	`created_at`	    TIMESTAMP	NOT NULL,
 	`modified_at`	    TIMESTAMP	NOT NULL,
 	`deleted_at`	    TIMESTAMP	NULL,

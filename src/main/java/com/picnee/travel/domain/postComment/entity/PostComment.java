@@ -38,6 +38,8 @@ public class PostComment extends SoftDeleteBaseEntity {
     private UUID id;
     @Column(name = "content")
     private String content;
+    @Column(name = "likes")
+    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_comment_parent_id")
     private PostComment commentParent;
