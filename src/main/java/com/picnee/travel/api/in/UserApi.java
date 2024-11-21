@@ -4,6 +4,7 @@ import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
+import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
@@ -22,4 +23,10 @@ public interface UserApi {
 
     @Operation(summary = "닉네임 설정", description = "OAuth 로그인 한 사람 중 닉네임을 설정하지 않은 사용자의 닉네임을 설정하게 한다.")
     public ResponseEntity<String> updateNickname(AuthenticatedUserReq auth, UpdateUserNicknameReq dto);
+
+    @Operation(summary = "이메일 중복 확인", description = "이메일이 중복인지 확인한다.")
+    public ResponseEntity<CheckDuplicateRes> checkEmailDuplicate(String email);
+
+    @Operation(summary = "닉네임 중복 확인", description = "닉네임이 중복인지 확인한다.")
+    public ResponseEntity<CheckDuplicateRes> checkNicknameDuplicate(String nickname);
 }
