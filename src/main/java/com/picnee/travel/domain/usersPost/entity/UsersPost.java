@@ -37,5 +37,5 @@ public class UsersPost extends BaseEntity{
     private Post post;
     @Builder.Default
     @Column(name = "is_viewed")
-    private boolean isViewed = false;
+    private Boolean isViewed = false;
 }

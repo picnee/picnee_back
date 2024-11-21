@@ -3,11 +3,9 @@ package com.picnee.travel.domain.user.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.user.dto.req.UpdateUser;
+import com.picnee.travel.domain.usersPost.entity.UsersPost;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
@@ -15,6 +13,8 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -71,6 +71,9 @@ public class User extends SoftDeleteBaseEntity {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private State state;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<UsersPost> usersPosts = new ArrayList<>();
 
     public void failPasswordCount() {
         this.passwordCount++;

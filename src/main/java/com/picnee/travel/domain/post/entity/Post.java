@@ -68,4 +68,11 @@ public class Post extends SoftDeleteBaseEntity {
     public void softDelete() {
         super.delete();
     }
+
+    /**
+     * 게시글 count 증가
+     */
+    public void incrementViewCount() {
+        this.viewed++;
+    }
 }
