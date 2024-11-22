@@ -2,6 +2,11 @@ package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.UserApi;
 import com.picnee.travel.domain.user.dto.req.*;
+import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
+import com.picnee.travel.domain.user.dto.req.CreateUserReq;
+import com.picnee.travel.domain.user.dto.req.LoginUserReq;
+import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
+import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
@@ -9,6 +14,7 @@ import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.redis.service.RedisService;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +43,7 @@ public class UserController implements UserApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
+    public ResponseEntity<JwtTokenRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
         JwtTokenRes res = userService.login(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
@@ -59,7 +65,7 @@ public class UserController implements UserApi {
         response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
-        return ResponseEntity.status(OK).body(res.getUserRes());
+        return ResponseEntity.status(OK).body(res);
     }
 
     @PatchMapping("/nickname")
@@ -74,6 +80,17 @@ public class UserController implements UserApi {
                                              @Valid @RequestBody UpdateUser dto) {
         User user = userService.updateUser(auth, dto);
         return ResponseEntity.status(OK).body(user.getId().toString());
+  
+    @GetMapping("/email/exists")
+    public ResponseEntity<CheckDuplicateRes> checkEmailDuplicate(@RequestParam("email") String email) {
+        CheckDuplicateRes res = userService.checkEmailDuplicate(email);
+        return ResponseEntity.status(OK).body(res);
+    };
+
+    @GetMapping("/nickname/exists")
+    public ResponseEntity<CheckDuplicateRes> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
+        CheckDuplicateRes res = userService.checkNicknameDuplicate(nickname);
+        return ResponseEntity.status(OK).body(res);
     }
 }
 

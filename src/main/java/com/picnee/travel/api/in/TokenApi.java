@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 public interface TokenApi {
 
     @Operation(summary = "OAuth token 발급", description = "소셜 로그인 할 경우 Token 정보 전달")
-    public ResponseEntity<UserRes> createOauthToken(CreateOauthToken dto, HttpServletResponse response);
+    public ResponseEntity<JwtTokenRes> createOauthToken(CreateOauthToken dto, HttpServletResponse response);
 
     @Operation(summary = "토큰 재발급", description = "accessToken을 재발급 한다.")
     public ResponseEntity<AccessTokenRes> reGenerateToken(AuthenticatedUserReq auth, String refreshToken, HttpServletResponse response);

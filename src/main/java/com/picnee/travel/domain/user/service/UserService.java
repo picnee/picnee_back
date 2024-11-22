@@ -4,6 +4,7 @@ import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.dto.req.UpdateUser;
+import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
@@ -127,11 +128,35 @@ public class UserService {
             throw new NotEqualPassword(NOT_EQUAL_PASSWORD_EXCEPTION);
         }
 
-
-
         user.update(dto, passwordEncoder);
 
         return user;
+    }  
+      
+    /**
+     * 이메일 중복 확인
+     * */
+    public CheckDuplicateRes checkEmailDuplicate(String email) {
+        return CheckDuplicateRes.builder()
+                .isExists(isDuplicateEmail(email))
+                .build();
+    }
+
+    /**
+     * 닉네임 중복 확인
+     * */
+    public CheckDuplicateRes checkNicknameDuplicate(String nickname) {
+        return CheckDuplicateRes.builder()
+                .isExists(isDuplicateNickname(nickname))
+                .build();
+    }
+
+    public boolean isDuplicateEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean isDuplicateNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 
     public User findByEmail(String email) {
