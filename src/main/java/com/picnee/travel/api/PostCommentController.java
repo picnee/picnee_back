@@ -70,5 +70,13 @@ public class PostCommentController implements PostCommentApi {
 
         return ResponseEntity.status(OK).body(childrenComment.getId().toString());
     }
+
+    @PostMapping("/{postId}/comments/{commentId}/like")
+    public ResponseEntity<Void> toggleCommentLike(@PathVariable("postId") UUID postId,
+                                                  @PathVariable("commentId") UUID commentId,
+                                                  @AuthenticatedUser AuthenticatedUserReq auth) {
+        postCommentService.toggleLike(postId, commentId, auth);
+        return ResponseEntity.status(OK).build();
+    }
 }
 

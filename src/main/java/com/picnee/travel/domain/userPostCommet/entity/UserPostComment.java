@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.userPostCommet.entity;
 
+import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.user.entity.User;
@@ -21,7 +22,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class UserPostComment {
+public class UserPostComment extends BaseEntity {
 
     @Id
     @EqualsAndHashCode.Include
@@ -38,4 +39,18 @@ public class UserPostComment {
     @Builder.Default
     @Column(name = "is_liked")
     private boolean isLiked = false;
+
+    /**
+     * 좋아요
+     */
+    public void like() {
+        this.isLiked = true;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    public void dislike() {
+        this.isLiked = false;
+    }
 }
