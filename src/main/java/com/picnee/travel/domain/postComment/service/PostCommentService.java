@@ -15,7 +15,6 @@ import com.picnee.travel.domain.user.service.UserService;
 import com.picnee.travel.domain.userPostCommet.service.UserPostCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,7 +104,7 @@ public class PostCommentService {
         PostComment postComment = findByIdNotDeletedPostComment(commentId);
         User user = userService.findByEmail(auth.getEmail());
 
-        boolean likeState = userPostCommentService.upLike(postComment, user);
+        boolean likeState = userPostCommentService.incrementLike(postComment, user);
 
         if (likeState) {
             postComment.addLike();

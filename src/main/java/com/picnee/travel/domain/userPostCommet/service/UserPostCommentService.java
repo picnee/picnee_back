@@ -17,7 +17,7 @@ public class UserPostCommentService {
 
     private final UserPostCommentRepository userPostCommentRepository;
 
-    public boolean upLike(PostComment postComment, User user) {
+    public boolean incrementLike(PostComment postComment, User user) {
         UserPostComment userPostComment = userPostCommentRepository.findByUserAndPostComment(user, postComment)
                 .orElseGet(() -> createUserPostComment(user, postComment));
 
