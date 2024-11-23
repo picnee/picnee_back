@@ -80,12 +80,13 @@ public class UserController implements UserApi {
                                              @Valid @RequestBody UpdateUser dto) {
         User user = userService.updateUser(auth, dto);
         return ResponseEntity.status(OK).body(user.getId().toString());
+    }
   
     @GetMapping("/email/exists")
     public ResponseEntity<CheckDuplicateRes> checkEmailDuplicate(@RequestParam("email") String email) {
         CheckDuplicateRes res = userService.checkEmailDuplicate(email);
         return ResponseEntity.status(OK).body(res);
-    };
+    }
 
     @GetMapping("/nickname/exists")
     public ResponseEntity<CheckDuplicateRes> checkNicknameDuplicate(@RequestParam("nickname") String nickname) {
