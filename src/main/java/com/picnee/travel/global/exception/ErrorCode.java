@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE(BAD_REQUEST, "G002", " Invalid Type Value"),
     IO_ERROR(BAD_REQUEST, "G003", "I/O Exception"),
     JSON_PARSE_ERROR(BAD_REQUEST, "G004", "JsonParseException"),
+    NOT_EQUAL_PASSWORD_EXCEPTION(BAD_REQUEST, "G005", "비밀번호가 일치하지 않습니다."),
 
     /**
      * 401

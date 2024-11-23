@@ -43,8 +43,6 @@ public class Post extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "viewed")
     private Long viewed;
-    @Column(name = "likes")
-    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -69,5 +67,12 @@ public class Post extends SoftDeleteBaseEntity {
      */
     public void softDelete() {
         super.delete();
+    }
+
+    /**
+     * 게시글 count 증가
+     */
+    public void incrementViewCount() {
+        this.viewed++;
     }
 }

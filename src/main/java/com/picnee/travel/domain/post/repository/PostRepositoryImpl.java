@@ -1,7 +1,10 @@
 package com.picnee.travel.domain.post.repository;
 
+import com.picnee.travel.domain.board.entity.BoardCategory;
+import com.picnee.travel.domain.board.entity.Region;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.entity.QPost;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +23,23 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Post> findByPosts(Pageable pageable) {
+    public Page<Post> findByPosts(String boardCategory, String region, Pageable pageable) {
         QPost post = QPost.post;
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(post.isDeleted.isFalse());
+
+        if (boardCategory != null && !boardCategory.isEmpty()) {
+            builder.and(post.board.boardCategory.eq(BoardCategory.valueOf(boardCategory)));
+        }
+
+        if (region != null && !region.isEmpty()) {
+            builder.and(post.board.region.eq(Region.valueOf(region)));
+        }
 
         JPAQuery<Post> query = jpaQueryFactory
                 .selectFrom(post)
-                .where(post.isDeleted.isFalse())
+                .where(builder)
                 .orderBy(post.createdAt.desc());
 
         List<Post> result = query
@@ -36,7 +50,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         Long total = Optional.ofNullable(jpaQueryFactory
                         .select(post.count())
                         .from(post)
-                        .where(post.isDeleted.isFalse())
+                        .where(builder) // 동적 조건 동일하게 사용
                         .fetchOne())
                 .orElse(0L);
 

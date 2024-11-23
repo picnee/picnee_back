@@ -1,6 +1,7 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.UserApi;
+import com.picnee.travel.domain.user.dto.req.*;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
@@ -74,6 +75,12 @@ public class UserController implements UserApi {
         return ResponseEntity.status(OK).body(user.getNickname());
     }
 
+    @PatchMapping
+    public ResponseEntity<String> updateUser(@AuthenticatedUser AuthenticatedUserReq auth,
+                                             @Valid @RequestBody UpdateUser dto) {
+        User user = userService.updateUser(auth, dto);
+        return ResponseEntity.status(OK).body(user.getId().toString());
+  
     @GetMapping("/email/exists")
     public ResponseEntity<CheckDuplicateRes> checkEmailDuplicate(@RequestParam("email") String email) {
         CheckDuplicateRes res = userService.checkEmailDuplicate(email);

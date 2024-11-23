@@ -2,17 +2,19 @@ package com.picnee.travel.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
+import com.picnee.travel.domain.user.dto.req.UpdateUser;
+import com.picnee.travel.domain.usersPost.entity.UsersPost;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -69,6 +71,9 @@ public class User extends SoftDeleteBaseEntity {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private State state;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<UsersPost> usersPosts = new ArrayList<>();
 
     public void failPasswordCount() {
         this.passwordCount++;
@@ -89,5 +94,18 @@ public class User extends SoftDeleteBaseEntity {
     public void updateDefaultNickname(String nickname) {
         this.nickname = nickname;
         this.isDefaultNickname = false;
+    }
+
+    /**
+     * 내 정보 수정
+     */
+    public void update(UpdateUser dto, PasswordEncoder passwordEncoder) {
+        this.nickname = dto.getNickname() == null ? this.nickname : dto.getNickname();
+        this.password = dto.getNewPassword() == null ? this.password : passwordEncoder.encode(dto.getNewPassword());
+        this.phoneNumber = dto.getPhoneNumber() == null ? this.phoneNumber : dto.getPhoneNumber().replaceAll("-", "");
+        this.birthDate = dto.getBirthDate() == null ? this.birthDate : dto.getBirthDate();
+        this.gender = dto.getGender() == null ? this.gender : dto.getGender();
+        this.isMarketing = dto.getIsMarketing() == null ? this.isMarketing : dto.getIsMarketing();
+        this.isAlarm = dto.getIsAlarm() == null ? this.isAlarm : dto.getIsAlarm();
     }
 }

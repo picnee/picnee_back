@@ -26,6 +26,7 @@ public class CreatePostCommentReq {
         return PostComment.builder()
                 .user(user)
                 .content(dto.content)
+                .likes(0L)
                 .post(post)
                 .build();
     }
@@ -34,6 +35,7 @@ public class CreatePostCommentReq {
         return PostComment.builder()
                 .user(user)
                 .content(dto.content)
+                .likes(0L)
                 .commentParent(postComment)
                 .post(post)
                 .build();

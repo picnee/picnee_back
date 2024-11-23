@@ -12,17 +12,20 @@ import com.picnee.travel.domain.post.repository.PostRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
+import com.picnee.travel.domain.usersPost.service.UsersPostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
+import static org.springframework.transaction.annotation.Propagation.*;
 
 @Slf4j
 @Service
@@ -33,6 +36,7 @@ public class PostService {
     private final UserService userService;
     private final PostRepository postRepository;
     private final BoardService boardService;
+    private final UsersPostService usersPostService;
 
     /**
      * 게시글 생성
@@ -76,17 +80,40 @@ public class PostService {
     /**
      * 게시글 단건 조회
      */
+    @Transactional
     public FindPostRes find(UUID postId, AuthenticatedUserReq auth) {
         Post post = findByIdNotDeletedPost(postId);
+
+        if (isUserAuthenticated(auth) && isFirstViewByUser(post, auth)) {
+            incrementViewCount(post);
+        }
+
         return FindPostRes.from(post);
+    }
+
+    private boolean isUserAuthenticated(AuthenticatedUserReq auth) {
+        return auth != null;
+    }
+
+    private boolean isFirstViewByUser(Post post, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        return usersPostService.isFirstView(post, user);
+    }
+
+    /**
+     * 게시글 카운트 증가
+     */
+    @Transactional(propagation = REQUIRES_NEW)
+    public void incrementViewCount(Post post) {
+        post.incrementViewCount();
     }
 
     /**
      * 문의 글 전체 조회
      */
-    public Page<FindPostRes> findPosts(int page) {
+    public Page<FindPostRes> findPosts(String boardCategory, String region, int page) {
         Pageable pageable = PageRequest.of(page, 8);
-        Page<Post> posts = postRepository.findByPosts(pageable);
+        Page<Post> posts = postRepository.findByPosts(boardCategory, region, pageable);
 
         return FindPostRes.paging(posts);
     }

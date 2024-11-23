@@ -28,5 +28,5 @@ public interface PostApi {
     public ResponseEntity<FindPostRes> findPost(UUID postId, AuthenticatedUserReq auth);
 
     @Operation(summary = "게시글 전체 조회", description = "게시글을 전체 조회한다.")
-    public ResponseEntity<Page<FindPostRes>> findPosts(int page);
+    public ResponseEntity<Page<FindPostRes>> findPosts(String boardCategory, String region, int page);
 }

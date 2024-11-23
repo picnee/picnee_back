@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class GetPostCommentRes {
 
     private String content;
+    private Long likes;
     private UserRes userRes;
     private List<GetChildrenCommentRes> replies;
     private LocalDateTime createdAt;
@@ -28,6 +29,7 @@ public class GetPostCommentRes {
         return comments.stream()
                 .map(comment -> GetPostCommentRes.builder()
                         .content(comment.getContent())
+                        .likes(comment.getLikes())
                         .userRes(UserRes.from(comment.getUser()))
                         .createdAt(comment.getCreatedAt())
                         .replies(GetChildrenCommentRes.from(comment.getChildren()))

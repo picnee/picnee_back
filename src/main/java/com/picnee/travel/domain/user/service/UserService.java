@@ -3,6 +3,7 @@ package com.picnee.travel.domain.user.service;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
+import com.picnee.travel.domain.user.dto.req.UpdateUser;
 import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
 import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.Role;
@@ -116,6 +117,22 @@ public class UserService {
         return user;
     }
 
+    /**
+     * 내 정보 수정
+     */
+    @Transactional
+    public User updateUser(AuthenticatedUserReq auth, UpdateUser dto) {
+        User user = findByEmail(auth.getEmail());
+
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new NotEqualPassword(NOT_EQUAL_PASSWORD_EXCEPTION);
+        }
+
+        user.update(dto, passwordEncoder);
+
+        return user;
+    }  
+      
     /**
      * 이메일 중복 확인
      * */

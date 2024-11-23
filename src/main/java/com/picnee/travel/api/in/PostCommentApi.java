@@ -31,4 +31,7 @@ public interface PostCommentApi {
 
     @Operation(summary = "대댓글 생성", description = "대댓글을 생성한다.")
     public ResponseEntity<String> createChildrenComment(UUID postId, UUID commentId, CreatePostCommentReq dto, AuthenticatedUserReq auth);
+
+    @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 한다.")
+    public ResponseEntity<Void> toggleCommentLike(UUID postId, UUID commentId, AuthenticatedUserReq auth);
 }

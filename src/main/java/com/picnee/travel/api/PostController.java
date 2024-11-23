@@ -57,8 +57,10 @@ public class PostController implements PostApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<FindPostRes>> findPosts(@RequestParam(name = "page", defaultValue = "0") int page) {
-        Page<FindPostRes> posts = postService.findPosts(page);
+    public ResponseEntity<Page<FindPostRes>> findPosts(@RequestParam(name = "boardCategory", required = false) String boardCategory,
+                                                       @RequestParam(name = "region", required = false) String region,
+                                                       @RequestParam(name = "page", defaultValue = "0") int page) {
+        Page<FindPostRes> posts = postService.findPosts(boardCategory, region, page);
         return ResponseEntity.status(OK).body(posts);
     }
 }

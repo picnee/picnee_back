@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class GetChildrenCommentRes {
 
     private String content;
+    private Long likes;
     private UserRes userRes;
     private LocalDateTime createdAt;
 
@@ -22,6 +23,7 @@ public class GetChildrenCommentRes {
         return replies.stream()
                 .map(reply -> GetChildrenCommentRes.builder()
                         .content(reply.getContent())
+                        .likes(reply.getLikes())
                         .userRes(UserRes.from(reply.getUser()))
                         .createdAt(reply.getCreatedAt())
                         .build())

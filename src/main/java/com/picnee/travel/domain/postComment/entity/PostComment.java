@@ -38,6 +38,8 @@ public class PostComment extends SoftDeleteBaseEntity {
     private UUID id;
     @Column(name = "content")
     private String content;
+    @Column(name = "likes")
+    private Long likes;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_comment_parent_id")
     private PostComment commentParent;
@@ -60,5 +62,19 @@ public class PostComment extends SoftDeleteBaseEntity {
 
     public void softDelete() {
         super.delete();
+    }
+
+    /**
+     * 좋아요 추가
+     */
+    public void addLike() {
+        this.likes++;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    public void deleteLike() {
+        this.likes--;
     }
 }

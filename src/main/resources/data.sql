@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `like_place`;
 DROP TABLE IF EXISTS `like_list`;
 DROP TABLE IF EXISTS `users_post`;
+DROP TABLE IF EXISTS `users_post_comment`;
 DROP TABLE IF EXISTS `post_comment`;
 DROP TABLE IF EXISTS `post`;
 DROP TABLE IF EXISTS `board`;
@@ -83,7 +84,6 @@ CREATE TABLE `post` (
     `title` VARCHAR(255) NOT NULL,
     `content` VARCHAR(255) NOT NULL,
     `viewed` BIGINT DEFAULT 0,
-    `likes` BIGINT DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
     `deleted_at` TIMESTAMP NULL,
@@ -96,6 +96,7 @@ CREATE TABLE `post` (
 CREATE TABLE `post_comment` (
     `post_comment_id`	    VARCHAR(36)	NOT NULL,
 	`content`	        LONGTEXT	NOT NULL,
+    `likes`             BIGINT DEFAULT 0,
 	`created_at`	    TIMESTAMP	NOT NULL,
 	`modified_at`	    TIMESTAMP	NOT NULL,
 	`deleted_at`	    TIMESTAMP	NULL,
@@ -114,13 +115,26 @@ CREATE TABLE `users_post`(
     `user_id` VARCHAR(36) NOT NULL,
     `post_id` VARCHAR(36) NOT NULL,
     `is_viewed` BOOLEAN NOT NULL DEFAULT FALSE,
-    `is_liked` BOOLEAN NOT NULL DEFAULT FALSE,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
     PRIMARY KEY (`user_post_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`post_id`) REFERENCES `post`(`post_id`)
 );
+
+CREATE TABLE `users_post_comment`(
+    `user_post_comment_id` VARCHAR(36) NOT NULL,
+    `user_id` VARCHAR(36) NOT NULL,
+    `post_comment_id` VARCHAR(36) NOT NULL,
+    `is_liked` BOOLEAN NOT NULL DEFAULT FALSE,
+    `created_at` TIMESTAMP NOT NULL,
+    `modified_at` TIMESTAMP NOT NULL,
+    PRIMARY KEY (`user_post_comment_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`post_comment_id`) REFERENCES `post`(`post_comment_id`)
+);
+
+
 
 CREATE TABLE `place` (
     `place_id`	         VARCHAR(36)     NOT NULL,

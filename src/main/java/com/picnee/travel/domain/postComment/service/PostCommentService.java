@@ -12,9 +12,9 @@ import com.picnee.travel.domain.postComment.repository.PostCommentRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
+import com.picnee.travel.domain.userPostCommet.service.UserPostCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +31,7 @@ public class PostCommentService {
 
     private final UserService userService;
     private final PostService postService;
+    private final UserPostCommentService userPostCommentService;
     private final PostCommentRepository postCommentRepository;
 
     /**
@@ -95,6 +96,22 @@ public class PostCommentService {
         User user = userService.findByEmail(auth.getEmail());
 
         return postCommentRepository.save(CreatePostCommentReq.toEntityCoComment(post, postComment, user, dto));
+    }
+
+    @Transactional
+    public void toggleLike(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
+        postService.findByIdNotDeletedPost(postId);
+        PostComment postComment = findByIdNotDeletedPostComment(commentId);
+        User user = userService.findByEmail(auth.getEmail());
+
+        boolean likeState = userPostCommentService.incrementLike(postComment, user);
+
+        if (likeState) {
+            postComment.addLike();
+            return;
+        }
+
+        postComment.deleteLike();
     }
 
     /**
