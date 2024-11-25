@@ -103,7 +103,6 @@ public class PostService {
     /**
      * 게시글 카운트 증가
      */
-    @Transactional(propagation = REQUIRES_NEW)
     public void incrementViewCount(Post post) {
         post.incrementViewCount();
     }

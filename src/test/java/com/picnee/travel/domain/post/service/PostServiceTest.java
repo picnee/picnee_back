@@ -122,4 +122,18 @@ class PostServiceTest {
         assertThat(findPostRes.getContent()).isEqualTo("테스트 내용");
     }
 
+    @Test
+    @DisplayName("게시글 조회수 테스트 : 2명이 방문하면 조회수가 2가 되야 한다.")
+    void test7() {
+        postService.find(post.getId(), user);
+        postService.find(post.getId(), anotherUser);
+
+        assertThat(post.getViewed()).isEqualTo(2L);
+
+        // 반복해서 들어가더라도 조회수는 2가 되어야 한다.
+        postService.find(post.getId(), anotherUser);
+
+        assertThat(post.getViewed()).isEqualTo(2L);
+    }
+
 }
