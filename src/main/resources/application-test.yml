@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+jwt:
+  header: Authorization
+  secret: askchasdichaewdGxaNW12WFdTRTkiasiawe12887vaviuawwdck34214avgvaslkhasdilc==
+  access-validity-in-seconds: 500
+  refresh-validity-in-seconds: 6048000
