@@ -131,7 +131,7 @@ CREATE TABLE `users_post_comment`(
     `modified_at` TIMESTAMP NOT NULL,
     PRIMARY KEY (`user_post_comment_id`),
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`post_comment_id`) REFERENCES `post`(`post_comment_id`)
+    FOREIGN KEY (`post_comment_id`) REFERENCES `post_comment`(`post_comment_id`)
 );
 
 
