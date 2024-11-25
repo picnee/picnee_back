@@ -4,6 +4,7 @@ import com.picnee.travel.domain.board.entity.BoardCategory;
 import com.picnee.travel.domain.board.entity.Region;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +92,24 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.update(post.getId(), modifyPostReq, anotherUser))
                 .isInstanceOf(NotPostAuthorException.class);
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 삭제 성공")
+    void test4() {
+        postService.delete(post.getId(), user);
+        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+        assertThat(posts.getTotalElements()).isEqualTo(0L);
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 삭제 실패 : 권한 없는 유저가 삭제할 경우")
+    void test5() {
+        assertThatThrownBy(() -> postService.delete(post.getId(), anotherUser))
+                .isInstanceOf(NotPostAuthorException.class);
+
+        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+        assertThat(posts.getTotalElements()).isEqualTo(1L);
     }
 
 }
