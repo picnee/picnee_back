@@ -3,7 +3,9 @@ package com.picnee.travel.domain.post.service;
 import com.picnee.travel.domain.board.entity.BoardCategory;
 import com.picnee.travel.domain.board.entity.Region;
 import com.picnee.travel.domain.post.dto.req.CreatePostReq;
+import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.post.exception.NotPostAuthorException;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.CreateTestUser;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
@@ -57,6 +59,37 @@ class PostServiceTest {
         assertThat(post).isNotNull();
         assertThat(post.getTitle()).isEqualTo("테스트 제목");
         assertThat(post.getContent()).isEqualTo("테스트 내용");
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 수정 성공")
+    void test2() {
+        ModifyPostReq modifyPostReq = ModifyPostReq.builder()
+                .title("수정된 테스트 제목")
+                .content("수정된 테스트 내용")
+                .region(Region.KANSAI)
+                .boardCategory(BoardCategory.RESTAURANT)
+                .build();
+
+        postService.update(post.getId(), modifyPostReq, user);
+
+        assertThat(post).isNotNull();
+        assertThat(post.getTitle()).isEqualTo("수정된 테스트 제목");
+        assertThat(post.getContent()).isEqualTo("수정된 테스트 내용");
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 수정 실패 : 게시글 작성자가 아닌 다른 유저가 수정할려고 할 경우")
+    void test3() {
+        ModifyPostReq modifyPostReq = ModifyPostReq.builder()
+                .title("수정된 테스트 제목")
+                .content("수정된 테스트 내용")
+                .region(Region.KANSAI)
+                .boardCategory(BoardCategory.RESTAURANT)
+                .build();
+
+        assertThatThrownBy(() -> postService.update(post.getId(), modifyPostReq, anotherUser))
+                .isInstanceOf(NotPostAuthorException.class);
     }
 
 }
