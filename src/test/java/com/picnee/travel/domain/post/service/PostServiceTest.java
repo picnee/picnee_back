@@ -112,4 +112,14 @@ class PostServiceTest {
         assertThat(posts.getTotalElements()).isEqualTo(1L);
     }
 
+    @Test
+    @DisplayName("로그인을 하지 않더라도 게시글 조회는 성공")
+    void test6() {
+        FindPostRes findPostRes = postService.find(post.getId(), null);
+
+        assertThat(findPostRes).isNotNull();
+        assertThat(findPostRes.getTitle()).isEqualTo("테스트 제목");
+        assertThat(findPostRes.getContent()).isEqualTo("테스트 내용");
+    }
+
 }
