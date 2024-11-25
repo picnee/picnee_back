@@ -136,4 +136,96 @@ class PostServiceTest {
         assertThat(post.getViewed()).isEqualTo(2L);
     }
 
+    @Test
+    @DisplayName("자유 토크 게시글 전체 조회 elements 테스트")
+    void test8() {
+        for (int i = 0; i < 5; i++ ){
+            CreatePostReq postReq = CreatePostReq.builder()
+                    .title("테스트 제목 = " + i)
+                    .content("테스트 내용 = " + i)
+                    .region(Region.KANSAI)
+                    .boardCategory(BoardCategory.RESTAURANT)
+                    .build();
+
+            postService.create(postReq, user);
+        }
+
+        // 5 + 1 = 6개의 게시글이 나와야 한다.
+        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+
+        assertThat(posts.getTotalElements()).isEqualTo(6L);
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 전체 조회 카테고리 분류 elements 테스트")
+    void test9() {
+        for (int i = 0; i < 3; i++ ){
+            CreatePostReq postReq = CreatePostReq.builder()
+                    .title("테스트 제목 = " + i)
+                    .content("테스트 내용 = " + i)
+                    .region(Region.KANTO)
+                    .boardCategory(BoardCategory.ACCOMMODATION)
+                    .build();
+
+            postService.create(postReq, user);
+        }
+
+        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", null, 0);
+
+        assertThat(posts.getTotalElements()).isEqualTo(3L);
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 전체 조회 지역 분류 elements 테스트")
+    void test10() {
+        for(int i = 0; i < 2; i++) {
+            CreatePostReq postReq = CreatePostReq.builder()
+                    .title("테스트 제목")
+                    .content("테스트 내용")
+                    .region(Region.KUSHU)
+                    .boardCategory(BoardCategory.ACCOMMODATION)
+                    .build();
+
+            postService.create(postReq, user);
+        }
+        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "KUSHU", 0);
+
+        assertThat(posts.getTotalElements()).isEqualTo(2L);
+    }
+
+    @Test
+    @DisplayName("자유 토크 게시글 전체 조회 지역과 카테고리 분류 elements 테스트")
+    void test11() {
+        CreatePostReq postReq1 = CreatePostReq.builder()
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .region(Region.KUSHU)
+                .boardCategory(BoardCategory.ACCOMMODATION)
+                .build();
+
+        postService.create(postReq1, user);
+
+        CreatePostReq postReq2 = CreatePostReq.builder()
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .region(Region.KUSHU)
+                .boardCategory(BoardCategory.ACCOMMODATION)
+                .build();
+
+        postService.create(postReq2, user);
+
+        CreatePostReq postReq3 = CreatePostReq.builder()
+                .title("테스트 제목")
+                .content("테스트 내용")
+                .region(Region.KUSHU)
+                .boardCategory(BoardCategory.RESTAURANT)
+                .build();
+
+        postService.create(postReq3, user);
+
+        // 규슈, 숙박은 2개이기 때문에 2개가 나와야 한다.
+        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "KUSHU", 0);
+
+        assertThat(posts.getTotalElements()).isEqualTo(2L);
+    }
 }
