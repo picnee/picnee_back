@@ -103,7 +103,6 @@ public class PostService {
     /**
      * 게시글 카운트 증가
      */
-    @Transactional(propagation = REQUIRES_NEW)
     public void incrementViewCount(Post post) {
         post.incrementViewCount();
     }
@@ -112,7 +111,7 @@ public class PostService {
      * 문의 글 전체 조회
      */
     public Page<FindPostRes> findPosts(String boardCategory, String region, int page) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Post> posts = postRepository.findByPosts(boardCategory, region, pageable);
 
         return FindPostRes.paging(posts);

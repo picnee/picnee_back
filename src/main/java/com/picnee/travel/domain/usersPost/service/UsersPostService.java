@@ -21,7 +21,6 @@ public class UsersPostService {
 
     private final UsersPostRepository usersPostRepository;
 
-    @Transactional(propagation = REQUIRES_NEW)
     public boolean isFirstView(Post post, User user) {
         Optional<UsersPost> existingUsersPost = usersPostRepository.findByPostAndUser(post, user);
 
