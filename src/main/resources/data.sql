@@ -134,16 +134,19 @@ CREATE TABLE `users_post_comment`(
     FOREIGN KEY (`post_comment_id`) REFERENCES `post_comment`(`post_comment_id`)
 );
 
-
-
 CREATE TABLE `place` (
-    `place_id`	         VARCHAR(36)     NOT NULL,
-	`place_name`	     VARCHAR(255)    NOT NULL,
-	`place_type`	     VARCHAR(30)	 NOT NULL	 COMMENT '식당 000/숙소 001 /관광지 002',
-	`place_point`	     VARCHAR(255)    NOT NULL,
-    `google_place_id`    VARCHAR(255)	 NOT NULL    UNIQUE,
-	`created_at`	     TIMESTAMP	     NOT NULL,
-	`modified_at`	     TIMESTAMP	     NOT NULL,
+    `place_id`	             VARCHAR(36)     NOT NULL,
+	`place_name`	         VARCHAR(255)    NOT NULL,
+    `url`                    VARCHAR(255)	 NOT NULL,
+    `formatted_address`      VARCHAR(255)	 NULL,
+    `formatted_phone_number` VARCHAR(255)    NULL,
+    `opening_hours`          VARCHAR(255)    NULL,
+    `user_ratings_total`     Double          NULL,
+    `website`                VARCHAR(255)    NULL,
+    `lat`                    VARCHAR(255)    NOT NULL,
+    `lng`                    VARCHAR(255)    NOT NULL,
+    `created_at`	         TIMESTAMP	     NOT NULL,
+	`modified_at`	         TIMESTAMP	     NOT NULL,
     PRIMARY KEY (`place_id`)
 );
 
