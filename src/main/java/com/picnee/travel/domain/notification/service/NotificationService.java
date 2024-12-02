@@ -8,9 +8,11 @@ import com.picnee.travel.domain.notification.exception.NotFoundNotificationExcep
 import com.picnee.travel.domain.notification.exception.NotNotificationRecipientException;
 import com.picnee.travel.domain.notification.repository.NotificationRepository;
 import com.picnee.travel.domain.post.service.PostService;
+import com.picnee.travel.domain.postComment.service.PostCommentService;
 import com.picnee.travel.domain.review.service.ReviewService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final ReviewService reviewService;
     private final PostService postService;
+    private final PostCommentService postCommentService;
 
     /**
      * 알림 생성
@@ -73,7 +76,9 @@ public class NotificationService {
 
     public User findUserByTargetIdAndType(UUID targetId, NotificationType notificationType) {
         return switch (notificationType) {
-            case POST_COMMENT, POST_LIKE -> postService.findById(targetId)
+            case POST_COMMENT -> postService.findById(targetId)
+                    .getUser();
+            case COMMENT_LIKE -> postCommentService.findById(targetId)
                     .getUser();
             case REVIEW_SCORE -> reviewService.findById(targetId)
                     .getUser();
