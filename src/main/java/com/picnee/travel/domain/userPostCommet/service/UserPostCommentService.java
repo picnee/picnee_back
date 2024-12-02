@@ -44,7 +44,7 @@ public class UserPostCommentService {
         UserPostComment userPostComment = UserPostComment.builder()
                 .user(user)
                 .postComment(postComment)
-                .isLiked(false) // 최초 생성 시 좋아요 상태는 true
+                .isLiked(false)
                 .build();
 
         return userPostCommentRepository.save(userPostComment);
