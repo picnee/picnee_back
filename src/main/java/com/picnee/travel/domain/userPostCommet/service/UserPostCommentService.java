@@ -30,7 +30,6 @@ public class UserPostCommentService {
         if (!likeState) {
             userPostComment.like();
             eventPublisher.publishEvent(new CommentLikeEvent(userPostComment.getPostComment().getId()));
-            log.info("@@@@@userPostCommentId = {}", userPostComment.getPostComment().getId());
             return likeState;
         }
 
