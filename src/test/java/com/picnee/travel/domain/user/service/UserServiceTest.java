@@ -7,6 +7,7 @@ import com.picnee.travel.domain.user.entity.CreateTestUser;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.exception.LoginFailedException;
 import com.picnee.travel.domain.user.exception.NotFoundEmailException;
+import com.picnee.travel.domain.user.repository.UserRepository;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +41,12 @@ public class UserServiceTest {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TokenProvider tokenProvider;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() throws Exception {
+        userRepository.deleteAll();
         user = createTestUser.createUser();
         anotherUser = createTestUser.createAnotherUser();
         jwtTokenRes = createTestUser.createJwtToken();
@@ -67,6 +71,25 @@ public class UserServiceTest {
         assertThat(passwordEncoder.matches("abcd1234!", testUser.getPassword())).isTrue();
         assertThat(testUser.getIsMarketing()).isTrue();
         assertThat(testUser.getIsAlarm()).isTrue();
+    }
+
+    // Todo : 동일한유저 확인테스트 해야함
+    @Test
+    @DisplayName("유저 생성 실패 - 이미 존재하는 닉네임")
+    void test1_1() {
+        CreateUserReq createUserReq = CreateUserReq.builder()
+                .email("testUser@naver.com")
+                .nickname("tester")
+                .password("abcd1234!")
+                .isMarketing(true)
+                .isAlarm(true)
+                .build();
+
+//        Boolean findUser = userRepository.existsByNickname("tester");
+//
+//        System.out.println("test111" + findUser);
+
+        assertThatThrownBy(()-> userService.create(createUserReq)).isInstanceOf(Exception.class);
     }
 
     @Test
@@ -114,6 +137,16 @@ public class UserServiceTest {
         assertThatThrownBy(() -> userService.login(loginUserReq))
                 .isInstanceOf(NotFoundEmailException.class)
                 .hasMessage("존재하지 않는 계정입니다.");
+    }
+
+    @Test
+    @DisplayName("닉네임 업데이트 테스트")
+    void test5() {
+        String updateNickname = "updateNickName";
+
+        User updatedUser = userService.updateNickname(user, updateNickname);
+
+        assertThat(updatedUser.getNickname()).isEqualTo(updateNickname);
     }
 
 }
