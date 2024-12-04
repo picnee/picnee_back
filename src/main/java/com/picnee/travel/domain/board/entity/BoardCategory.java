@@ -3,6 +3,8 @@ package com.picnee.travel.domain.board.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.picnee.travel.domain.board.exception.NotFoundBoardException;
+import com.picnee.travel.global.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -35,7 +37,7 @@ public enum BoardCategory {
             case "자유 토크" -> BoardCategory.FREE_TALK;
             case "날씨" -> BoardCategory.WEATHER;
             case "교통" -> BoardCategory.TRAFFIC;
-            default -> null;
+            default -> throw new NotFoundBoardException(ErrorCode.NOT_FOUND_BOARD_CATEGORY_EXCEPTION);
         };
     }
 }

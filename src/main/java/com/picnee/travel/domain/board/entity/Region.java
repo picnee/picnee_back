@@ -3,6 +3,8 @@ package com.picnee.travel.domain.board.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.picnee.travel.domain.board.exception.NotFoundBoardException;
+import com.picnee.travel.global.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
@@ -35,7 +37,7 @@ public enum Region {
             case "후쿠오카" -> Region.FUKUOKA;
             case "도쿄" -> Region.TOKYO;
             case "삿포로" -> Region.SAPPORO;
-            default -> null;
+            default -> throw new NotFoundBoardException(ErrorCode.NOT_FOUND_BOARD_REGION_EXCEPTION);
         };
     }
 }
