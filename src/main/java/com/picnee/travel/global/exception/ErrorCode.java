@@ -41,7 +41,8 @@ public enum ErrorCode {
     NOT_FOUND_EMAIL_EXCEPTION(NOT_FOUND, "G003", "존재하지 않는 계정입니다."),
     NOT_FOUND_USER_EXCEPTION(NOT_FOUND, "G004", "존재하지 않는 계정입니다."),
     NOT_FOUND_POST_EXCEPTION(NOT_FOUND, "G005", "존재하지 않는 게시글입니다."),
-    NOT_FOUND_BOARD_EXCEPTION(NOT_FOUND, "G006", "존재하지 않는 카테고리입니다."),
+    NOT_FOUND_BOARD_CATEGORY_EXCEPTION(NOT_FOUND, "G006", "서비스 하지 않는 카테고리입니다."),
+    NOT_FOUND_BOARD_REGION_EXCEPTION(NOT_FOUND, "G006", "서비스 하지 않는 지역입니다."),
     NOT_FOUND_COMMENT_EXCEPTION(NOT_FOUND, "G007", "존재하지 않는 댓글입니다."),
     NOT_FOUND_NOTIFICATION_EXCEPTION(NOT_FOUND, "G008", "존재하지 않는 알림입니다."),
 

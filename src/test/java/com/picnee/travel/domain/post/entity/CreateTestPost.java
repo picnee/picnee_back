@@ -32,7 +32,7 @@ public class CreateTestPost {
         CreatePostReq postReq = CreatePostReq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .region(Region.KANSAI)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.RESTAURANT)
                 .build();
 

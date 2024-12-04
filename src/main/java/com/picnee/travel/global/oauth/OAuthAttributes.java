@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OAuthAttributes {
 
-    private Map<String, Object> attributes = new HashMap<>();
+    private Map<String, Object> attributes;
     private String email;
     private String nickname;
     private String socialRoot;

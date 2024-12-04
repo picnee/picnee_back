@@ -47,6 +47,6 @@ public class BoardService {
 
     public Board findByBoardId(UUID boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new NotFoundBoardException(NOT_FOUND_BOARD_EXCEPTION));
+                .orElseThrow(() -> new NotFoundBoardException(NOT_FOUND_BOARD_CATEGORY_EXCEPTION));
     }
 }
