@@ -1,10 +1,12 @@
 package com.picnee.travel.domain.board.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BoardCategory {
     RESTAURANT("음식점"),      // 음식점
     ACCOMMODATION("숙박"),    // 숙박

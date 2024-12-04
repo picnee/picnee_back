@@ -23,8 +23,8 @@ public class BoardRes {
     public static BoardRes from(Board board) {
         return BoardRes.builder()
                 .boardId(board.getId())
-                .region(board.getRegion().toString())
-                .boardCategory(board.getBoardCategory().toString())
+                .region(board.getRegion().getDescription())
+                .boardCategory(board.getBoardCategory().getCategory())
                 .build();
     }
 }

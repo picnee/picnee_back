@@ -1,8 +1,12 @@
 package com.picnee.travel.domain.board.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
+@Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Region {
     OSAKA("오사카"),          // 오사카
     KYOTO("교토"),         // 교토
