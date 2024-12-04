@@ -30,11 +30,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         builder.and(post.isDeleted.isFalse());
 
         if (boardCategory != null && !boardCategory.isEmpty()) {
-            builder.and(post.board.boardCategory.eq(BoardCategory.valueOf(boardCategory)));
+            builder.and(post.board.boardCategory.eq(BoardCategory.fromString(boardCategory)));
         }
 
         if (region != null && !region.isEmpty()) {
-            builder.and(post.board.region.eq(Region.valueOf(region)));
+            builder.and(post.board.region.eq(Region.fromString(region)));
         }
 
         JPAQuery<Post> query = jpaQueryFactory
