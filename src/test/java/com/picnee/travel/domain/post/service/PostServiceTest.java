@@ -48,7 +48,7 @@ class PostServiceTest {
         CreatePostReq postReq = CreatePostReq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .region(Region.KANSAI)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.RESTAURANT)
                 .build();
 
@@ -69,7 +69,7 @@ class PostServiceTest {
         ModifyPostReq modifyPostReq = ModifyPostReq.builder()
                 .title("수정된 테스트 제목")
                 .content("수정된 테스트 내용")
-                .region(Region.KANSAI)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.RESTAURANT)
                 .build();
 
@@ -86,7 +86,7 @@ class PostServiceTest {
         ModifyPostReq modifyPostReq = ModifyPostReq.builder()
                 .title("수정된 테스트 제목")
                 .content("수정된 테스트 내용")
-                .region(Region.KANSAI)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.RESTAURANT)
                 .build();
 
@@ -143,7 +143,7 @@ class PostServiceTest {
             CreatePostReq postReq = CreatePostReq.builder()
                     .title("테스트 제목 = " + i)
                     .content("테스트 내용 = " + i)
-                    .region(Region.KANSAI)
+                    .region(Region.OSAKA)
                     .boardCategory(BoardCategory.RESTAURANT)
                     .build();
 
@@ -163,7 +163,7 @@ class PostServiceTest {
             CreatePostReq postReq = CreatePostReq.builder()
                     .title("테스트 제목 = " + i)
                     .content("테스트 내용 = " + i)
-                    .region(Region.KANTO)
+                    .region(Region.OSAKA)
                     .boardCategory(BoardCategory.ACCOMMODATION)
                     .build();
 
@@ -182,13 +182,13 @@ class PostServiceTest {
             CreatePostReq postReq = CreatePostReq.builder()
                     .title("테스트 제목")
                     .content("테스트 내용")
-                    .region(Region.KUSHU)
+                    .region(Region.OSAKA)
                     .boardCategory(BoardCategory.ACCOMMODATION)
                     .build();
 
             postService.create(postReq, user);
         }
-        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "KUSHU", 0);
+        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "OSAKA", 0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }
@@ -199,7 +199,7 @@ class PostServiceTest {
         CreatePostReq postReq1 = CreatePostReq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .region(Region.KUSHU)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.ACCOMMODATION)
                 .build();
 
@@ -208,7 +208,7 @@ class PostServiceTest {
         CreatePostReq postReq2 = CreatePostReq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .region(Region.KUSHU)
+                .region(Region.OSAKA)
                 .boardCategory(BoardCategory.ACCOMMODATION)
                 .build();
 
@@ -217,14 +217,14 @@ class PostServiceTest {
         CreatePostReq postReq3 = CreatePostReq.builder()
                 .title("테스트 제목")
                 .content("테스트 내용")
-                .region(Region.KUSHU)
+                .region(Region.SAPPORO)
                 .boardCategory(BoardCategory.RESTAURANT)
                 .build();
 
         postService.create(postReq3, user);
 
         // 규슈, 숙박은 2개이기 때문에 2개가 나와야 한다.
-        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "KUSHU", 0);
+        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "OSAKA", 0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }
