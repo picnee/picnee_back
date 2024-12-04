@@ -5,6 +5,8 @@ import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.entity.CreateTestUser;
 import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.user.exception.LoginFailedException;
+import com.picnee.travel.domain.user.exception.NotFoundEmailException;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -84,7 +86,34 @@ public class UserServiceTest {
         assertThat(jwtTokenRes.getUserRes().getNickName()).isEqualTo("tester");
     }
 
+    @Test
+    @DisplayName("비밀번호 미일치 로그인 실패")
+    void test3() {
+        String email = "testUser@naver.com";
+        String failPassword = "failPassword";
+        LoginUserReq failLoginUserReq = LoginUserReq.builder()
+                .email(email)
+                .password(failPassword)
+                .build();
 
+        assertThatThrownBy(() -> userService.login(failLoginUserReq))
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessageContaining("비밀번호");
+    }
 
+    @Test
+    @DisplayName("갖고있지 않은 이메일 정보")
+    void test4() {
+        String failEmail = "unknown@naver.com";
+        String password = "abcd1234!";
+        LoginUserReq loginUserReq = LoginUserReq.builder()
+                .email(failEmail)
+                .password(password)
+                .build();
+
+        assertThatThrownBy(() -> userService.login(loginUserReq))
+                .isInstanceOf(NotFoundEmailException.class)
+                .hasMessage("존재하지 않는 계정입니다.");
+    }
 
 }
