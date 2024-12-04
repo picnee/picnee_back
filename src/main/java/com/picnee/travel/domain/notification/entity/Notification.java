@@ -37,7 +37,6 @@ public class Notification extends BaseEntity {
     @Column(name = "notification_type")
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
-    @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;

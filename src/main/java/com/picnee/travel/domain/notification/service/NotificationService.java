@@ -8,6 +8,7 @@ import com.picnee.travel.domain.notification.exception.NotFoundNotificationExcep
 import com.picnee.travel.domain.notification.exception.NotNotificationRecipientException;
 import com.picnee.travel.domain.notification.repository.NotificationRepository;
 import com.picnee.travel.domain.post.service.PostService;
+import com.picnee.travel.domain.postComment.service.PostCommentService;
 import com.picnee.travel.domain.review.service.ReviewService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
@@ -32,15 +33,19 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final ReviewService reviewService;
     private final PostService postService;
+    private final PostCommentService postCommentService;
+
+    // TODO 본인이 발행한 알림(본인이 작성한 게시글에 본인이 댓글 작성 등)은 뜨지 않게 하기
+    // TODO 중복 알림은 안 뜨게 하기(좋아요 토글 같은 경우는 적용 필요)
 
     /**
      * 알림 생성
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void create(NotificationEvent event) {
+    public Notification create(NotificationEvent event) {
         User user = findUserByTargetIdAndType(event.getTargetId(), event.getNotificationType());
 
-        notificationRepository.save(event.toEntity(user));
+        return notificationRepository.save(event.toEntity(user));
     }
 
     /**
@@ -73,7 +78,9 @@ public class NotificationService {
 
     public User findUserByTargetIdAndType(UUID targetId, NotificationType notificationType) {
         return switch (notificationType) {
-            case POST_COMMENT, POST_LIKE -> postService.findById(targetId)
+            case POST_COMMENT -> postService.findById(targetId)
+                    .getUser();
+            case COMMENT_LIKE -> postCommentService.findById(targetId)
                     .getUser();
             case REVIEW_SCORE -> reviewService.findById(targetId)
                     .getUser();

@@ -1,12 +1,11 @@
 package com.picnee.travel.domain.notification.eventListener;
 
 import com.picnee.travel.domain.notification.dto.event.PostCommentEvent;
-import com.picnee.travel.domain.notification.dto.event.PostLikeEvent;
+import com.picnee.travel.domain.notification.dto.event.CommentLikeEvent;
 import com.picnee.travel.domain.notification.dto.event.ReviewScoreEvent;
 import com.picnee.travel.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -23,7 +22,7 @@ public class NotificationEventListener {
     }
 
     @TransactionalEventListener
-    public void handlePostLikeEvent(PostLikeEvent event) {
+    public void handlePostLikeEvent(CommentLikeEvent event) {
         notificationService.create(event);
     }
 

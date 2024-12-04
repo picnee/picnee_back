@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.postComment.service;
 
+import com.picnee.travel.domain.notification.dto.event.PostCommentEvent;
 import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
@@ -15,6 +16,7 @@ import com.picnee.travel.domain.user.service.UserService;
 import com.picnee.travel.domain.userPostCommet.service.UserPostCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ public class PostCommentService {
     private final PostService postService;
     private final UserPostCommentService userPostCommentService;
     private final PostCommentRepository postCommentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 댓글 생성
@@ -41,6 +44,8 @@ public class PostCommentService {
     public PostComment create(UUID postId, CreatePostCommentReq dto, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
         Post post = postService.findByIdNotDeletedPost(postId);
+
+        eventPublisher.publishEvent(new PostCommentEvent(postId));
 
         return postCommentRepository.save(CreatePostCommentReq.toEntity(dto, user, post));
     }

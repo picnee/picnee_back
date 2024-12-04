@@ -9,24 +9,24 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-public class PostLikeEvent implements NotificationEvent {
-    private final UUID postId;
+public class CommentLikeEvent implements NotificationEvent {
+    private final UUID commentId;
 
     @Override
     public UUID getTargetId() {
-        return postId;
+        return commentId;
     }
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.POST_LIKE;
+        return NotificationType.COMMENT_LIKE;
     }
 
     @Override
     public Notification toEntity(User user) {
         return Notification.builder()
-                .notificationType(NotificationType.POST_LIKE)
-                .targetId(postId)
+                .notificationType(NotificationType.COMMENT_LIKE)
+                .targetId(commentId)
                 .isRead(false)
                 .user(user)
                 .build();
