@@ -16,6 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Description;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,13 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * 테스트에 사용할 user 데이터
+     * email : testUser@naver.com
+     * nickname : tester
+     * password : abcd1234!
+     * 
+     */
     @BeforeEach
     void setUp() throws Exception {
         userRepository.deleteAll();
@@ -55,10 +64,15 @@ public class UserServiceTest {
     @Test
     @DisplayName("유저 생성 성공")
     void test1() {
+
+        String email = "test@gmail.com";
+        String nickname = "testName";
+        String password = "abcd1234!";
+
         CreateUserReq createUserReq = CreateUserReq.builder()
-                .email("test@gmail.com")
-                .nickname("testName")
-                .password("abcd1234!")
+                .email(email)
+                .nickname(nickname)
+                .password(password)
                 .isMarketing(true)
                 .isAlarm(true)
                 .build();
@@ -66,30 +80,53 @@ public class UserServiceTest {
         User testUser = userService.create(createUserReq);
 
         assertThat(testUser).isNotNull();
-        assertThat(testUser.getEmail()).isEqualTo("test@gmail.com");
-        assertThat(testUser.getNickname()).isEqualTo("testName");
-        assertThat(passwordEncoder.matches("abcd1234!", testUser.getPassword())).isTrue();
+        assertThat(testUser.getEmail()).isEqualTo(email);
+        assertThat(testUser.getNickname()).isEqualTo(nickname);
+        assertThat(passwordEncoder.matches(password, testUser.getPassword())).isTrue();
         assertThat(testUser.getIsMarketing()).isTrue();
         assertThat(testUser.getIsAlarm()).isTrue();
     }
 
-    // Todo : 동일한유저 확인테스트 해야함
     @Test
-    @DisplayName("유저 생성 실패 - 이미 존재하는 닉네임")
+    @DisplayName("유저 생성 실패 - 이미 존재하는 이메일")
+    @Description("유니크 제약조건 확인")
     void test1_1() {
-        CreateUserReq createUserReq = CreateUserReq.builder()
-                .email("testUser@naver.com")
-                .nickname("tester")
+
+        String duplicatedEmail = "test@gmail.com";
+
+        CreateUserReq createDuplicateUserReq = CreateUserReq.builder()
+                .email(duplicatedEmail) // 중복된 이메일
+                .nickname("testUser")
                 .password("abcd1234!")
                 .isMarketing(true)
                 .isAlarm(true)
                 .build();
 
-//        Boolean findUser = userRepository.existsByNickname("tester");
-//
-//        System.out.println("test111" + findUser);
+        assertThatThrownBy(()-> {
+            userService.create(createDuplicateUserReq);
+            userRepository.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
+    }
 
-        assertThatThrownBy(()-> userService.create(createUserReq)).isInstanceOf(Exception.class);
+    @Test
+    @DisplayName("유저 생성 실패 - 이미 존재하는 닉네임")
+    @Description("유니크 제약조건 확인")
+    void test1_2() {
+
+        String duplicatedNickname = "tester";
+
+        CreateUserReq createDuplicateUserReq = CreateUserReq.builder()
+                .email("notDupleMail@gmail.com")
+                .nickname(duplicatedNickname) // 중복된 닉네임
+                .password("abcd1234!")
+                .isMarketing(true)
+                .isAlarm(true)
+                .build();
+
+        assertThatThrownBy(()-> {
+            userService.create(createDuplicateUserReq);
+            userRepository.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
@@ -111,7 +148,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("비밀번호 미일치 로그인 실패")
-    void test3() {
+    void test2_1() {
         String email = "testUser@naver.com";
         String failPassword = "failPassword";
         LoginUserReq failLoginUserReq = LoginUserReq.builder()
@@ -126,7 +163,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("갖고있지 않은 이메일 정보")
-    void test4() {
+    void test2_2() {
         String failEmail = "unknown@naver.com";
         String password = "abcd1234!";
         LoginUserReq loginUserReq = LoginUserReq.builder()
@@ -141,12 +178,34 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("닉네임 업데이트 테스트")
-    void test5() {
+    void test3() {
         String updateNickname = "updateNickName";
 
         User updatedUser = userService.updateNickname(user, updateNickname);
 
         assertThat(updatedUser.getNickname()).isEqualTo(updateNickname);
+    }
+
+    @Test
+    @DisplayName("기존과 동일한 닉네임 감지 테스트")
+    void test3_1() {
+        String duplicateNickname = "tester"; // 기존의 닉네임과 동일한 닉네임
+
+        assertThatThrownBy(() ->
+                userService.updateNickname(user, duplicateNickname)
+        ).isInstanceOf(Exception.class);
+    }
+
+    @Test
+    @DisplayName("중복 닉네임 감지 테스트")
+    @Description("유니크 제약조건 확인")
+    void test3_2() {
+        String duplicateNickname = "tester"; // 이미 존재하는 닉네임
+
+        assertThatThrownBy(() -> {
+            userService.updateNickname(anotherUser, duplicateNickname);
+            userRepository.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 
 }
