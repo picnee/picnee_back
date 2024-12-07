@@ -25,7 +25,7 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
                 .where(postComment.post.eq(post)
                         .and(postComment.isDeleted.isFalse())
                         .and(postComment.commentParent.isNull()))
-                .orderBy(postComment.createdAt.desc())
+                .orderBy(postComment.createdAt.asc())
                 .fetch();
     }
 }
