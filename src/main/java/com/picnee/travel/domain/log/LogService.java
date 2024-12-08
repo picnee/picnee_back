@@ -23,7 +23,7 @@ public class LogService {
     public LogRes getLog() {
 
         //리눅스 로그파일 위치
-        String filePath = "/picnee/picnee_back/build/libs/nohup.out";
+        String filePath = "/home/ubuntu/picnee_back/build/libs/nohup.out";
         File file = new File(filePath);
 
         if (!file.exists()) {
