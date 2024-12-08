@@ -47,7 +47,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public void create(CreateUserReq dto) {
+    public User create(CreateUserReq dto) {
         User user = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
@@ -63,7 +63,7 @@ public class UserService {
                 .state(State.ACTIVE)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     /**

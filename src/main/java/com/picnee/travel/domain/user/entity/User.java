@@ -41,9 +41,9 @@ public class User extends SoftDeleteBaseEntity {
     private String phoneNumber;
     @Column(name = "birth_date")
     private String birthDate;
-    @Column(name = "email")
+    @Column(unique = true, name = "email")
     private String email;
-    @Column(name = "nickname")
+    @Column(unique = true, name = "nickname")
     private String nickname;
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
