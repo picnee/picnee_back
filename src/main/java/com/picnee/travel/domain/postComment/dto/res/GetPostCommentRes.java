@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GetPostCommentRes {
 
+    private UUID commentId;
     private String content;
     private Long likes;
     private UserRes userRes;
@@ -28,6 +30,7 @@ public class GetPostCommentRes {
     public static List<GetPostCommentRes> from(List<PostComment> comments) {
         return comments.stream()
                 .map(comment -> GetPostCommentRes.builder()
+                        .commentId(comment.getId())
                         .content(comment.getContent())
                         .likes(comment.getLikes())
                         .userRes(UserRes.from(comment.getUser()))
