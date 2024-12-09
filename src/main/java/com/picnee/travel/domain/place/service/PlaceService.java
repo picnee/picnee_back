@@ -2,6 +2,7 @@ package com.picnee.travel.domain.place.service;
 
 import com.picnee.travel.domain.place.dto.req.CreatePlaceReq;
 import com.picnee.travel.domain.place.dto.res.FindPlaceRes;
+import com.picnee.travel.domain.place.entity.OpeningHours;
 import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final OpeningHoursService openingHoursService;
 
     @Transactional
-    public void create(CreatePlaceReq dto) {
-        placeRepository.save(CreatePlaceReq.toEntity(dto));
+    public String create(CreatePlaceReq dto) {
+        Place place = placeRepository.save(CreatePlaceReq.toEntity(dto));
+        openingHoursService.create(dto.getOpeningHoursList(), place);
+
+        return place.getId();
     }
 
     public FindPlaceRes getPlace(String placeId){
@@ -28,5 +33,5 @@ public class PlaceService {
 
         return FindPlaceRes.from(place);
     }
-
+    
 }

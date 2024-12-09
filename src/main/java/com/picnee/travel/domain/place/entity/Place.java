@@ -1,13 +1,16 @@
 package com.picnee.travel.domain.place.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.postComment.entity.PostComment;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -31,8 +34,6 @@ public class Place extends BaseEntity {
     private String formattedAddress;
     @Column(name = "formatted_phone_number")
     private String formattedPhoneNumber;
-    @Column(name = "opening_hours")
-    private String openingHours;
     @Column(name = "user_ratings_total")
     private Double userRatingsTotal;
     @Column(name = "website")
@@ -41,4 +42,7 @@ public class Place extends BaseEntity {
     private String lat;
     @Column(name = "lng")
     private String lng;
+    @Builder.Default
+    @OneToMany(mappedBy = "place", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<OpeningHours> openingHours = new ArrayList<>();
 }

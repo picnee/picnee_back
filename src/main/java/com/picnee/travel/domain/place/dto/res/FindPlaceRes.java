@@ -1,6 +1,6 @@
 package com.picnee.travel.domain.place.dto.res;
 
-import com.picnee.travel.domain.place.dto.req.OpeningHours;
+import com.picnee.travel.domain.place.dto.req.OpeningHoursReq;
 import com.picnee.travel.domain.place.entity.Place;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class FindPlaceRes {
     private String url;
     private String formattedAddress;
     private String formattedPhoneNumber;
-    private OpeningHours openingHours;
+    private OpeningHoursReq openingHoursReq;
     private Double userRatingsTotal;
     private String website;
     private String lat;
@@ -33,7 +33,6 @@ public class FindPlaceRes {
                 .url(place.getUrl())
                 .formattedAddress(place.getFormattedAddress())
                 .formattedPhoneNumber(place.getFormattedPhoneNumber())
-                .openingHours(null)
                 .userRatingsTotal(place.getUserRatingsTotal())
                 .website(place.getWebsite())
                 .lat(place.getLat())

@@ -140,7 +140,6 @@ CREATE TABLE `place` (
     `url`                    VARCHAR(255)	 NOT NULL,
     `formatted_address`      VARCHAR(255)	 NULL,
     `formatted_phone_number` VARCHAR(255)    NULL,
-    `opening_hours`          VARCHAR(255)    NULL,
     `user_ratings_total`     Double          NULL,
     `website`                VARCHAR(255)    NULL,
     `lat`                    VARCHAR(255)    NOT NULL,
@@ -241,4 +240,13 @@ CREATE TABLE `image` (
 	`deleted_at`           TIMESTAMP       NULL,
 	`is_deleted`           BOOLEAN         NOT NULL    DEFAULT FALSE,
     PRIMARY KEY (`image_id`)
+);
+
+CREATE TABLE `opening_hours` (
+     `opening_hours_id`     VARCHAR(36)      NOT NULL,
+     `place_id`			    VARCHAR(36)		 NOT NULL,
+     `day`                  VARCHAR(200)     NULL,
+     `time`                 VARCHAR(200)     NULL,
+     PRIMARY KEY (`opening_hours_id`),
+     FOREIGN KEY (`place_id`) REFERENCES `place`(`place_id`)
 );

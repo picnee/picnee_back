@@ -25,17 +25,15 @@ public class PlaceController implements PlaceApi {
     private final PlaceService placeService;
 
     @PostMapping
-    public ResponseEntity<Void> createPlace(@Valid @RequestBody CreatePlaceReq dto) {
-        placeService.create(dto);
-        return ResponseEntity.status(CREATED).build();
+    public ResponseEntity<String> createPlace(@Valid @RequestBody CreatePlaceReq dto) {
+        String placeId = placeService.create(dto);
+        return ResponseEntity.status(CREATED).body(placeId);
     }
 
     @GetMapping("/{placeId}")
     public ResponseEntity<FindPlaceRes> getPlace(@PathVariable("placeId") String placeId) {
-
         FindPlaceRes res = placeService.getPlace(placeId);
 
         return ResponseEntity.status(OK).body(res);
     }
 }
-
