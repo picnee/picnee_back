@@ -170,7 +170,7 @@ class PostServiceTest {
             postService.create(postReq, user);
         }
 
-        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", null, 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", null, 0);
 
         assertThat(posts.getTotalElements()).isEqualTo(3L);
     }
@@ -188,7 +188,7 @@ class PostServiceTest {
 
             postService.create(postReq, user);
         }
-        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "OSAKA", 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", 0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }
@@ -224,7 +224,7 @@ class PostServiceTest {
         postService.create(postReq3, user);
 
         // 규슈, 숙박은 2개이기 때문에 2개가 나와야 한다.
-        Page<FindPostRes> posts = postService.findPosts("ACCOMMODATION", "OSAKA", 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", 0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }

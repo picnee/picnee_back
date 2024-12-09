@@ -8,6 +8,7 @@ import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.exception.NotValidOwnerException;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.picnee.travel.global.exception.ErrorCode.NOT_VALID_OWNER_EXCEPTION;
 import static org.assertj.core.api.Assertions.*;
@@ -90,6 +93,22 @@ class PostCommentServiceTest {
                 .build();
 
         assertThatThrownBy(() -> postCommentService.update(post.getId(), postComment.getId(), req, anotherUser))
+                .isInstanceOf(NotValidOwnerException.class);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제한다.")
+    void test4() {
+        postCommentService.delete(post.getId(), postComment.getId(), user);
+        List<GetPostCommentRes> comments = postCommentService.getComments(post.getId(), user);
+
+        assertThat(comments).isEmpty();
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 실패 : 다른 사람의 댓글은 삭제하지 못한다.")
+    void test5() {
+        assertThatThrownBy(() -> postCommentService.delete(post.getId(), postComment.getId(), anotherUser))
                 .isInstanceOf(NotValidOwnerException.class);
     }
 
