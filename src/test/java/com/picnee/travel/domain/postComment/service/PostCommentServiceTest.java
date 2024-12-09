@@ -112,4 +112,18 @@ class PostCommentServiceTest {
                 .isInstanceOf(NotValidOwnerException.class);
     }
 
+    @Test
+    @DisplayName("댓글 조회 한다.")
+    void test6() {
+        for (int i = 0; i < 10; i++){
+            CreatePostCommentReq req = CreatePostCommentReq.builder()
+                    .content("댓글입니다.")
+                    .build();
+
+            postComment = postCommentService.create(post.getId(), req, user);
+        }
+
+        List<GetPostCommentRes> comments = postCommentService.getComments(post.getId(), user);
+        assertThat(comments.size()).isEqualTo(11L);
+    }
 }
