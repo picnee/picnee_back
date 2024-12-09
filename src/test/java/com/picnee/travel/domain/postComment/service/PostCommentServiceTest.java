@@ -10,6 +10,7 @@ import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
+import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeException;
 import com.picnee.travel.domain.postComment.exception.NotValidOwnerException;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.CreateTestUser;
@@ -159,5 +160,12 @@ class PostCommentServiceTest {
         PostComment likeComment = postCommentService.findById(postComment.getId());
 
         assertThat(likeComment.getLikes()).isEqualTo(2L);
+    }
+
+    @Test
+    @DisplayName("좋아요 실패 : 로그인한 사용자만 댓글 좋아요가 가능하다.")
+    void test10() {
+        assertThatThrownBy(() -> postCommentService.toggleLike(post.getId(), postComment.getId(), null))
+                .isInstanceOf(NotProvideCommentLikeException.class);
     }
 }
