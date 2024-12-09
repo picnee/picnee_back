@@ -111,7 +111,8 @@ public class PostCommentService {
 
         boolean likeState = userPostCommentService.incrementLike(postComment, user);
 
-        if (likeState) {
+        log.info("like state is {}", likeState);
+        if (!likeState) {
             postComment.addLike();
             return;
         }

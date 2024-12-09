@@ -126,4 +126,38 @@ class PostCommentServiceTest {
         List<GetPostCommentRes> comments = postCommentService.getComments(post.getId(), user);
         assertThat(comments.size()).isEqualTo(11L);
     }
+
+    @Test
+    @DisplayName("좋아요 성공 테스트")
+    void test7() {
+        postCommentService.toggleLike(post.getId(), postComment.getId(), user);
+        PostComment likeComment = postCommentService.findById(postComment.getId());
+
+        assertThat(likeComment.getLikes()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("좋아요는 두번 누르면 좋아요 취소 테스트")
+    void test8() {
+        postCommentService.toggleLike(post.getId(), postComment.getId(), user);
+        PostComment likeComment = postCommentService.findById(postComment.getId());
+        // user는 좋아요를 취소했다.
+        postCommentService.toggleLike(post.getId(), postComment.getId(), user);
+        // anotherUser는 좋아요를 했다.
+        postCommentService.toggleLike(post.getId(), postComment.getId(), anotherUser);
+
+        assertThat(likeComment.getLikes()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("좋아요 2개 테스트")
+    void test9() {
+        // user는 좋아요를 눌렀다.
+        postCommentService.toggleLike(post.getId(), postComment.getId(), user);
+        // anotherUser는 좋아요를 했다.
+        postCommentService.toggleLike(post.getId(), postComment.getId(), anotherUser);
+        PostComment likeComment = postCommentService.findById(postComment.getId());
+
+        assertThat(likeComment.getLikes()).isEqualTo(2L);
+    }
 }
