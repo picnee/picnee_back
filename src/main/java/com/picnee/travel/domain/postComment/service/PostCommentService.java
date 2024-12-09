@@ -8,6 +8,7 @@ import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.exception.NotFoundCommentException;
+import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeException;
 import com.picnee.travel.domain.postComment.exception.NotValidOwnerException;
 import com.picnee.travel.domain.postComment.repository.PostCommentRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -105,18 +106,31 @@ public class PostCommentService {
 
     @Transactional
     public void toggleLike(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
+        // 로그인한 사용자만 가능
+        if (isUserAuthenticated(auth)) {
+            throw new NotProvideCommentLikeException(NOT_PROVIDE_COMMENT_LIKE_EXCEPTION);
+        }
+
         postService.findByIdNotDeletedPost(postId);
         PostComment postComment = findByIdNotDeletedPostComment(commentId);
         User user = userService.findByEmail(auth.getEmail());
 
         boolean likeState = userPostCommentService.incrementLike(postComment, user);
 
-        if (likeState) {
+        if (!likeState) {
             postComment.addLike();
             return;
         }
 
         postComment.deleteLike();
+    }
+
+
+    /**
+     * 로그인한 유저인지 확인
+     */
+    private boolean isUserAuthenticated(AuthenticatedUserReq auth) {
+        return auth == null;
     }
 
     /**
