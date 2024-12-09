@@ -1,11 +1,7 @@
 package com.picnee.travel.domain.postComment.service;
 
-import com.picnee.travel.domain.board.entity.BoardCategory;
-import com.picnee.travel.domain.board.entity.Region;
-import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.entity.CreateTestPost;
 import com.picnee.travel.domain.post.entity.Post;
-import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
@@ -14,9 +10,7 @@ import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeExcep
 import com.picnee.travel.domain.postComment.exception.NotValidOwnerException;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.CreateTestUser;
-import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
