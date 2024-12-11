@@ -42,6 +42,9 @@ public class Place extends BaseEntity {
     private String lat;
     @Column(name = "lng")
     private String lng;
+    @Column(name = "types")
+    @Enumerated(EnumType.STRING)
+    private PlaceType types;
     @Builder.Default
     @OneToMany(mappedBy = "place", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<OpeningHours> openingHours = new ArrayList<>();

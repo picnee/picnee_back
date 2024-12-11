@@ -144,6 +144,7 @@ CREATE TABLE `place` (
     `website`                VARCHAR(255)    NULL,
     `lat`                    VARCHAR(255)    NOT NULL,
     `lng`                    VARCHAR(255)    NOT NULL,
+    `types`                  VARCHAR(255)    NOT NULL,
     `created_at`	         TIMESTAMP	     NOT NULL,
 	`modified_at`	         TIMESTAMP	     NOT NULL,
     PRIMARY KEY (`place_id`)

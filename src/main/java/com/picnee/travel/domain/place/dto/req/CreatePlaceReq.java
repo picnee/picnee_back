@@ -1,9 +1,12 @@
 package com.picnee.travel.domain.place.dto.req;
 
+import com.picnee.travel.domain.place.dto.PlaceTypeWeight;
 import com.picnee.travel.domain.place.entity.Place;
+import com.picnee.travel.domain.place.entity.PlaceType;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -20,9 +23,13 @@ public class CreatePlaceReq {
     private String website;
     private String lat;
     private String lng;
+    private List<String> types;
     private List<OpeningHoursReq> openingHoursList;
+    
 
     public static Place toEntity(CreatePlaceReq dto) {
+        PlaceType type = PlaceTypeWeight.filterType(dto.getTypes());
+
         return Place.builder()
                 .id(dto.getPlaceId())
                 .placeName(dto.getPlaceName())
@@ -33,6 +40,7 @@ public class CreatePlaceReq {
                 .website(dto.getWebsite())
                 .lat(dto.getLat())
                 .lng(dto.getLng())
+                .types(type)
                 .build();
     }
 }
