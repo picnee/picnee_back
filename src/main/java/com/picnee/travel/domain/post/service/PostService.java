@@ -110,9 +110,9 @@ public class PostService {
     /**
      * 문의 글 전체 조회
      */
-    public Page<FindPostRes> findPosts(String boardCategory, String region, int page) {
+    public Page<FindPostRes> findPosts(String boardCategory, String region, String sort, int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<Post> posts = postRepository.findByPosts(boardCategory, region, pageable);
+        Page<Post> posts = postRepository.findByPosts(boardCategory, region, sort, pageable);
 
         return FindPostRes.paging(posts);
     }

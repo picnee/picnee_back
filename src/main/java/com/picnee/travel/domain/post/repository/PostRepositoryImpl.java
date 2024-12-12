@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+import static com.picnee.travel.domain.postComment.entity.QPostComment.postComment;
+
 @Slf4j
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom{
@@ -23,7 +25,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Post> findByPosts(String boardCategory, String region, Pageable pageable) {
+    public Page<Post> findByPosts(String boardCategory, String region, String sort, Pageable pageable) {
         QPost post = QPost.post;
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -37,10 +39,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
             builder.and(post.board.region.eq(Region.fromString(region)));
         }
 
+        log.info("sort = {} ", sort);
         JPAQuery<Post> query = jpaQueryFactory
                 .selectFrom(post)
-                .where(builder)
-                .orderBy(post.createdAt.desc());
+                .where(builder);
+
+        switch (sort) {
+            case "new" -> query.orderBy(post.createdAt.desc());
+            case "viewed" -> query.orderBy(post.viewed.desc(), post.createdAt.desc());
+            case "comment" -> query.orderBy(post.comments.size().desc(), post.createdAt.desc());
+            default -> query.orderBy(post.createdAt.desc());
+        }
 
         List<Post> result = query
                 .offset(pageable.getOffset())
