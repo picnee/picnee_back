@@ -140,10 +140,11 @@ CREATE TABLE `place` (
     `url`                    VARCHAR(255)	 NOT NULL,
     `formatted_address`      VARCHAR(255)	 NULL,
     `formatted_phone_number` VARCHAR(255)    NULL,
-    `user_ratings_total`     Double          NULL,
+    `rating`                 Double          NULL,
     `website`                VARCHAR(255)    NULL,
     `lat`                    VARCHAR(255)    NOT NULL,
     `lng`                    VARCHAR(255)    NOT NULL,
+    `types`                  VARCHAR(255)    NOT NULL,
     `created_at`	         TIMESTAMP	     NOT NULL,
 	`modified_at`	         TIMESTAMP	     NOT NULL,
     PRIMARY KEY (`place_id`)

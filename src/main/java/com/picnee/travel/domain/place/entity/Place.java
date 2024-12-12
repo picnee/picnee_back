@@ -34,14 +34,17 @@ public class Place extends BaseEntity {
     private String formattedAddress;
     @Column(name = "formatted_phone_number")
     private String formattedPhoneNumber;
-    @Column(name = "user_ratings_total")
-    private Double userRatingsTotal;
+    @Column(name = "rating")
+    private Double rating;
     @Column(name = "website")
     private String website;
     @Column(name = "lat")
     private String lat;
     @Column(name = "lng")
     private String lng;
+    @Column(name = "types")
+    @Enumerated(EnumType.STRING)
+    private PlaceType types;
     @Builder.Default
     @OneToMany(mappedBy = "place", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<OpeningHours> openingHours = new ArrayList<>();
