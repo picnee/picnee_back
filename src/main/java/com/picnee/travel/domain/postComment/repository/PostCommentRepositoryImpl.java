@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +27,17 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
                         .and(postComment.isDeleted.isFalse())
                         .and(postComment.commentParent.isNull()))
                 .orderBy(postComment.createdAt.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<PostComment> findChildrenByParentId(UUID commentId) {
+        QPostComment postComment = QPostComment.postComment;
+
+        return jpaQueryFactory
+                .selectFrom(postComment)
+                .where(postComment.commentParent.id.eq(commentId)
+                        .and(postComment.isDeleted.isFalse()))
                 .fetch();
     }
 }

@@ -7,6 +7,7 @@ import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UuidGenerator;
@@ -24,6 +25,7 @@ import static org.hibernate.annotations.UuidGenerator.Style.RANDOM;
 @Entity
 @Table(name = "post_comment")
 @SuperBuilder
+@DynamicUpdate
 @AllArgsConstructor
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor(access = PROTECTED)
