@@ -19,7 +19,7 @@ public class CreatePlaceReq {
     private String url;
     private String formattedAddress;
     private String formattedPhoneNumber;
-    private Double userRatingsTotal;
+    private Double rating;
     private String website;
     private String lat;
     private String lng;
@@ -36,7 +36,7 @@ public class CreatePlaceReq {
                 .url(dto.getUrl())
                 .formattedAddress(dto.getFormattedAddress())
                 .formattedPhoneNumber(dto.getFormattedPhoneNumber())
-                .userRatingsTotal(dto.getUserRatingsTotal())
+                .rating(dto.getRating())
                 .website(dto.getWebsite())
                 .lat(dto.getLat())
                 .lng(dto.getLng())
