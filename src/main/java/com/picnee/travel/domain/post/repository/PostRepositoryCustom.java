@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface PostRepositoryCustom {
     Page<Post> findByPosts(String boardCategory, String region, String sort, Pageable pageable);
 
-    Page<Post> findMyPosts(UUID userId, Pageable pageable);
+    Page<Post> getMyPosts(UUID userId, Pageable pageable);
 }

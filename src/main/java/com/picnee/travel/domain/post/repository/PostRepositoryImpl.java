@@ -68,7 +68,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     }
 
     @Override
-    public Page<Post> findMyPosts(UUID userId, Pageable pageable) {
+    public Page<Post> getMyPosts(UUID userId, Pageable pageable) {
         QPost post = QPost.post;
 
         JPAQuery<Post> query = jpaQueryFactory

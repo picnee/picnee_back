@@ -20,13 +20,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
-import static org.springframework.transaction.annotation.Propagation.*;
 
 @Slf4j
 @Service
@@ -129,7 +127,7 @@ public class PostService {
         User user = userService.findByEmail(auth.getEmail());
         Pageable pageable = PageRequest.of(page, 10);
 
-        Page<Post> myPosts = postRepository.findMyPosts(user.getId(), pageable);
+        Page<Post> myPosts = postRepository.getMyPosts(user.getId(), pageable);
 
         return FindPostRes.paging(myPosts);
     }
