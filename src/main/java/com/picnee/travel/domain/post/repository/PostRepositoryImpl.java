@@ -40,14 +40,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
             builder.and(post.board.region.eq(Region.fromString(region)));
         }
 
-        log.info("sort = {} ", sort);
         JPAQuery<Post> query = jpaQueryFactory
                 .selectFrom(post)
                 .where(builder);
 
         switch (sort) {
             case "new" -> query.orderBy(post.createdAt.desc());
-            case "viewed" -> query.orderBy(post.viewed.desc(), post.createdAt.desc());
+            case "popular" -> query.orderBy(post.viewed.desc(), post.createdAt.desc());
             case "comment" -> query.orderBy(post.comments.size().desc(), post.createdAt.desc());
             default -> query.orderBy(post.createdAt.desc());
         }
