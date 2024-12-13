@@ -98,7 +98,7 @@ class PostServiceTest {
     @DisplayName("자유 토크 게시글 삭제 성공")
     void test4() {
         postService.delete(post.getId(), user);
-        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+        Page<FindPostRes> posts = postService.findPosts(null, null, "new",0);
         assertThat(posts.getTotalElements()).isEqualTo(0L);
     }
 
@@ -108,7 +108,7 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.delete(post.getId(), anotherUser))
                 .isInstanceOf(NotPostAuthorException.class);
 
-        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+        Page<FindPostRes> posts = postService.findPosts(null, null, "new",0);
         assertThat(posts.getTotalElements()).isEqualTo(1L);
     }
 
@@ -151,7 +151,7 @@ class PostServiceTest {
         }
 
         // 5 + 1 = 6개의 게시글이 나와야 한다.
-        Page<FindPostRes> posts = postService.findPosts(null, null, 0);
+        Page<FindPostRes> posts = postService.findPosts(null, null, "new",0);
 
         assertThat(posts.getTotalElements()).isEqualTo(6L);
     }
@@ -170,7 +170,7 @@ class PostServiceTest {
             postService.create(postReq, user);
         }
 
-        Page<FindPostRes> posts = postService.findPosts("숙박", null, 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", null, "new",0);
 
         assertThat(posts.getTotalElements()).isEqualTo(3L);
     }
@@ -188,7 +188,7 @@ class PostServiceTest {
 
             postService.create(postReq, user);
         }
-        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", "new",0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }
@@ -224,7 +224,7 @@ class PostServiceTest {
         postService.create(postReq3, user);
 
         // 규슈, 숙박은 2개이기 때문에 2개가 나와야 한다.
-        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", 0);
+        Page<FindPostRes> posts = postService.findPosts("숙박", "오사카", "new",0);
 
         assertThat(posts.getTotalElements()).isEqualTo(2L);
     }

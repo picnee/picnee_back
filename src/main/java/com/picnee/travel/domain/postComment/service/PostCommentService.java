@@ -1,10 +1,13 @@
 package com.picnee.travel.domain.postComment.service;
 
 import com.picnee.travel.domain.notification.dto.event.PostCommentEvent;
+import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.post.exception.NotAuthException;
 import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.res.GetMyPostCommentRes;
 import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.exception.NotFoundCommentException;
@@ -18,6 +21,9 @@ import com.picnee.travel.domain.userPostCommet.service.UserPostCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +86,10 @@ public class PostCommentService {
 
         validOwner(postComment, user);
 
+        // 부모 댓글과 자식댓글 삭제
+        List<PostComment> childComments = postCommentRepository.findChildrenByParentId(postComment.getId());
         postComment.softDelete();
+        childComments.forEach(PostComment::softDelete);
     }
 
     /**
@@ -123,6 +132,21 @@ public class PostCommentService {
         }
 
         postComment.deleteLike();
+    }
+
+    /**
+     * 내가 작성한 댓글 확인
+     */
+    public Page<GetMyPostCommentRes> getMyComments(int page, AuthenticatedUserReq auth) {
+        if(isUserAuthenticated(auth)) {
+            throw new NotAuthException(NOT_AUTH_EXCEPTION);
+        }
+
+        User user = userService.findByEmail(auth.getEmail());
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<PostComment> myComments = postCommentRepository.getMyComments(pageable, user.getId());
+        return GetMyPostCommentRes.paging(myComments);
     }
 
 

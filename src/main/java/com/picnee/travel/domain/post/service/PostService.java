@@ -6,6 +6,7 @@ import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.post.exception.NotAuthException;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
 import com.picnee.travel.domain.post.repository.PostRepository;
@@ -19,13 +20,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
-import static org.springframework.transaction.annotation.Propagation.*;
 
 @Slf4j
 @Service
@@ -110,11 +109,27 @@ public class PostService {
     /**
      * 문의 글 전체 조회
      */
-    public Page<FindPostRes> findPosts(String boardCategory, String region, int page) {
+    public Page<FindPostRes> findPosts(String boardCategory, String region, String sort, int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<Post> posts = postRepository.findByPosts(boardCategory, region, pageable);
+        Page<Post> posts = postRepository.findByPosts(boardCategory, region, sort, pageable);
 
         return FindPostRes.paging(posts);
+    }
+
+    /**
+     * 내가 작성한 게시글 조회
+     */
+    public Page<FindPostRes> getMyPosts(AuthenticatedUserReq auth, int page) {
+        if(!isUserAuthenticated(auth)) {
+            throw new NotAuthException(NOT_AUTH_EXCEPTION);
+        }
+
+        User user = userService.findByEmail(auth.getEmail());
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<Post> myPosts = postRepository.getMyPosts(user.getId(), pageable);
+
+        return FindPostRes.paging(myPosts);
     }
 
     /**

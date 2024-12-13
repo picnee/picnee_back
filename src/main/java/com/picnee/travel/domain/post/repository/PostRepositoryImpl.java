@@ -15,6 +15,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static com.picnee.travel.domain.postComment.entity.QPostComment.postComment;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Post> findByPosts(String boardCategory, String region, Pageable pageable) {
+    public Page<Post> findByPosts(String boardCategory, String region, String sort, Pageable pageable) {
         QPost post = QPost.post;
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -39,8 +42,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         JPAQuery<Post> query = jpaQueryFactory
                 .selectFrom(post)
-                .where(builder)
-                .orderBy(post.createdAt.desc());
+                .where(builder);
+
+        switch (sort) {
+            case "new" -> query.orderBy(post.createdAt.desc());
+            case "popular" -> query.orderBy(post.viewed.desc(), post.createdAt.desc());
+            case "comment" -> query.orderBy(post.comments.size().desc(), post.createdAt.desc());
+            default -> query.orderBy(post.createdAt.desc());
+        }
 
         List<Post> result = query
                 .offset(pageable.getOffset())
@@ -51,6 +60,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         .select(post.count())
                         .from(post)
                         .where(builder) // 동적 조건 동일하게 사용
+                        .fetchOne())
+                .orElse(0L);
+
+        return new PageImpl<>(result, pageable, total);
+    }
+
+    @Override
+    public Page<Post> getMyPosts(UUID userId, Pageable pageable) {
+        QPost post = QPost.post;
+
+        JPAQuery<Post> query = jpaQueryFactory
+                .selectFrom(post)
+                .where(post.isDeleted.isFalse(),
+                        post.user.id.eq(userId))
+                .orderBy(post.createdAt.desc());
+
+        List<Post> result = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = Optional.ofNullable(jpaQueryFactory
+                        .select(post.count())
+                        .from(post)
+                        .where(post.isDeleted.isFalse(),
+                                post.user.id.eq(userId)) // 동적 조건 동일하게 사용
                         .fetchOne())
                 .orElse(0L);
 

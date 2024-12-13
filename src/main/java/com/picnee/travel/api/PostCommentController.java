@@ -3,6 +3,7 @@ package com.picnee.travel.api;
 import com.picnee.travel.api.in.PostCommentApi;
 import com.picnee.travel.domain.postComment.dto.req.CreatePostCommentReq;
 import com.picnee.travel.domain.postComment.dto.req.UpdatePostCommentReq;
+import com.picnee.travel.domain.postComment.dto.res.GetMyPostCommentRes;
 import com.picnee.travel.domain.postComment.dto.res.GetPostCommentRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.service.PostCommentService;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Fetch;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +79,13 @@ public class PostCommentController implements PostCommentApi {
                                                   @AuthenticatedUser AuthenticatedUserReq auth) {
         postCommentService.toggleLike(postId, commentId, auth);
         return ResponseEntity.status(OK).build();
+    }
+
+    @GetMapping("/my-comments")
+    public ResponseEntity<Page<GetMyPostCommentRes>> getMyPostComments(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                       @AuthenticatedUser AuthenticatedUserReq auth) {
+        Page<GetMyPostCommentRes> res = postCommentService.getMyComments(page, auth);
+        return ResponseEntity.status(OK).body(res);
     }
 }
 

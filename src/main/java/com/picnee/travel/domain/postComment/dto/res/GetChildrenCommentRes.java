@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GetChildrenCommentRes {
 
+    private UUID commentId;
     private String content;
     private Long likes;
     private UserRes userRes;
@@ -22,6 +24,7 @@ public class GetChildrenCommentRes {
     public static List<GetChildrenCommentRes> from(List<PostComment> replies) {
         return replies.stream()
                 .map(reply -> GetChildrenCommentRes.builder()
+                        .commentId(reply.getId())
                         .content(reply.getContent())
                         .likes(reply.getLikes())
                         .userRes(UserRes.from(reply.getUser()))
