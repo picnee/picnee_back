@@ -29,4 +29,7 @@ public interface PostApi {
 
     @Operation(summary = "게시글 전체 조회", description = "게시글을 전체 조회한다.")
     public ResponseEntity<Page<FindPostRes>> findPosts(String boardCategory, String region, String sort, int page);
+
+    @Operation(summary = "작성한 게시글 조회", description = "자신이 작성한 게시글만 조회한다.")
+    public ResponseEntity<Page<FindPostRes>> getMyPosts(int page, AuthenticatedUserReq auth);
 }

@@ -6,6 +6,7 @@ import com.picnee.travel.domain.post.dto.req.CreatePostReq;
 import com.picnee.travel.domain.post.dto.req.ModifyPostReq;
 import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.post.entity.Post;
+import com.picnee.travel.domain.post.exception.NotAuthException;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.post.exception.NotPostAuthorException;
 import com.picnee.travel.domain.post.repository.PostRepository;
@@ -115,6 +116,22 @@ public class PostService {
         Page<Post> posts = postRepository.findByPosts(boardCategory, region, sort, pageable);
 
         return FindPostRes.paging(posts);
+    }
+
+    /**
+     * 내가 작성한 게시글 조회
+     */
+    public Page<FindPostRes> getMyPosts(AuthenticatedUserReq auth, int page) {
+        if(!isUserAuthenticated(auth)) {
+            throw new NotAuthException(NOT_AUTH_EXCEPTION);
+        }
+
+        User user = userService.findByEmail(auth.getEmail());
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Page<Post> myPosts = postRepository.findMyPosts(user.getId(), pageable);
+
+        return FindPostRes.paging(myPosts);
     }
 
     /**

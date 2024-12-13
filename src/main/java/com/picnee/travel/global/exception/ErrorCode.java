@@ -28,6 +28,7 @@ public enum ErrorCode {
     NOT_NOTIFICATION_RECIPIENT_EXCEPTION(UNAUTHORIZED, "G007", "알림 수신자가 아닙니다. 본인의 알림만 읽을 수 있습니다."),
     NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G008", "올바르지 않은 소셜 로그인입니다."),
     NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G009", "댓글 좋아요는 로그인시 가능합니다."),
+    NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G010", "로그인한 유저만 접근가능합니다."),
 
     /**
      * 403

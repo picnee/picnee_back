@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.picnee.travel.domain.postComment.entity.QPostComment.postComment;
 
@@ -60,6 +61,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                         .select(post.count())
                         .from(post)
                         .where(builder) // 동적 조건 동일하게 사용
+                        .fetchOne())
+                .orElse(0L);
+
+        return new PageImpl<>(result, pageable, total);
+    }
+
+    @Override
+    public Page<Post> findMyPosts(UUID userId, Pageable pageable) {
+        QPost post = QPost.post;
+
+        JPAQuery<Post> query = jpaQueryFactory
+                .selectFrom(post)
+                .where(post.isDeleted.isFalse(),
+                        post.user.id.eq(userId))
+                .orderBy(post.createdAt.desc());
+
+        List<Post> result = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = Optional.ofNullable(jpaQueryFactory
+                        .select(post.count())
+                        .from(post)
+                        .where(post.isDeleted.isFalse(),
+                                post.user.id.eq(userId)) // 동적 조건 동일하게 사용
                         .fetchOne())
                 .orElse(0L);
 
