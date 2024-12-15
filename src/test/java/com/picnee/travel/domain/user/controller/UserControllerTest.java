@@ -131,7 +131,6 @@ class UserControllerTest {
 
     }
 
-    //TODO : 여기부터
     @Test
     @DisplayName("내정보 변경 성공 response 테스트")
     void testUpdateUserSuccess() throws Exception {
