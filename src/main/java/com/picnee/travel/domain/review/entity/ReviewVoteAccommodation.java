@@ -29,7 +29,6 @@ public class ReviewVoteAccommodation {
 
     @Id
     @EqualsAndHashCode.Include
-    @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;

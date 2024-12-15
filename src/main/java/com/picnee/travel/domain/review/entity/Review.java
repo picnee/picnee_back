@@ -39,17 +39,18 @@ public class Review extends SoftDeleteBaseEntity {
     @Column(name = "content")
     private String content;
     @Column(name = "is_vote_review")
-    private Boolean isVoteReview;
+    private boolean isVoteReview;
     @Column(name = "is_smoking")
-    private Boolean isSmoking;
+    private boolean isSmoking;
     @Column(name = "is_card")
-    private Boolean isCard;
-    @Column(name = "is_korean_employee")
-    private Boolean isKoreanEmployee;
+    private boolean isCard;
+    @Column(name = "is_kiosk")
+    private boolean isKiosk;
     @Column(name = "is_korean_menu")
-    private Boolean isKoreanMenu;
+    private boolean isKoreanMenu;
     @Column(name = "recommendation_status")
-    private String recommendationStatus;
+    @Enumerated(EnumType.STRING)
+    private RecommendationStatus recommendationStatus;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;

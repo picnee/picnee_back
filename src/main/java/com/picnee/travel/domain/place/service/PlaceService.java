@@ -28,10 +28,13 @@ public class PlaceService {
     }
 
     public FindPlaceRes getPlace(String placeId){
-        Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new IllegalArgumentException("여기에 404보내"));
-
+        Place place = findById(placeId);
         return FindPlaceRes.from(place);
+    }
+
+    public Place findById(String placeId){
+        return placeRepository.findById(placeId)
+                .orElseThrow(() -> new IllegalArgumentException("여기에 404보내"));
     }
     
 }
