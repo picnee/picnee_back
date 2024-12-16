@@ -23,7 +23,6 @@ import java.util.UUID;
 public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final EntityManager entityManager;
 
     @Override
     public List<PostComment> findByCommentsOfPost(Post post) {
