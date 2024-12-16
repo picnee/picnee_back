@@ -19,4 +19,7 @@ public interface ReviewApi {
 
     @Operation(summary = "리뷰 전체 조회", description = "장소에 대한 리뷰를 전체조회한다.")
     ResponseEntity<Page<GetReviewRes>> getReviews(String placeId, AuthenticatedUserReq auth, int page);
+
+    @Operation(summary = "리뷰 삭제", description = "장소를 삭제한다.")
+    ResponseEntity<Void> deleteReview(UUID reviewId, AuthenticatedUserReq auth);
 }

@@ -29,6 +29,7 @@ public enum ErrorCode {
     NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G008", "올바르지 않은 소셜 로그인입니다."),
     NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G009", "댓글 좋아요는 로그인시 가능합니다."),
     NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G010", "로그인한 유저만 접근가능합니다."),
+    NOT_REVIEW_AUTHOR_EXCEPTION(UNAUTHORIZED, "G011", "리뷰의 작성자가 아닙니다. 본인이 작성한 리뷰만 수정/삭제가 가능합니다."),
 
     /**
      * 403

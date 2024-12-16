@@ -1,5 +1,7 @@
 package com.picnee.travel.domain.review.dto.req;
 
+import com.picnee.travel.domain.review.entity.Review;
+import com.picnee.travel.domain.review.entity.ReviewVoteTouristspot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +17,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class CreateTouristspotVoteReviewReq {
+public class CreateTouristspotVoteReviewReq extends BaseReviewReq {
     @NotNull
     private UUID    reviewId;
     @NotNull
@@ -24,4 +26,13 @@ public class CreateTouristspotVoteReviewReq {
     private boolean isCrowded;
     @NotNull
     private boolean isExperiencePositive;
+
+    public ReviewVoteTouristspot toEntity(Review review) {
+        return ReviewVoteTouristspot.builder()
+                .id(review.getId())
+                .isAccessibilityPositive(isAccessibilityPositive)
+                .isCrowded(isCrowded)
+                .isExperiencePositive(isExperiencePositive)
+                .build();
+    }
 }

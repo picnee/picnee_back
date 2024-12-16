@@ -3,6 +3,7 @@ package com.picnee.travel.domain.place.dto.req;
 import com.picnee.travel.domain.place.dto.PlaceTypeWeight;
 import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.entity.PlaceType;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -14,15 +15,21 @@ import java.util.Map;
 @AllArgsConstructor
 public class CreatePlaceReq {
 
+    @NotNull(message = "장소는 고유번호는 필수입니다.")
     private String placeId;
+    @NotNull(message = "장소 이름은 필수입니다.")
     private String placeName;
+    @NotNull(message = "URL은 필수 값입니다.")
     private String url;
     private String formattedAddress;
     private String formattedPhoneNumber;
     private Double rating;
     private String website;
+    @NotNull(message = "위도는 필수입니다.")
     private String lat;
+    @NotNull(message = "경도는 필수입니다.")
     private String lng;
+    @NotNull(message = "카테고리는 필수입니다.")
     private List<String> types;
     private List<OpeningHoursReq> openingHoursList;
     

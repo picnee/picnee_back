@@ -40,4 +40,12 @@ public class ReviewController implements ReviewApi {
         Page<GetReviewRes> res = reviewService.getReviews(placeId, auth, page);
         return ResponseEntity.status(OK).body(res);
     }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") UUID reviewId,
+                                             @AuthenticatedUser AuthenticatedUserReq auth) {
+
+        reviewService.deleteReview(reviewId, auth);
+        return ResponseEntity.status(OK).build();
+    }
 }

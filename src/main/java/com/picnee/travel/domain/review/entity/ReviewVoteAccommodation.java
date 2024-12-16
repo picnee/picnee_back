@@ -33,9 +33,9 @@ public class ReviewVoteAccommodation {
     @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
     @Column(name = "is_cleanliness_positive")
-    private Boolean isCleanlinessPositive;
+    private boolean isCleanlinessPositive;
     @Column(name = "is_accessibility_positive")
-    private Boolean accessibilityPositive;
+    private boolean isAccessibilityPositive;
     @Column(name = "is_service_positive")
-    private Boolean servicePositive;
+    private boolean isServicePositive;
 }

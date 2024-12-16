@@ -57,4 +57,11 @@ public class Review extends SoftDeleteBaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
+
+    /**
+     * 리뷰 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }
