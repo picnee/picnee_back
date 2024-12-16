@@ -3,23 +3,18 @@ package com.picnee.travel.domain.user.service;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
-import com.picnee.travel.domain.user.dto.req.UpdateUser;
+import com.picnee.travel.domain.user.dto.req.UpdateUserReq;
 import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
-import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.Role;
 import com.picnee.travel.domain.user.entity.State;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.exception.*;
 import com.picnee.travel.domain.user.repository.UserRepository;
-import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.jwt.provider.TokenProvider;
 import com.picnee.travel.global.redis.service.RedisService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.antlr.v4.runtime.Token;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static com.picnee.travel.domain.user.entity.State.*;
@@ -47,7 +41,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public void create(CreateUserReq dto) {
+    public User create(CreateUserReq dto) {
         User user = User.builder()
                 .email(dto.getEmail())
                 .nickname(dto.getNickname())
@@ -63,7 +57,7 @@ public class UserService {
                 .state(State.ACTIVE)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     /**
@@ -121,7 +115,7 @@ public class UserService {
      * 내 정보 수정
      */
     @Transactional
-    public User updateUser(AuthenticatedUserReq auth, UpdateUser dto) {
+    public User updateUser(AuthenticatedUserReq auth, UpdateUserReq dto) {
         User user = findByEmail(auth.getEmail());
 
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
