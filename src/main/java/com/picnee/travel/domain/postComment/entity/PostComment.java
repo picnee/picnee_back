@@ -62,10 +62,6 @@ public class PostComment extends SoftDeleteBaseEntity {
         this.content = dto.getContent() == null ? this.content : dto.getContent();
     }
 
-    public void softDelete() {
-        super.delete();
-    }
-
     /**
      * 좋아요 추가
      */
