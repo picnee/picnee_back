@@ -1,12 +1,13 @@
 package com.picnee.travel.domain.postComment.repository;
 
 import com.picnee.travel.domain.post.entity.Post;
-import com.picnee.travel.domain.post.entity.QPost;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.postComment.entity.QPostComment;
-import com.picnee.travel.domain.user.entity.User;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
+    private final EntityManager entityManager;
 
     @Override
     public List<PostComment> findByCommentsOfPost(Post post) {
@@ -38,14 +40,24 @@ public class PostCommentRepositoryImpl implements PostCommentRepositoryCustom{
     }
 
     @Override
-    public List<PostComment> findChildrenByParentId(UUID commentId) {
+    public void findChildrenByParentId(UUID commentId) {
         QPostComment postComment = QPostComment.postComment;
 
-        return jpaQueryFactory
-                .selectFrom(postComment)
-                .where(postComment.commentParent.id.eq(commentId)
-                        .and(postComment.isDeleted.isFalse()))
+        List<UUID> commentIds = jpaQueryFactory
+                .select(postComment.id)
+                .from(postComment)
+                .where(postComment.isDeleted.eq(false)
+                        .and(postComment.id.eq(commentId)
+                                .or(postComment.commentParent.id.eq(commentId))))
                 .fetch();
+
+        if (!commentIds.isEmpty()) {
+            jpaQueryFactory
+                    .update(postComment)
+                    .set(postComment.isDeleted, true)
+                    .where(postComment.id.in(commentIds))
+                    .execute();
+        }
     }
 
     @Override
