@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.postComment.dto.res;
 
+import com.picnee.travel.domain.post.dto.res.FindMyPostRes;
 import com.picnee.travel.domain.post.dto.res.FindPostRes;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.user.dto.res.UserRes;
@@ -24,19 +25,19 @@ import static lombok.AccessLevel.PROTECTED;
 public class GetMyPostCommentRes {
 
     private UUID commentId;
-    private UUID postId;
     private String content;
     private Long likes;
     private UserRes userRes;
+    private FindMyPostRes findMyPostRes;
     private LocalDateTime createdAt;
 
     private static GetMyPostCommentRes from(PostComment postComment) {
         return GetMyPostCommentRes.builder()
                 .commentId(postComment.getId())
-                .postId(postComment.getPost().getId())
                 .content(postComment.getContent())
                 .likes(postComment.getLikes())
                 .userRes(UserRes.from(postComment.getUser()))
+                .findMyPostRes(FindMyPostRes.from(postComment.getPost()))
                 .createdAt(postComment.getCreatedAt())
                 .build();
     }
