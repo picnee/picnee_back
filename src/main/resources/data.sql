@@ -178,7 +178,7 @@ CREATE TABLE `review` (
 	`is_vote_review`          BOOLEAN        NOT NULL    DEFAULT FALSE,
 	`is_smoking`              BOOLEAN        NOT NULL    DEFAULT FALSE,
 	`is_card`                 BOOLEAN        NOT NULL    DEFAULT FALSE,
-	`is_korean_employee`      BOOLEAN        NOT NULL    DEFAULT FALSE,
+	`is_kiosk`                BOOLEAN        NOT NULL    DEFAULT FALSE,
 	`is_korean_menu`          BOOLEAN        NOT NULL    DEFAULT FALSE,
 	`recommendation_status`    VARCHAR(15)    NOT NULL    COMMENT '추천/보통/비추천',
 	`created_at`              TIMESTAMP      NOT NULL,

@@ -29,6 +29,7 @@ public enum ErrorCode {
     NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G008", "올바르지 않은 소셜 로그인입니다."),
     NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G009", "댓글 좋아요는 로그인시 가능합니다."),
     NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G010", "로그인한 유저만 접근가능합니다."),
+    NOT_REVIEW_AUTHOR_EXCEPTION(UNAUTHORIZED, "G011", "리뷰의 작성자가 아닙니다. 본인이 작성한 리뷰만 수정/삭제가 가능합니다."),
 
     /**
      * 403
@@ -47,6 +48,7 @@ public enum ErrorCode {
     NOT_FOUND_BOARD_REGION_EXCEPTION(NOT_FOUND, "G006", "서비스 하지 않는 지역입니다."),
     NOT_FOUND_COMMENT_EXCEPTION(NOT_FOUND, "G007", "존재하지 않는 댓글입니다."),
     NOT_FOUND_NOTIFICATION_EXCEPTION(NOT_FOUND, "G008", "존재하지 않는 알림입니다."),
+    NOT_FOUND_REVIEW_EXCEPTION(NOT_FOUND, "G009", "존재하지 않는 리뷰입니다."),
 
     /**
      * 500
