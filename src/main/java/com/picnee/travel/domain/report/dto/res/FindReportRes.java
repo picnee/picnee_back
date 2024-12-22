@@ -4,7 +4,6 @@ import com.picnee.travel.domain.report.entity.Report;
 import com.picnee.travel.domain.report.entity.ReportTargetType;
 import com.picnee.travel.domain.report.entity.ReportType;
 import com.picnee.travel.domain.user.entity.User;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +28,8 @@ public class FindReportRes {
     private ReportTargetType reportTargetType;
     private ReportType reportType;
     private Boolean isVisible;
-    private User user;
+    private LocalDateTime createAt;
+    private UUID userId;
 
     public static FindReportRes from(Report report){
         return FindReportRes.builder()
@@ -37,7 +38,8 @@ public class FindReportRes {
                 .reportTargetType(report.getReportTargetType())
                 .reportType(report.getReportType())
                 .isVisible(report.getIsVisible())
-                .user(report.getUser())
+                .createAt(report.getCreatedAt())
+                .userId(report.getUser().getId())
                 .build();
     }
 

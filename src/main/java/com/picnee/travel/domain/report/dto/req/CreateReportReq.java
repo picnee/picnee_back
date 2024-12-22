@@ -23,21 +23,18 @@ public class CreateReportReq {
     @NotNull(message = "targetId는 필수입니다.")
     private UUID targetId;
 
-    @NotNull
+    @NotNull(message = "신고 대상은 타입은 필수입니다.(ex : REVIEW)")
     private ReportTargetType reportTargetType;
 
-    @NotNull
+    @NotNull(message = "신고 유형은 필수입니다.(ex : ADVERTISEMENT)")
     private ReportType reportType;
-
-    @NotNull
-    private Boolean isVisible;
 
     public Report toEntity(CreateReportReq dto, User user) {
         return Report.builder()
                 .targetId(dto.getTargetId())
                 .reportTargetType(dto.getReportTargetType())
                 .reportType(dto.getReportType())
-                .isVisible(getIsVisible())
+                .isVisible(false)
                 .user(user)
                 .build();
     }

@@ -120,7 +120,7 @@ public class PostService {
      * 내가 작성한 게시글 조회
      */
     public Page<FindPostRes> getMyPosts(AuthenticatedUserReq auth, int page) {
-        if(!isUserAuthenticated(auth)) {
+        if (!isUserAuthenticated(auth)) {
             throw new NotAuthException(NOT_AUTH_EXCEPTION);
         }
 
@@ -160,5 +160,17 @@ public class PostService {
     public Post findById(UUID postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
+    }
+
+    /**
+     * 신고된 댓글 제재
+     */
+    @Transactional
+    public void sanction(UUID reportTargetId) {
+        Post post = postRepository.findById(reportTargetId)
+                .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
+
+        post.softDelete();
+        boardService.delete(post);
     }
 }

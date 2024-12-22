@@ -5,6 +5,7 @@ import com.picnee.travel.domain.report.dto.res.FindReportRes;
 import com.picnee.travel.domain.report.service.ReportService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping
-    public ResponseEntity<String> createReport(@RequestBody CreateReportReq dto,
+    public ResponseEntity<String> createReport(@Valid @RequestBody CreateReportReq dto,
                                                @AuthenticatedUser AuthenticatedUserReq auth) {
 
         return ResponseEntity.status(CREATED).body(reportService.create(dto, auth).getId().toString());
@@ -46,10 +47,22 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<FindReportRes>> findReports(@AuthenticatedUser AuthenticatedUserReq auth,
-                                                           @RequestParam(name = "page", defaultValue = "0") int page) {
-        Page<FindReportRes> reports = reportService.findReports(auth, page);
-        return ResponseEntity.ok().body(reports);
+    public ResponseEntity<Page<FindReportRes>> findReports(@RequestParam(name = "targetId", required = false) String targetId,
+                                                           @RequestParam(name = "reportTargetType", required = false) String reportTargetType,
+                                                           @RequestParam(name = "reportType", required = false) String reportType,
+                                                           @RequestParam(name = "is_visible", required = false) String isVisible,
+                                                           @RequestParam(name = "sort", required = false) String sort,
+                                                           @RequestParam(name = "page", defaultValue = "0") int page,
+                                                            @AuthenticatedUser AuthenticatedUserReq auth) {
+        Page<FindReportRes> reports = reportService.findReports(auth, targetId, reportTargetType, reportType, isVisible, sort, page);
+        return ResponseEntity.status(OK).body(reports);
+    }
+
+    @PatchMapping("/{reportId}")
+    public ResponseEntity<String> processReport(@PathVariable("reportId") UUID reportTargetId,
+                                                @AuthenticatedUser AuthenticatedUserReq auth) {
+
+        return ResponseEntity.status(OK).body(reportService.processReport(reportTargetId, auth).getId().toString());
     }
 
 

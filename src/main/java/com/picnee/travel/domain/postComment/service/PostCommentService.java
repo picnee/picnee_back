@@ -183,4 +183,13 @@ public class PostCommentService {
         return postCommentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundCommentException(NOT_FOUND_COMMENT_EXCEPTION));
     }
+
+    /**
+     * 신고된 댓글 제재
+     */
+    @Transactional
+    public void sanction(UUID reportTargetId) {
+        PostComment postComment = findById(reportTargetId);
+        postComment.softDelete();
+    }
 }
