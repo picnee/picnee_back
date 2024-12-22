@@ -1,15 +1,13 @@
 package com.picnee.travel.domain.review.service;
 
 import com.picnee.travel.domain.place.entity.Place;
+import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.place.service.PlaceService;
-import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
-import com.picnee.travel.domain.post.exception.NotPostAuthorException;
-import com.picnee.travel.domain.post.service.PostService;
 import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
+import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.entity.ReviewVoteAccommodation;
@@ -41,50 +39,68 @@ import static com.picnee.travel.global.exception.ErrorCode.*;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
-    private final ReviewVoteAccommodationRepository reviewVoteAccommodationRepository;
-    private final ReviewVoteRestaurantRepository reviewVoteRestaurantRepository;
-    private final ReviewVoteTouristspotRepository reviewVoteTouristspotRepository;
+
     private final PlaceService placeService;
     private final UserService userService;
+    private final ReviewVoteRestaurantService reviewVoteRestaurantService;
 
-    // TODO 중복 제거 리팩토링
-    public Review createAccommodationVoteReview(CreateAccommodationVoteReviewReq dto, AuthenticatedUserReq auth) {
-        User                    user        = userService.findByEmail(auth.getEmail());
-        Place                   place       = placeService.findById(dto.getPlaceId());
-        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-        ReviewVoteAccommodation voteReview  = reviewVoteAccommodationRepository.save(dto.toEntity(review));
-        return review;
-    }
-
-    public Review createRestaurantVoteReview(CreateRestaurantVoteReviewReq dto, AuthenticatedUserReq auth) {
-        User                    user        = userService.findByEmail(auth.getEmail());
-        Place                   place       = placeService.findById(dto.getPlaceId());
-        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-        ReviewVoteRestaurant    voteReview  = reviewVoteRestaurantRepository.save(dto.toEntity(review));
-        return review;
-    }
-
-    public Review createRestaurantVoteReview(CreateTouristspotVoteReviewReq dto, AuthenticatedUserReq auth) {
-        User                    user        = userService.findByEmail(auth.getEmail());
-        Place                   place       = placeService.findById(dto.getPlaceId());
-        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-        ReviewVoteTouristspot   voteReview  = reviewVoteTouristspotRepository.save(dto.toEntity(review));
-        return review;
-    }
-
-    public Review createReview(CreateReviewReq dto, AuthenticatedUserReq auth) {
+    /**
+     * 음식점 리뷰 생성
+     */
+    @Transactional
+    public Review createRestaurantReview(CreateRestaurantVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
         User    user        = userService.findByEmail(auth.getEmail());
-        Place   place       = placeService.findById(dto.getPlaceId());
-        return reviewRepository.save(dto.toEntity(user, place));
+        Place   place       = placeService.findById(placeId);
+        // 리뷰 생성
+        Review review = reviewRepository.save(dto.toEntity(dto, user, place));
+        // 투표 식당 여부 생성
+        reviewVoteRestaurantService.createRestaurantReview(review, dto);
+        return review;
     }
+
+//    // TODO 중복 제거 리팩토링
+//    public Review createAccommodationVoteReview(CreateAccommodationVoteReviewReq dto, AuthenticatedUserReq auth) {
+//        User                    user        = userService.findByEmail(auth.getEmail());
+//        Place                   place       = placeService.findById(dto.getPlaceId());
+//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
+//        ReviewVoteAccommodation voteReview  = reviewVoteAccommodationRepository.save(dto.toEntity(review));
+//        return review;
+//    }
+//
+//    public Review createRestaurantVoteReview(CreateRestaurantVoteReviewReq dto, AuthenticatedUserReq auth) {
+//        User                    user        = userService.findByEmail(auth.getEmail());
+//        Place                   place       = placeService.findById(dto.getPlaceId());
+//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
+//        ReviewVoteRestaurant    voteReview  = reviewVoteRestaurantRepository.save(dto.toEntity(review));
+//        return review;
+//    }
+//
+//    public Review createRestaurantVoteReview(CreateTouristspotVoteReviewReq dto, AuthenticatedUserReq auth) {
+//        User                    user        = userService.findByEmail(auth.getEmail());
+//        Place                   place       = placeService.findById(dto.getPlaceId());
+//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
+//        ReviewVoteTouristspot   voteReview  = reviewVoteTouristspotRepository.save(dto.toEntity(review));
+//        return review;
+//    }
 
     /**
      * 리뷰 조회
      */
     public GetReviewRes getReview(UUID reviewId, AuthenticatedUserReq auth) {
         Review review = findByIdNotDeletedReview(reviewId);
-        return GetReviewRes.of(review, auth);
+        PlaceType placeType = review.getPlace().getTypes();
+
+        switch (placeType) {
+            case RESTAURANT -> {
+                ReviewVoteRestaurant reviewVoteRestaurant = reviewVoteRestaurantService.findById(reviewId);
+                return GetReviewRes.of(review, reviewVoteRestaurant, auth);
+            }
+        }
+
+
+        return null;
     }
 
     /**
@@ -94,7 +110,8 @@ public class ReviewService {
         Place place = placeService.findById(placeId);
         Pageable pageable = PageRequest.of(page, 10);
         Page<Review> review = reviewRepository.findByReviewOfPlace(place, pageable);
-        return GetReviewRes.paging(review);
+        //return GetReviewRes.paging(review);
+        return null;
     }
 
     /**

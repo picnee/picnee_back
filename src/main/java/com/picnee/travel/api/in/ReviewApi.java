@@ -1,6 +1,7 @@
 package com.picnee.travel.api.in;
 
 
+import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
@@ -13,6 +14,9 @@ import java.util.UUID;
 
 @Tag(name = "posts/comments", description = "postComment API")
 public interface ReviewApi {
+
+    @Operation(summary = "음식점 리뷰 생성", description = "음식점 리뷰를 생성한다.")
+    ResponseEntity<String> createRestaurantReview(CreateRestaurantVoteReviewReq dto, String placeId, AuthenticatedUserReq auth);
 
     @Operation(summary = "리뷰 단건 조회", description =  "리뷰를 단건 조회한다.")
     ResponseEntity<GetReviewRes> getReview(UUID reviewId, AuthenticatedUserReq auth);

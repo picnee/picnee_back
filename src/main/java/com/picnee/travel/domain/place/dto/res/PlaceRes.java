@@ -14,6 +14,7 @@ public class PlaceRes {
 
     private String placeId;
     private String placeName;
+    private PlaceType types;
     private String lat;
     private String lng;
 
@@ -21,6 +22,7 @@ public class PlaceRes {
         return PlaceRes.builder()
                 .placeId(place.getId())
                 .placeName(place.getPlaceName())
+                .types(place.getTypes())
                 .lat(place.getLat())
                 .lng(place.getLng())
                 .build();

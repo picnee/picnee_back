@@ -1,10 +1,13 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.ReviewApi;
+import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
+import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.service.ReviewService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,15 @@ import static org.springframework.http.HttpStatus.*;
 public class ReviewController implements ReviewApi {
 
     private final ReviewService reviewService;
+
+
+    @PostMapping("/{placeId}/restaurant")
+    public ResponseEntity<String> createRestaurantReview(@Valid @RequestBody CreateRestaurantVoteReviewReq dto,
+                                                         @PathVariable("placeId") String placeId,
+                                                         @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.createRestaurantReview(dto, placeId, auth);
+        return ResponseEntity.status(CREATED).body(review.getId().toString());
+    }
 
     @GetMapping("/{reviewId}")
     public ResponseEntity<GetReviewRes> getReview(@PathVariable("reviewId") UUID reviewId,

@@ -2,6 +2,7 @@ package com.picnee.travel.domain.review.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.place.entity.Place;
+import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,23 +35,14 @@ public class Review extends SoftDeleteBaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "content")
-    private String content;
-    @Column(name = "is_vote_review")
-    private boolean isVoteReview;
-    @Column(name = "is_smoking")
-    private boolean isSmoking;
-    @Column(name = "is_card")
-    private boolean isCard;
-    @Column(name = "is_kiosk")
-    private boolean isKiosk;
-    @Column(name = "is_korean_menu")
-    private boolean isKoreanMenu;
-    @Column(name = "recommendation_status")
-    @Enumerated(EnumType.STRING)
-    private RecommendationStatus recommendationStatus;
+    @Column(name = "good_points")
+    private String goodPoints;
+    @Column(name = "low_points")
+    private String lowPoints;
+    @Column(name = "place_tips")
+    private String placeTips;
+    @Column(name = "rating")
+    private Double rating;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
