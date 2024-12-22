@@ -49,6 +49,16 @@ public class Review extends SoftDeleteBaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteRestaurant reviewVoteRestaurant;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteAccommodation reviewVoteAccommodation;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteTouristspot reviewVoteTouristspot;
+
 
     /**
      * 리뷰 삭제

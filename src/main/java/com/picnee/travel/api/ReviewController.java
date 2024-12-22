@@ -46,10 +46,11 @@ public class ReviewController implements ReviewApi {
 
     @GetMapping("/place/{placeId}")
     public ResponseEntity<Page<GetReviewRes>> getReviews(@PathVariable("placeId") String placeId,
-                                           @AuthenticatedUser AuthenticatedUserReq auth,
-                                           @RequestParam(name = "page", defaultValue = "0") int page) {
+                                                         @AuthenticatedUser AuthenticatedUserReq auth,
+                                                         @RequestParam(name = "sort", required = false, defaultValue = "rating") String sort,
+                                                         @RequestParam(name = "page", defaultValue = "0") int page) {
 
-        Page<GetReviewRes> res = reviewService.getReviews(placeId, auth, page);
+        Page<GetReviewRes> res = reviewService.getReviews(placeId, auth, sort, page);
         return ResponseEntity.status(OK).body(res);
     }
 

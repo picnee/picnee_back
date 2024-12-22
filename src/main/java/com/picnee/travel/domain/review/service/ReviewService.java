@@ -60,31 +60,6 @@ public class ReviewService {
         return review;
     }
 
-//    // TODO 중복 제거 리팩토링
-//    public Review createAccommodationVoteReview(CreateAccommodationVoteReviewReq dto, AuthenticatedUserReq auth) {
-//        User                    user        = userService.findByEmail(auth.getEmail());
-//        Place                   place       = placeService.findById(dto.getPlaceId());
-//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-//        ReviewVoteAccommodation voteReview  = reviewVoteAccommodationRepository.save(dto.toEntity(review));
-//        return review;
-//    }
-//
-//    public Review createRestaurantVoteReview(CreateRestaurantVoteReviewReq dto, AuthenticatedUserReq auth) {
-//        User                    user        = userService.findByEmail(auth.getEmail());
-//        Place                   place       = placeService.findById(dto.getPlaceId());
-//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-//        ReviewVoteRestaurant    voteReview  = reviewVoteRestaurantRepository.save(dto.toEntity(review));
-//        return review;
-//    }
-//
-//    public Review createRestaurantVoteReview(CreateTouristspotVoteReviewReq dto, AuthenticatedUserReq auth) {
-//        User                    user        = userService.findByEmail(auth.getEmail());
-//        Place                   place       = placeService.findById(dto.getPlaceId());
-//        Review                  review      = reviewRepository.save(dto.toEntity(user, place));
-//        ReviewVoteTouristspot   voteReview  = reviewVoteTouristspotRepository.save(dto.toEntity(review));
-//        return review;
-//    }
-
     /**
      * 리뷰 조회
      */
@@ -94,24 +69,39 @@ public class ReviewService {
 
         switch (placeType) {
             case RESTAURANT -> {
-                ReviewVoteRestaurant reviewVoteRestaurant = reviewVoteRestaurantService.findById(reviewId);
-                return GetReviewRes.of(review, reviewVoteRestaurant, auth);
+                return GetRestaurantRes.of(review);
             }
+//            case LODGING -> {
+//
+//            }
+//            case TOURISTSPOT -> {
+//
+//            }
         }
 
-
-        return null;
+        return null; // exception 설정
     }
 
     /**
      * 한 장소에 대한 리뷰 전체 조회
      */
-    public Page<GetReviewRes> getReviews(String placeId, AuthenticatedUserReq auth, int page) {
+    public Page<GetReviewRes> getReviews(String placeId, AuthenticatedUserReq auth, String sort, int page) {
         Place place = placeService.findById(placeId);
         Pageable pageable = PageRequest.of(page, 10);
-        Page<Review> review = reviewRepository.findByReviewOfPlace(place, pageable);
-        //return GetReviewRes.paging(review);
-        return null;
+        Page<Review> reviews = reviewRepository.findByReviewOfPlace(place, sort, pageable);
+
+        switch (place.getTypes()) {
+            case RESTAURANT -> {
+                return GetRestaurantRes.getReviewsPaging(reviews).map(review -> review);
+            }
+//            case LODGING -> {
+//
+//            }
+//            case TOURISTSPOT -> {
+//
+//            }
+        }
+        return null; // exception 설정
     }
 
     /**

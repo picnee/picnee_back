@@ -5,6 +5,7 @@ import com.picnee.travel.domain.post.entity.Post;
 import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.review.entity.QReview;
 import com.picnee.travel.domain.review.entity.Review;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,21 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<Review> findByReviewOfPlace(Place place, Pageable pageable) {
+    public Page<Review> findByReviewOfPlace(Place place, String sort, Pageable pageable) {
         QReview review = QReview.review;
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(review.isDeleted.isFalse());
 
         JPAQuery<Review> query = jpaQueryFactory
                 .selectFrom(review)
-                .where(review.isDeleted.isFalse(),
-                        review.place.id.eq(place.getId()))
-                .orderBy(review.createdAt.desc());
+                .where(builder);
 
+        switch (sort) {
+            case "new" -> query.orderBy(review.createdAt.desc());
+            case "rating" -> query.orderBy(review.rating.desc(), review.createdAt.desc());
+            default -> query.orderBy(review.createdAt.desc());
+        }
 
         List<Review> result = query
                 .offset(pageable.getOffset())
