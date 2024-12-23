@@ -43,7 +43,7 @@ public class UserController implements UserApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtTokenRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
+    public ResponseEntity<JwtTokenRes> loginUser(@Valid @RequestBody LoginUserReq dto, HttpServletResponse response) {
         JwtTokenRes res = userService.login(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())

@@ -2,6 +2,7 @@ package com.picnee.travel.domain.review.entity;
 
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.place.entity.Place;
+import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,26 +35,35 @@ public class Review extends SoftDeleteBaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "content")
-    private String content;
-    @Column(name = "is_vote_review")
-    private Boolean isVoteReview;
-    @Column(name = "is_smoking")
-    private Boolean isSmoking;
-    @Column(name = "is_card")
-    private Boolean isCard;
-    @Column(name = "is_korean_employee")
-    private Boolean isKoreanEmployee;
-    @Column(name = "is_korean_menu")
-    private Boolean isKoreanMenu;
-    @Column(name = "recommendation_status")
-    private String recommendationStatus;
+    @Column(name = "good_points")
+    private String goodPoints;
+    @Column(name = "low_points")
+    private String lowPoints;
+    @Column(name = "place_tips")
+    private String placeTips;
+    @Column(name = "rating")
+    private Double rating;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteRestaurant reviewVoteRestaurant;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteAccommodation reviewVoteAccommodation;
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "review_id")
+    private ReviewVoteTouristspot reviewVoteTouristspot;
+
+
+    /**
+     * 리뷰 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
 }
