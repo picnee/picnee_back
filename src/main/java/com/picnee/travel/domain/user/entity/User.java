@@ -2,7 +2,7 @@ package com.picnee.travel.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
-import com.picnee.travel.domain.user.dto.req.UpdateUser;
+import com.picnee.travel.domain.user.dto.req.UpdateUserReq;
 import com.picnee.travel.domain.usersPost.entity.UsersPost;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,9 +41,9 @@ public class User extends SoftDeleteBaseEntity {
     private String phoneNumber;
     @Column(name = "birth_date")
     private String birthDate;
-    @Column(name = "email")
+    @Column(unique = true, name = "email")
     private String email;
-    @Column(name = "nickname")
+    @Column(unique = true, name = "nickname")
     private String nickname;
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
@@ -99,7 +99,7 @@ public class User extends SoftDeleteBaseEntity {
     /**
      * 내 정보 수정
      */
-    public void update(UpdateUser dto, PasswordEncoder passwordEncoder) {
+    public void update(UpdateUserReq dto, PasswordEncoder passwordEncoder) {
         this.nickname = dto.getNickname() == null ? this.nickname : dto.getNickname();
         this.password = dto.getNewPassword() == null ? this.password : passwordEncoder.encode(dto.getNewPassword());
         this.phoneNumber = dto.getPhoneNumber() == null ? this.phoneNumber : dto.getPhoneNumber().replaceAll("-", "");
