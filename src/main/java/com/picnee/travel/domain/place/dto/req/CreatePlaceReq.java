@@ -1,8 +1,10 @@
 package com.picnee.travel.domain.place.dto.req;
 
 import com.picnee.travel.domain.place.dto.PlaceTypeWeight;
+import com.picnee.travel.domain.place.dto.RegionMapper;
 import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.entity.PlaceType;
+import com.picnee.travel.domain.place.entity.Region;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -35,7 +37,8 @@ public class CreatePlaceReq {
     
 
     public static Place toEntity(CreatePlaceReq dto) {
-        PlaceType type = PlaceTypeWeight.filterType(dto.getTypes());
+        PlaceType   type     = PlaceTypeWeight.filterType(dto.getTypes());
+        Region      region   = RegionMapper.getRegion(dto.getFormattedAddress());
 
         return Place.builder()
                 .id(dto.getPlaceId())
@@ -48,6 +51,7 @@ public class CreatePlaceReq {
                 .lat(dto.getLat())
                 .lng(dto.getLng())
                 .types(type)
+                .region(region)
                 .build();
     }
 }

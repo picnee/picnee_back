@@ -145,6 +145,7 @@ CREATE TABLE `place` (
     `lat`                    VARCHAR(255)    NOT NULL,
     `lng`                    VARCHAR(255)    NOT NULL,
     `types`                  VARCHAR(255)    NOT NULL,
+    `region`	             VARCHAR(255)	 NOT NULL,
     `created_at`	         TIMESTAMP	     NOT NULL,
 	`modified_at`	         TIMESTAMP	     NOT NULL,
     PRIMARY KEY (`place_id`)
@@ -212,19 +213,44 @@ CREATE TABLE `review_vote_restaurant` (
 );
 
 CREATE TABLE `review_vote_accommodation` (
-	`review_id`                    VARCHAR(36)    NOT NULL,
-	`is_cleanliness_positive`      BOOLEAN        NOT NULL,
-	`is_accessibility_positive`    BOOLEAN        NOT NULL,
-	`is_service_positive`          BOOLEAN        NOT NULL,
+	`review_id`                   VARCHAR(36)    NOT NULL,
+    `has_self_check_in_out`       BOOLEAN         NOT NULL,
+    `has_24hr_print_service`      BOOLEAN         NOT NULL,
+    `provides_breakfast`          BOOLEAN         NOT NULL,
+    `has_luggage_storage`         BOOLEAN         NOT NULL,
+    `has_facilities`              BOOLEAN         NOT NULL,
+    `has_large_bath`              BOOLEAN         NOT NULL,
+    `has_spacious_rooms`          BOOLEAN         NOT NULL,
+    `has_clean_rooms`             BOOLEAN         NOT NULL,
+    `has_good_room_view`          BOOLEAN         NOT NULL,
+    `has_historical_tradition`    BOOLEAN         NOT NULL,
+    `has_comfortable_beds`        BOOLEAN         NOT NULL,
+    `has_good_heating_cooling`    BOOLEAN         NOT NULL,
+    `has_good_soundproofing`      BOOLEAN         NOT NULL,
+    `has_delicious_breakfast`     BOOLEAN         NOT NULL,
+    `has_friendly_service`        BOOLEAN         NOT NULL,
+    `is_easy_public_transport`    BOOLEAN         NOT NULL
     PRIMARY KEY (`review_id`),
     FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
 );
 
 CREATE TABLE `review_vote_touristspot` (
-	`review_id`                    VARCHAR(36)    NOT NULL,
-    `is_accessibility_positive`    BOOLEAN        NOT NULL,
-	`is_crowded`                   BOOLEAN        NOT NULL,
-	`is_experience_positive`       BOOLEAN        NOT NULL,
+	`review_id`                 VARCHAR(36)     NOT NULL,
+    `is_paid_entry`               BOOLEAN         NOT NULL,
+    `is_reservation_required`     BOOLEAN         NOT NULL,
+    `is_korean_guide_available`   BOOLEAN         NOT NULL,
+    `is_bike_parking_available`   BOOLEAN         NOT NULL,
+    `is_car_parking_available`    BOOLEAN         NOT NULL,
+    `has_historical_tradition`    BOOLEAN         NOT NULL,
+    `has_many_sights`             BOOLEAN         NOT NULL,
+    `has_beautiful_night_view`    BOOLEAN         NOT NULL,
+    `is_photo_friendly`           BOOLEAN         NOT NULL,
+    `has_good_guidance`           BOOLEAN         NOT NULL,
+    `has_convenient_facilities`   BOOLEAN         NOT NULL,
+    `has_experience_programs`     BOOLEAN         NOT NULL,
+    `has_clean_restrooms`         BOOLEAN         NOT NULL,
+    `is_easy_public_transport`    BOOLEAN         NOT NULL,
+    `is_quiet_and_peaceful`       BOOLEAN         NOT NULL
     PRIMARY KEY (`review_id`),
     FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
 );

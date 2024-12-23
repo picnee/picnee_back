@@ -37,7 +37,9 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
         switch (sort) {
             case "new" -> query.orderBy(review.createdAt.desc());
-            case "rating" -> query.orderBy(review.rating.desc(), review.createdAt.desc());
+            case "old" -> query.orderBy(review.createdAt.asc());
+            case "high" -> query.orderBy(review.rating.desc(), review.createdAt.desc());
+            case "low" -> query.orderBy(review.rating.asc(), review.createdAt.desc());
             default -> query.orderBy(review.createdAt.desc());
         }
 

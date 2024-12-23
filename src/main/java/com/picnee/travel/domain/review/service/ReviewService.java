@@ -10,18 +10,13 @@ import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
-import com.picnee.travel.domain.review.entity.ReviewVoteAccommodation;
-import com.picnee.travel.domain.review.entity.ReviewVoteRestaurant;
-import com.picnee.travel.domain.review.entity.ReviewVoteTouristspot;
 import com.picnee.travel.domain.review.exception.NotFoundReviewException;
 import com.picnee.travel.domain.review.exception.NotReviewAuthorException;
 import com.picnee.travel.domain.review.repository.ReviewRepository;
-import com.picnee.travel.domain.review.repository.ReviewVoteAccommodationRepository;
-import com.picnee.travel.domain.review.repository.ReviewVoteRestaurantRepository;
-import com.picnee.travel.domain.review.repository.ReviewVoteTouristspotRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -45,6 +40,8 @@ public class ReviewService {
     private final PlaceService placeService;
     private final UserService userService;
     private final ReviewVoteRestaurantService reviewVoteRestaurantService;
+    private final ReviewVoteTouristSpotService reviewVoteTouristSpotService;
+    private final ReviewVoteAccommodationService reviewVoteAccommodationService;
 
     /**
      * 음식점 리뷰 생성
@@ -53,10 +50,37 @@ public class ReviewService {
     public Review createRestaurantReview(CreateRestaurantVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
         User    user        = userService.findByEmail(auth.getEmail());
         Place   place       = placeService.findById(placeId);
-        // 리뷰 생성
+        // 음식점 리뷰 생성
         Review review = reviewRepository.save(dto.toEntity(dto, user, place));
         // 투표 식당 여부 생성
         reviewVoteRestaurantService.createRestaurantReview(review, dto);
+        return review;
+    }
+
+    /**
+     * 관광지 리뷰 생성
+     */
+    @Transactional
+    public Review createTouristSpotReview(CreateTouristspotVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        Place place = placeService.findById(placeId);
+
+        // 관광지 리뷰 생성
+        Review review = reviewRepository.save(dto.toEntity(dto, user, place));
+        // 투표 관광지 여부 생성
+        reviewVoteTouristSpotService.createTouristSpotReview(review, dto);
+        return review;
+    }
+
+    @Transactional
+    public Review createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        Place place = placeService.findById(placeId);
+
+        // 숙소 리뷰 생성
+        Review review = reviewRepository.save(dto.toEntity(dto, user, place));
+        // 토표 리뷰 여부 생성
+        reviewVoteAccommodationService.createAccommodationReview(review, dto);
         return review;
     }
 
@@ -114,7 +138,6 @@ public class ReviewService {
         checkAuthor(review, user);
         review.softDelete();
     }
-
     /**
      * 게시글 작성자 확인
      */
@@ -136,6 +159,7 @@ public class ReviewService {
 
         return review;
     }
+
     // TODO 리뷰 수정
 
     public Review findById(UUID reviewId) {

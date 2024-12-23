@@ -19,7 +19,7 @@ public abstract class BaseReviewReq {
     private String placeTips;
     private Double rating;
 
-    public Review toEntity(CreateRestaurantVoteReviewReq dto, User user, Place place) {
+    public Review toEntity(BaseReviewReq dto, User user, Place place) {
         return Review.builder()
                 .goodPoints(dto.getGoodPoints())
                 .lowPoints(dto.getLowPoints())

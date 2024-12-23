@@ -1,7 +1,9 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.ReviewApi;
+import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.service.ReviewService;
@@ -33,6 +35,23 @@ public class ReviewController implements ReviewApi {
                                                          @AuthenticatedUser AuthenticatedUserReq auth) {
         Review review = reviewService.createRestaurantReview(dto, placeId, auth);
         return ResponseEntity.status(CREATED).body(review.getId().toString());
+    }
+
+    @PostMapping("/{placeId}/touristSpot")
+    public ResponseEntity<String> createTouristSpotReview(@Valid @RequestBody CreateTouristspotVoteReviewReq dto,
+                                                          @PathVariable("placeId") String placeId,
+                                                          @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.createTouristSpotReview(dto, placeId, auth);
+        return ResponseEntity.status(CREATED).body(review.getId().toString());
+    }
+
+    @PostMapping("/{placeId}/accommodation")
+    public ResponseEntity<String> createAccommodationReview(@Valid @RequestBody CreateAccommodationVoteReviewReq dto,
+                                                            @PathVariable("placeId") String placeId,
+                                                            @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.createAccommodationReview(dto, placeId, auth);
+        return ResponseEntity.status(CREATED).body(review.getId().toString());
+
     }
 
     @GetMapping("/{reviewId}")
