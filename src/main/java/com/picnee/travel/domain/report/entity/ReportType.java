@@ -1,6 +1,6 @@
 package com.picnee.travel.domain.report.entity;
 
 public enum ReportType {
-    ADVERTISEMENT,
-    SWEAR
+    ADVERTISEMENT, // 스팸
+    SWEAR // 욕설
 }
