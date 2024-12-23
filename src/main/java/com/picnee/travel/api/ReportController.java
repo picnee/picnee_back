@@ -1,5 +1,6 @@
 package com.picnee.travel.api;
 
+import com.picnee.travel.api.in.ReportApi;
 import com.picnee.travel.domain.report.dto.req.CreateReportReq;
 import com.picnee.travel.domain.report.dto.res.FindReportRes;
 import com.picnee.travel.domain.report.service.ReportService;
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/reports")
 @RequiredArgsConstructor
-public class ReportController {
+public class ReportController implements ReportApi {
 
     private final ReportService reportService;
 
