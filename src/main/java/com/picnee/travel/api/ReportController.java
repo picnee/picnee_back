@@ -32,14 +32,14 @@ public class ReportController {
         return ResponseEntity.status(CREATED).body(reportService.create(dto, auth).getId().toString());
     }
 
-    @DeleteMapping("{reportId}")
+    @DeleteMapping("/{reportId}")
     public ResponseEntity<String> deleteReport(@PathVariable("reportId") UUID reportId,
                                                @AuthenticatedUser AuthenticatedUserReq auth) {
         reportService.delete(reportId, auth);
         return ResponseEntity.status(OK).build();
     }
 
-    @GetMapping("{reportId}")
+    @GetMapping("/{reportId}")
     public ResponseEntity<FindReportRes> findReport(@PathVariable("reportId") UUID reportId,
                                              @AuthenticatedUser AuthenticatedUserReq auth) {
         FindReportRes findReportRes = reportService.find(reportId, auth);
@@ -61,8 +61,8 @@ public class ReportController {
     @PatchMapping("/{reportId}")
     public ResponseEntity<String> processReport(@PathVariable("reportId") UUID reportTargetId,
                                                 @AuthenticatedUser AuthenticatedUserReq auth) {
-
-        return ResponseEntity.status(OK).body(reportService.processReport(reportTargetId, auth).getId().toString());
+        reportService.processReport(reportTargetId, auth);
+        return ResponseEntity.status(OK).build();
     }
 
 

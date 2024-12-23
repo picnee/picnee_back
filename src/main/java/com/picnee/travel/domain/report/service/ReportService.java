@@ -5,7 +5,6 @@ import com.picnee.travel.domain.postComment.service.PostCommentService;
 import com.picnee.travel.domain.report.dto.req.CreateReportReq;
 import com.picnee.travel.domain.report.dto.res.FindReportRes;
 import com.picnee.travel.domain.report.entity.Report;
-import com.picnee.travel.domain.report.entity.ReportTargetType;
 import com.picnee.travel.domain.report.repository.ReportRepository;
 import com.picnee.travel.domain.review.service.ReviewService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-
 
 @Slf4j
 @Service
@@ -83,7 +81,7 @@ public class ReportService {
      * 권한 : 어드민
      */
     @Transactional
-    public Report processReport(UUID reportTargetId, AuthenticatedUserReq auth) {
+    public Boolean processReport(UUID reportTargetId, AuthenticatedUserReq auth) {
         validateAdmin(auth);
 
         Report report = reportRepository.processReport(reportTargetId);
@@ -101,7 +99,7 @@ public class ReportService {
                 break;
         }
 
-        return report;
+        return true;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.picnee.travel.domain.report.entity.Report;
 import com.picnee.travel.domain.report.entity.ReportTargetType;
 import com.picnee.travel.domain.report.entity.ReportType;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -12,6 +13,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.hibernate.tool.schema.TargetType;
@@ -39,6 +42,12 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
         JPAQuery<Report> query = jpaQueryFactory
                 .selectFrom(report)
                 .where(builder);
+
+        // 정렬 조건 추가
+        if (sort != null) {
+            OrderSpecifier<LocalDateTime> orderSpecifier = getOrderSpecifier(report, sort);
+            query.orderBy(orderSpecifier);
+        }
 
         List<Report> reports = query.offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -72,7 +81,7 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
                     .execute();
         }
 
-        return null;
+        return jpaQueryFactory.selectFrom(report).fetchFirst();
     }
 
     // 조건 빌딩
@@ -102,5 +111,16 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
         }
 
         return builder;
+    }
+
+    private OrderSpecifier<LocalDateTime> getOrderSpecifier(QReport report, String sort) {
+        switch (sort.toLowerCase()) {
+            case "asc":
+                return report.createdAt.asc();
+            case "desc":
+                return report.createdAt.desc();
+            default:
+                throw new IllegalArgumentException("Invalid sort order: " + sort);
+        }
     }
 }
