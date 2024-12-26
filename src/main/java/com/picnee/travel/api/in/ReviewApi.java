@@ -1,13 +1,9 @@
 package com.picnee.travel.api.in;
 
 
-import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
-import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -22,13 +18,16 @@ public interface ReviewApi {
     ResponseEntity<String> createRestaurantReview(CreateRestaurantVoteReviewReq dto, String placeId, AuthenticatedUserReq auth);
 
     @Operation(summary = "관광지 리뷰 생성", description = "관광지 리뷰를 생성한다.")
-    ResponseEntity<String> createTouristSpotReview(CreateTouristspotVoteReviewReq dto, String placeId, AuthenticatedUserReq auth);
+    ResponseEntity<String> createTouristSpotReview(CreateTouristSpotVoteReviewReq dto, String placeId, AuthenticatedUserReq auth);
 
     @Operation(summary = "숙소 리뷰 생성", description = "숙소 리뷰를 생성한다.")
     ResponseEntity<String> createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth);
 
     @Operation(summary = "음식점 리뷰 수정", description = "음식점 리뷰를 수정한다.")
     ResponseEntity<String> updateRestaurantReview(UpdateRestaurantVoteReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "관광지 리뷰 수정", description = "관광지 리뷰를 수정한다.")
+    ResponseEntity<String> updateTouristSpotReview(UpdateTouristSpotVoteReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
 
     @Operation(summary = "리뷰 단건 조회", description =  "리뷰를 단건 조회한다.")
     ResponseEntity<GetReviewRes> getReview(UUID reviewId, AuthenticatedUserReq auth);

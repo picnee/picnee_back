@@ -4,10 +4,7 @@ import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.place.service.PlaceService;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
-import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
@@ -62,7 +59,7 @@ public class ReviewService {
      * 관광지 리뷰 생성
      */
     @Transactional
-    public Review createTouristSpotReview(CreateTouristspotVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
+    public Review createTouristSpotReview(CreateTouristSpotVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
         Place place = placeService.findById(placeId);
 
@@ -73,6 +70,21 @@ public class ReviewService {
         return review;
     }
 
+    @Transactional
+    public Review createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        Place place = placeService.findById(placeId);
+
+        // 숙소 리뷰 생성
+        Review review = reviewRepository.save(dto.toEntity(dto, user, place));
+        // 토표 리뷰 여부 생성
+        reviewVoteAccommodationService.createAccommodationReview(review, dto);
+        return review;
+    }
+
+    /**
+     * 음식점 리뷰 수정
+     */
     @Transactional
     public Review updateRestaurantReview(UpdateRestaurantVoteReviewReq dto, String placeId, UUID reviewId,
                                          AuthenticatedUserReq auth) {
@@ -89,15 +101,23 @@ public class ReviewService {
         return review;
     }
 
-    @Transactional
-    public Review createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
-        User user = userService.findByEmail(auth.getEmail());
-        Place place = placeService.findById(placeId);
 
-        // 숙소 리뷰 생성
-        Review review = reviewRepository.save(dto.toEntity(dto, user, place));
-        // 토표 리뷰 여부 생성
-        reviewVoteAccommodationService.createAccommodationReview(review, dto);
+    /**
+     * 관광지 리뷰 수정
+     */
+    @Transactional
+    public Review updateTouristSpotReview(UpdateTouristSpotVoteReviewReq dto, String placeId, UUID reviewId,
+                                          AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        placeService.findById(placeId);
+
+        Review review = findByIdNotDeletedReview(reviewId);
+        checkAuthor(review, user);
+
+        reviewVoteTouristSpotService.updateTouristSpotReview(review, dto);
+        // 리뷰 수정
+        review.update(dto);
+
         return review;
     }
 
@@ -122,7 +142,6 @@ public class ReviewService {
 
         return null; // exception 설정
     }
-
     /**
      * 한 장소에 대한 리뷰 전체 조회
      */
@@ -144,6 +163,7 @@ public class ReviewService {
         }
         return null; // exception 설정
     }
+
     /**
      * 리뷰 삭제
      */

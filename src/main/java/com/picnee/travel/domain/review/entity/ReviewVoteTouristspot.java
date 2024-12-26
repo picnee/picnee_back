@@ -1,6 +1,7 @@
 package com.picnee.travel.domain.review.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.review.dto.req.UpdateTouristSpotVoteReviewReq;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -65,4 +66,25 @@ public class ReviewVoteTouristspot {
     private Boolean isEasyPublicTransport;
     @Column(name = "is_quiet_and_peaceful")
     private Boolean isQuietAndPeaceful;
+
+    /**
+     * 관광지 리뷰 수정
+     */
+    public void update(UpdateTouristSpotVoteReviewReq dto) {
+        this.isPaidEntry = dto.getIsPaidEntry() == null ? this.isPaidEntry : dto.getIsPaidEntry();
+        this.isReservationRequired = dto.getIsReservationRequired() == null ? this.isReservationRequired : dto.getIsReservationRequired();
+        this.isKoreanGuideAvailable = dto.getIsKoreanGuideAvailable() == null ? this.isKoreanGuideAvailable : dto.getIsKoreanGuideAvailable();
+        this.isBikeParkingAvailable = dto.getIsBikeParkingAvailable() == null ? this.isBikeParkingAvailable : dto.getIsBikeParkingAvailable();
+        this.isCarParkingAvailable = dto.getIsCarParkingAvailable() == null ? this.isCarParkingAvailable : dto.getIsCarParkingAvailable();
+        this.hasHistoricalTradition = dto.getHasHistoricalTradition() == null ? this.hasHistoricalTradition : dto.getHasHistoricalTradition();
+        this.hasManySights = dto.getHasManySights() == null ? this.hasManySights : dto.getHasManySights();
+        this.hasBeautifulNightView = dto.getHasBeautifulNightView() == null ? this.hasBeautifulNightView : dto.getHasBeautifulNightView();
+        this.isPhotoFriendly = dto.getIsPhotoFriendly() == null ? this.isPhotoFriendly : dto.getIsPhotoFriendly();
+        this.hasGoodGuidance = dto.getHasGoodGuidance() == null ? this.hasGoodGuidance : dto.getHasGoodGuidance();
+        this.hasConvenientFacilities = dto.getHasConvenientFacilities() == null ? this.hasConvenientFacilities : dto.getHasConvenientFacilities();
+        this.hasExperiencePrograms = dto.getHasExperiencePrograms() == null ? this.hasExperiencePrograms : dto.getHasExperiencePrograms();
+        this.hasCleanRestrooms = dto.getHasCleanRestrooms() == null ? this.hasCleanRestrooms : dto.getHasCleanRestrooms();
+        this.isEasyPublicTransport = dto.getIsEasyPublicTransport() == null ? this.isEasyPublicTransport : dto.getIsEasyPublicTransport();
+        this.isQuietAndPeaceful = dto.getIsQuietAndPeaceful() == null ? this.isQuietAndPeaceful : dto.getIsQuietAndPeaceful();
+    }
 }

@@ -1,16 +1,9 @@
 package com.picnee.travel.domain.review.dto.req;
 
 import com.picnee.travel.domain.review.entity.Review;
-import com.picnee.travel.domain.review.entity.ReviewVoteRestaurant;
 import com.picnee.travel.domain.review.entity.ReviewVoteTouristspot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.util.UUID;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -18,7 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class CreateTouristspotVoteReviewReq extends BaseReviewReq {
+public class CreateTouristSpotVoteReviewReq extends BaseReviewReq {
 
     @NotNull(message = "유료 입장 여부는 필수입니다.")
     private Boolean isPaidEntry;
@@ -41,7 +34,7 @@ public class CreateTouristspotVoteReviewReq extends BaseReviewReq {
     private Boolean isEasyPublicTransport;
     private Boolean isQuietAndPeaceful;
 
-    public  ReviewVoteTouristspot toEntity(Review review, CreateTouristspotVoteReviewReq dto) {
+    public  ReviewVoteTouristspot toEntity(Review review, CreateTouristSpotVoteReviewReq dto) {
         return ReviewVoteTouristspot.builder()
                 .id(review.getId())
                 .isPaidEntry(dto.getIsPaidEntry())

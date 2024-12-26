@@ -1,10 +1,7 @@
 package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.ReviewApi;
-import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
-import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.service.ReviewService;
@@ -39,7 +36,7 @@ public class ReviewController implements ReviewApi {
     }
 
     @PostMapping("/{placeId}/touristSpot")
-    public ResponseEntity<String> createTouristSpotReview(@Valid @RequestBody CreateTouristspotVoteReviewReq dto,
+    public ResponseEntity<String> createTouristSpotReview(@Valid @RequestBody CreateTouristSpotVoteReviewReq dto,
                                                           @PathVariable("placeId") String placeId,
                                                           @AuthenticatedUser AuthenticatedUserReq auth) {
         Review review = reviewService.createTouristSpotReview(dto, placeId, auth);
@@ -61,6 +58,15 @@ public class ReviewController implements ReviewApi {
                                                          @PathVariable("reviewId") UUID reviewId,
                                                          @AuthenticatedUser AuthenticatedUserReq auth) {
         Review review = reviewService.updateRestaurantReview(dto, placeId, reviewId, auth);
+        return ResponseEntity.status(OK).body(review.getId().toString());
+    }
+
+    @PatchMapping("/{placeId}/touristSpot/{reviewId}")
+    public ResponseEntity<String> updateTouristSpotReview(@Valid @RequestBody UpdateTouristSpotVoteReviewReq dto,
+                                                          @PathVariable("placeId") String placeId,
+                                                          @PathVariable("reviewId") UUID reviewId,
+                                                          @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.updateTouristSpotReview(dto, placeId, reviewId, auth);
         return ResponseEntity.status(OK).body(review.getId().toString());
     }
 
