@@ -29,6 +29,9 @@ public interface ReviewApi {
     @Operation(summary = "관광지 리뷰 수정", description = "관광지 리뷰를 수정한다.")
     ResponseEntity<String> updateTouristSpotReview(UpdateTouristSpotVoteReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
 
+    @Operation(summary = "숙소 리뷰 수정", description = "숙소 리뷰를 수정한다.")
+    ResponseEntity<String> updateAccommodationReview(UpdateAccommodationVoteReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
+
     @Operation(summary = "리뷰 단건 조회", description =  "리뷰를 단건 조회한다.")
     ResponseEntity<GetReviewRes> getReview(UUID reviewId, AuthenticatedUserReq auth);
 

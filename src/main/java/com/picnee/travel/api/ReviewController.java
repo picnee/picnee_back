@@ -70,6 +70,15 @@ public class ReviewController implements ReviewApi {
         return ResponseEntity.status(OK).body(review.getId().toString());
     }
 
+    @PatchMapping("/{placeId}/accommodation/{reviewId}")
+    public ResponseEntity<String> updateAccommodationReview(@Valid @RequestBody UpdateAccommodationVoteReviewReq dto,
+                                                            @PathVariable("placeId") String placeId,
+                                                            @PathVariable("reviewId") UUID reviewId,
+                                                            @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.updateAccommodationReview(dto, placeId, reviewId, auth);
+        return ResponseEntity.status(OK).body(review.getId().toString());
+    }
+
     @GetMapping("/{reviewId}")
     public ResponseEntity<GetReviewRes> getReview(@PathVariable("reviewId") UUID reviewId,
                                                   @AuthenticatedUser AuthenticatedUserReq auth) {

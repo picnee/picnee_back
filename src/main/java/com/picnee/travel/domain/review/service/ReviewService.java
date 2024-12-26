@@ -70,6 +70,9 @@ public class ReviewService {
         return review;
     }
 
+    /**
+     * 숙소 리뷰 생성
+     */
     @Transactional
     public Review createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
@@ -121,6 +124,21 @@ public class ReviewService {
         return review;
     }
 
+    @Transactional
+    public Review updateAccommodationReview(UpdateAccommodationVoteReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        placeService.findById(placeId);
+
+        Review review = findByIdNotDeletedReview(reviewId);
+        checkAuthor(review, user);
+
+        reviewVoteAccommodationService.updateAccommodationReview(review, dto);
+
+        review.update(dto);
+
+        return review;
+
+    }
     /**
      * 리뷰 조회
      */
@@ -142,6 +160,7 @@ public class ReviewService {
 
         return null; // exception 설정
     }
+
     /**
      * 한 장소에 대한 리뷰 전체 조회
      */
@@ -196,8 +215,6 @@ public class ReviewService {
 
         return review;
     }
-
-    // TODO 리뷰 수정
 
     public Review findById(UUID reviewId) {
         return reviewRepository.findById(reviewId)

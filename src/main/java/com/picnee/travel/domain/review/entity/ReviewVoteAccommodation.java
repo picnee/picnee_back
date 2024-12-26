@@ -1,5 +1,6 @@
 package com.picnee.travel.domain.review.entity;
 
+import com.picnee.travel.domain.review.dto.req.UpdateAccommodationVoteReviewReq;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -64,4 +65,26 @@ public class ReviewVoteAccommodation {
     private Boolean hasFriendlyService;
     @Column(name = "is_easy_public_transport")
     private Boolean isEasyPublicTransport;
+
+    /**
+     * 숙소 리뷰 수정
+     */
+    public void update(UpdateAccommodationVoteReviewReq dto) {
+        this.hasSelfCheckInOut = dto.getHasSelfCheckInOut() == null ? this.hasSelfCheckInOut : dto.getHasSelfCheckInOut();
+        this.has24HrPrintService = dto.getHas24HrPrintService() == null ? this.has24HrPrintService : dto.getHas24HrPrintService();
+        this.providesBreakfast = dto.getProvidesBreakfast() == null ? this.providesBreakfast : dto.getProvidesBreakfast();
+        this.hasLuggageStorage = dto.getHasLuggageStorage() == null ? this.hasLuggageStorage : dto.getHasLuggageStorage();
+        this.hasFacilities = dto.getHasFacilities() == null ? this.hasFacilities : dto.getHasFacilities();
+        this.hasLargeBath = dto.getHasLargeBath() == null ? this.hasLargeBath : dto.getHasLargeBath();
+        this.hasSpaciousRooms = dto.getHasSpaciousRooms() == null ? this.hasSpaciousRooms : dto.getHasSpaciousRooms();
+        this.hasCleanRooms = dto.getHasCleanRooms() == null ? this.hasCleanRooms : dto.getHasCleanRooms();
+        this.hasGoodRoomView = dto.getHasGoodRoomView() == null ? this.hasGoodRoomView : dto.getHasGoodRoomView();
+        this.hasHistoricalTradition = dto.getHasHistoricalTradition() == null ? this.hasHistoricalTradition : dto.getHasHistoricalTradition();
+        this.hasComfortableBeds = dto.getHasComfortableBeds() == null ? this.hasComfortableBeds : dto.getHasComfortableBeds();
+        this.hasGoodHeatingCooling = dto.getHasGoodHeatingCooling() == null ? this.hasGoodHeatingCooling : dto.getHasGoodHeatingCooling();
+        this.hasGoodSoundproofing = dto.getHasGoodSoundproofing() == null ? this.hasGoodSoundproofing : dto.getHasGoodSoundproofing();
+        this.hasDeliciousBreakfast = dto.getHasDeliciousBreakfast() == null ? this.hasDeliciousBreakfast : dto.getHasDeliciousBreakfast();
+        this.hasFriendlyService = dto.getHasFriendlyService() == null ? this.hasFriendlyService : dto.getHasFriendlyService();
+        this.isEasyPublicTransport = dto.getIsEasyPublicTransport() == null ? this.isEasyPublicTransport : dto.getIsEasyPublicTransport();
+    }
 }
