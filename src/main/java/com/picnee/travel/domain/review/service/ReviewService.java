@@ -7,6 +7,7 @@ import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
@@ -73,6 +74,22 @@ public class ReviewService {
     }
 
     @Transactional
+    public Review updateRestaurantReview(UpdateRestaurantVoteReviewReq dto, String placeId, UUID reviewId,
+                                         AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        placeService.findById(placeId);
+
+        Review review = findByIdNotDeletedReview(reviewId);
+        checkAuthor(review, user);
+
+        reviewVoteRestaurantService.updateRestaurantReview(review, dto);
+        // 리뷰 수정
+        review.update(dto);
+
+        return review;
+    }
+
+    @Transactional
     public Review createAccommodationReview(CreateAccommodationVoteReviewReq dto, String placeId, AuthenticatedUserReq auth) {
         User user = userService.findByEmail(auth.getEmail());
         Place place = placeService.findById(placeId);
@@ -127,7 +144,6 @@ public class ReviewService {
         }
         return null; // exception 설정
     }
-
     /**
      * 리뷰 삭제
      */
@@ -138,6 +154,7 @@ public class ReviewService {
         checkAuthor(review, user);
         review.softDelete();
     }
+
     /**
      * 게시글 작성자 확인
      */

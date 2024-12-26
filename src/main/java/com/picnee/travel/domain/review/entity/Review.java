@@ -3,6 +3,8 @@ package com.picnee.travel.domain.review.entity;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.entity.PlaceType;
+import com.picnee.travel.domain.review.dto.req.BaseReviewReq;
+import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -65,5 +67,16 @@ public class Review extends SoftDeleteBaseEntity {
      */
     public void softDelete() {
         super.delete();
+    }
+
+
+    /**
+     * 음식점 리뷰 수정
+     */
+    public void update(BaseReviewReq dto) {
+        this.goodPoints = dto.getGoodPoints() == null ? this.goodPoints : dto.getGoodPoints();
+        this.lowPoints = dto.getLowPoints() == null ? this.lowPoints : dto.getLowPoints();
+        this.placeTips = dto.getPlaceTips() == null ? this.placeTips : dto.getPlaceTips();
+        this.rating = dto.getRating() == null ? this.rating : dto.getRating();
     }
 }

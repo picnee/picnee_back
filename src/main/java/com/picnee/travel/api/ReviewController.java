@@ -4,6 +4,7 @@ import com.picnee.travel.api.in.ReviewApi;
 import com.picnee.travel.domain.review.dto.req.CreateAccommodationVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.req.CreateTouristspotVoteReviewReq;
+import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.service.ReviewService;
@@ -52,6 +53,15 @@ public class ReviewController implements ReviewApi {
         Review review = reviewService.createAccommodationReview(dto, placeId, auth);
         return ResponseEntity.status(CREATED).body(review.getId().toString());
 
+    }
+
+    @PatchMapping("/{placeId}/restaurant/{reviewId}")
+    public ResponseEntity<String> updateRestaurantReview(@Valid @RequestBody UpdateRestaurantVoteReviewReq dto,
+                                                         @PathVariable("placeId") String placeId,
+                                                         @PathVariable("reviewId") UUID reviewId,
+                                                         @AuthenticatedUser AuthenticatedUserReq auth) {
+        Review review = reviewService.updateRestaurantReview(dto, placeId, reviewId, auth);
+        return ResponseEntity.status(OK).body(review.getId().toString());
     }
 
     @GetMapping("/{reviewId}")

@@ -1,6 +1,7 @@
 package com.picnee.travel.domain.review.entity;
 
 import com.picnee.travel.domain.base.entity.BaseEntity;
+import com.picnee.travel.domain.review.dto.req.UpdateRestaurantVoteReviewReq;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -66,4 +67,26 @@ public class ReviewVoteRestaurant {
     @Column(name = "is_cost_effective")
     private Boolean isCostEffective;
 
+    /**
+     * 음식점 투표 리뷰 수정
+     */
+    public void update(UpdateRestaurantVoteReviewReq dto) {
+        this.isKoreanMenu = dto.getIsKoreanMenu() == null ? this.isKoreanMenu : dto.getIsKoreanMenu();
+        this.isSmoking = dto.getIsSmoking() == null ? this.isSmoking : dto.getIsSmoking();
+        this.isKiosk = dto.getIsKiosk() == null ? this.isKiosk : dto.getIsKiosk();
+        this.isCard = dto.getIsCard() == null ? this.isCard : dto.getIsCard();
+        this.isCash = dto.getIsCash() == null ? this.isCash : dto.getIsCash();
+        this.isOnlyReservation = dto.getIsOnlyReservation() == null ? this.isOnlyReservation : dto.getIsOnlyReservation();
+        this.isReservation = dto.getIsReservation() == null ? this.isReservation : dto.getIsReservation();
+        this.isTasty = dto.getIsTasty() == null ? this.isTasty : dto.getIsTasty();
+        this.isLocalFlavor = dto.getIsLocalFlavor() == null ? this.isLocalFlavor : dto.getIsLocalFlavor();
+        this.isCultural = dto.getIsCultural() == null ? this.isCultural: dto.getIsCultural();
+        this.isAtmosphereGood = dto.getIsAtmosphereGood() == null ? this.isAtmosphereGood : dto.getIsAtmosphereGood();
+        this.isSoloFriendly = dto.getIsSoloFriendly() == null ? this.isSoloFriendly : dto.getIsSoloFriendly();
+        this.isGroupFriendly = dto.getIsGroupFriendly() == null ? this.isGroupFriendly : dto.getIsGroupFriendly();
+        this.isServiceFriendly = dto.getIsServiceFriendly() == null ? this.isServiceFriendly : dto.getIsServiceFriendly();
+        this.hasWaiting = dto.getHasWaiting() == null ? this.hasWaiting : dto.getHasWaiting();
+        this.isClean = dto.getIsClean() == null ? this.isClean : dto.getIsClean();
+        this.isCostEffective = dto.getIsCostEffective() == null ? this.isCostEffective : dto.getIsCostEffective();
+    }
 }
