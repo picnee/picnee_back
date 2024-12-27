@@ -35,8 +35,8 @@ public class UsersReview extends BaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "user_review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "score")
-    private int score;
+    @Column(name = "good_and_bad")
+    private Boolean goodAndBad;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;

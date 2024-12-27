@@ -6,6 +6,7 @@ import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.service.ReviewService;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
+import com.picnee.travel.domain.usersReview.dto.req.EvaluateReviewReq;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +104,15 @@ public class ReviewController implements ReviewApi {
                                              @AuthenticatedUser AuthenticatedUserReq auth) {
 
         reviewService.deleteReview(reviewId, auth);
+        return ResponseEntity.status(OK).build();
+    }
+
+    @PostMapping("/{placeId}/evaluating/{reviewId}")
+    public ResponseEntity<Void> evaluateReview(@RequestBody EvaluateReviewReq dto,
+                                               @PathVariable("placeId") String placeId,
+                                               @PathVariable("reviewId") UUID reviewId,
+                                               @AuthenticatedUser AuthenticatedUserReq auth) {
+        reviewService.evaluateReview(dto, placeId, reviewId, auth);
         return ResponseEntity.status(OK).build();
     }
 }

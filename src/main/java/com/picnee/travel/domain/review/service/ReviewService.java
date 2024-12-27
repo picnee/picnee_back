@@ -14,6 +14,8 @@ import com.picnee.travel.domain.review.repository.ReviewRepository;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
+import com.picnee.travel.domain.usersReview.dto.req.EvaluateReviewReq;
+import com.picnee.travel.domain.usersReview.service.UserReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,7 @@ public class ReviewService {
     private final ReviewVoteRestaurantService reviewVoteRestaurantService;
     private final ReviewVoteTouristSpotService reviewVoteTouristSpotService;
     private final ReviewVoteAccommodationService reviewVoteAccommodationService;
+    private final UserReviewService userReviewService;
 
     /**
      * 음식점 리뷰 생성
@@ -192,6 +195,18 @@ public class ReviewService {
         User user = userService.findByEmail(auth.getEmail());
         checkAuthor(review, user);
         review.softDelete();
+    }
+
+    /**
+     * 리뷰를 평가한다.
+     */
+    @Transactional
+    public void evaluateReview(EvaluateReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth) {
+        User user = userService.findByEmail(auth.getEmail());
+        placeService.findById(placeId);
+        Review review = findByIdNotDeletedReview(reviewId);
+
+        userReviewService.evaluateReview(dto, review, user);
     }
 
     /**

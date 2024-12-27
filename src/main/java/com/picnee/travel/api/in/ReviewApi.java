@@ -4,6 +4,7 @@ package com.picnee.travel.api.in;
 import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
 import com.picnee.travel.domain.user.dto.req.AuthenticatedUserReq;
+import com.picnee.travel.domain.usersReview.dto.req.EvaluateReviewReq;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -35,9 +36,12 @@ public interface ReviewApi {
     @Operation(summary = "리뷰 단건 조회", description =  "리뷰를 단건 조회한다.")
     ResponseEntity<GetReviewRes> getReview(UUID reviewId, AuthenticatedUserReq auth);
 
-    @Operation(summary = "리뷰 전체 조회", description = "장소에 대한 리뷰를 전체조회한다.")
+    @Operation(summary = "리뷰 전체 조회", description = "장소에 대한 리뷰를 전체 조회한다.")
     ResponseEntity<Page<GetReviewRes>> getReviews(String placeId, AuthenticatedUserReq auth, String sort, int page);
 
     @Operation(summary = "리뷰 삭제", description = "장소를 삭제한다.")
     ResponseEntity<Void> deleteReview(UUID reviewId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "리뷰 평가", description = "리뷰를 평가한다.")
+    ResponseEntity<Void> evaluateReview(EvaluateReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
 }

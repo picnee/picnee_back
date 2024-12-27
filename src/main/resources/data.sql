@@ -257,7 +257,7 @@ CREATE TABLE `review_vote_touristspot` (
 
 CREATE TABLE `users_review` (
     `user_review_id`    VARCHAR(36)    NOT NULL,
-	`score`             INT            NOT NULL     DEFAULT 0,
+	`good_and_bad`      BOOLEAN        NOT NULL,
 	`created_at`        TIMESTAMP      NOT NULL,
 	`modified_at`       TIMESTAMP      NOT NULL,
 	`user_id`           VARCHAR(36)    NOT NULL,

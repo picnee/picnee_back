@@ -30,6 +30,7 @@ public enum ErrorCode {
     NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G009", "댓글 좋아요는 로그인시 가능합니다."),
     NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G010", "로그인한 유저만 접근가능합니다."),
     NOT_REVIEW_AUTHOR_EXCEPTION(UNAUTHORIZED, "G011", "리뷰의 작성자가 아닙니다. 본인이 작성한 리뷰만 수정/삭제가 가능합니다."),
+    EXISTS_ALREADY_REVIEW_EXCEPTION(UNAUTHORIZED, "G012", "이미 해당 리뷰에 평가를 하였습니다."),
 
     /**
      * 403
