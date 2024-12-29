@@ -92,7 +92,7 @@ public class UserServiceTest {
     @Description("유니크 제약조건 확인")
     void test1_1() {
 
-        String duplicatedEmail = "test@gmail.com";
+        String duplicatedEmail = "testUser@naver.com";
 
         CreateUserReq createDuplicateUserReq = CreateUserReq.builder()
                 .email(duplicatedEmail) // 중복된 이메일
