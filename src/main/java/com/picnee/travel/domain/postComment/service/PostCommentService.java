@@ -113,6 +113,9 @@ public class PostCommentService {
         return postCommentRepository.save(CreatePostCommentReq.toEntityCoComment(post, postComment, user, dto));
     }
 
+    /**
+     * 댓글 좋아요
+     */
     @Transactional
     public void toggleLike(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
         // 로그인한 사용자만 가능

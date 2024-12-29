@@ -4,6 +4,7 @@ import com.picnee.travel.domain.place.entity.Place;
 import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.place.service.PlaceService;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
+import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeException;
 import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
 import com.picnee.travel.domain.review.dto.res.GetReviewRes;
@@ -210,6 +211,30 @@ public class ReviewService {
     }
 
     /**
+     * 리뷰를 좋아요 한다.
+     */
+    @Transactional
+    public void toggleReviewLike(String placeId, UUID reviewId, AuthenticatedUserReq auth) {
+
+        if (isUserAuthenticated(auth)) {
+            throw new NotProvideCommentLikeException(NOT_PROVIDE_COMMENT_LIKE_EXCEPTION);
+        }
+
+        User user = userService.findByEmail(auth.getEmail());
+        placeService.findById(placeId);
+        Review review = findByIdNotDeletedReview(reviewId);
+
+        boolean likeState = userReviewService.incrementLike(review, user);
+
+        if (!likeState) {
+            review.addLike();
+            return;
+        }
+
+        review.deleteLike();
+    }
+
+    /**
      * 게시글 작성자 확인
      */
     public void checkAuthor(Review review, User user) {
@@ -234,5 +259,12 @@ public class ReviewService {
     public Review findById(UUID reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
+    }
+
+    /**
+     * 로그인한 유저인지 확인
+     */
+    private boolean isUserAuthenticated(AuthenticatedUserReq auth) {
+        return auth == null;
     }
 }

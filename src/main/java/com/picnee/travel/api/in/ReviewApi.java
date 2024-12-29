@@ -44,4 +44,7 @@ public interface ReviewApi {
 
     @Operation(summary = "리뷰 평가", description = "리뷰를 평가한다.")
     ResponseEntity<Void> evaluateReview(EvaluateReviewReq dto, String placeId, UUID reviewId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "리뷰 좋아요", description = "리뷰 좋아요 한다.")
+    ResponseEntity<Void> toggleReviewLike(String placeId, UUID reviewId, AuthenticatedUserReq auth);
 }

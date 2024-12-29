@@ -36,6 +36,7 @@ public enum ErrorCode {
      * 403
      */
     FORBIDDEN_ERROR(FORBIDDEN, "G001", "Forbidden Exception"),
+    SELF_REVIEW_EVALUATION_LIKE_EXCEPTION(FORBIDDEN, "G002", "자신의 리뷰에는 평가, 좋아요를 할 수 없습니다."),
 
     /**
      * 404

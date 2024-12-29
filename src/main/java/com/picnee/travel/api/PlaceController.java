@@ -31,9 +31,6 @@ public class PlaceController implements PlaceApi {
         return ResponseEntity.status(CREATED).body(placeId);
     }
 
-//    @GetMapping
-//    public ResponseEntity<Page<FindPlaceRes>> getPlaces()
-
     @GetMapping("/{placeId}")
     public ResponseEntity<FindPlaceRes> getPlace(@PathVariable("placeId") String placeId) {
         FindPlaceRes res = placeService.getPlace(placeId);

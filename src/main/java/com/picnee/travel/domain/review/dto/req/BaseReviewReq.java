@@ -25,6 +25,7 @@ public abstract class BaseReviewReq {
                 .lowPoints(dto.getLowPoints())
                 .placeTips(dto.getPlaceTips())
                 .rating(dto.getRating())
+                .likes(0L)
                 .user(user)
                 .place(place)
                 .build();

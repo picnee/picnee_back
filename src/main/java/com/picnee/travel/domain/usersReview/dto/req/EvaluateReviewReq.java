@@ -13,11 +13,11 @@ public class EvaluateReviewReq {
 
     private boolean goodAndBad;
 
-    public static UsersReview toEntity(EvaluateReviewReq dto, Review review, User user) {
+    public static UsersReview toEntity(UsersReview usersReview, EvaluateReviewReq dto) {
         return UsersReview.builder()
                 .goodAndBad(dto.isGoodAndBad())
-                .review(review)
-                .user(user)
+                .user(usersReview.getUser())
+                .review(usersReview.getReview())
                 .build();
     }
 }

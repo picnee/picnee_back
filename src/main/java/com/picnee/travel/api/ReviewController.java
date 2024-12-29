@@ -115,4 +115,13 @@ public class ReviewController implements ReviewApi {
         reviewService.evaluateReview(dto, placeId, reviewId, auth);
         return ResponseEntity.status(OK).build();
     }
+
+    @PostMapping("/{placeId}/like/{reviewId}")
+    public ResponseEntity<Void> toggleReviewLike(@PathVariable("placeId") String placeId,
+                                                 @PathVariable("reviewId") UUID reviewId,
+                                                 @AuthenticatedUser AuthenticatedUserReq auth) {
+        reviewService.toggleReviewLike(placeId, reviewId, auth);
+        return ResponseEntity.status(OK).build();
+
+    }
 }

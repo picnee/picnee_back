@@ -43,6 +43,8 @@ public class Review extends SoftDeleteBaseEntity {
     private String lowPoints;
     @Column(name = "place_tips")
     private String placeTips;
+    @Column(name = "likes")
+    private Long likes;
     @Column(name = "rating")
     private Double rating;
     @ManyToOne(fetch = LAZY)
@@ -78,5 +80,19 @@ public class Review extends SoftDeleteBaseEntity {
         this.lowPoints = dto.getLowPoints() == null ? this.lowPoints : dto.getLowPoints();
         this.placeTips = dto.getPlaceTips() == null ? this.placeTips : dto.getPlaceTips();
         this.rating = dto.getRating() == null ? this.rating : dto.getRating();
+    }
+
+    /**
+     * 리뷰 좋아요
+     */
+    public void addLike() {
+        this.likes++;
+    }
+
+    /**
+     * 리뷰 좋아요 취소
+     */
+    public void deleteLike() {
+        this.likes--;
     }
 }
