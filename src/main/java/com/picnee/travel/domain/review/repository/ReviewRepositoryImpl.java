@@ -1,8 +1,6 @@
 package com.picnee.travel.domain.review.repository;
 
 import com.picnee.travel.domain.place.entity.Place;
-import com.picnee.travel.domain.post.entity.Post;
-import com.picnee.travel.domain.postComment.entity.PostComment;
 import com.picnee.travel.domain.review.entity.QReview;
 import com.picnee.travel.domain.review.entity.Review;
 import com.querydsl.core.BooleanBuilder;

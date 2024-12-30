@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
@@ -124,4 +125,13 @@ public class ReviewController implements ReviewApi {
         return ResponseEntity.status(OK).build();
 
     }
+
+    @GetMapping("/{placeId}/popular_review")
+    public ResponseEntity<List<GetReviewRes>> getPopularReviews(@PathVariable("placeId") String placeId,
+                                                                    @AuthenticatedUser AuthenticatedUserReq auth) {
+        List<GetReviewRes> res = reviewService.findPopularReview(placeId, auth);
+        return ResponseEntity.status(OK).body(res);
+    }
+
+
 }

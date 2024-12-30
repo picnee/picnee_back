@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "posts/comments", description = "postComment API")
@@ -47,4 +48,7 @@ public interface ReviewApi {
 
     @Operation(summary = "리뷰 좋아요", description = "리뷰 좋아요 한다.")
     ResponseEntity<Void> toggleReviewLike(String placeId, UUID reviewId, AuthenticatedUserReq auth);
+
+    @Operation(summary = "베스트 리뷰 조회", description = "해당 장소에 대한 베스트 리뷰를 조회한다.")
+    ResponseEntity<List<GetReviewRes>> getPopularReviews(String placeId, AuthenticatedUserReq auth);
 }

@@ -6,8 +6,7 @@ import com.picnee.travel.domain.place.service.PlaceService;
 import com.picnee.travel.domain.post.exception.NotFoundPostException;
 import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeException;
 import com.picnee.travel.domain.review.dto.req.*;
-import com.picnee.travel.domain.review.dto.res.GetRestaurantRes;
-import com.picnee.travel.domain.review.dto.res.GetReviewRes;
+import com.picnee.travel.domain.review.dto.res.*;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.review.exception.NotFoundReviewException;
 import com.picnee.travel.domain.review.exception.NotReviewAuthorException;
@@ -17,7 +16,6 @@ import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
 import com.picnee.travel.domain.usersReview.dto.req.EvaluateReviewReq;
 import com.picnee.travel.domain.usersReview.service.UserReviewService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
@@ -232,6 +232,39 @@ public class ReviewService {
         }
 
         review.deleteLike();
+    }
+
+    /**
+     * 베스트 리뷰 3건 조회
+     */
+    public List<GetReviewRes> findPopularReview(String placeId, AuthenticatedUserReq auth) {
+        Place place = placeService.findById(placeId);
+
+        switch (place.getTypes()) {
+            case RESTAURANT -> {
+               // return reviewRepository.findByPopularRestaurantReviewFromPlace(place);
+            }
+
+            case LODGING -> {
+                List<GetAccommodationQueryRes> popularLodgingReviewFromPlace = reviewRepository.findByPopularLodgingReviewFromPlace(place.getId());
+                if (popularLodgingReviewFromPlace.isEmpty()) {
+                    return Collections.emptyList();
+                }
+                List<Review> reviews = popularLodgingReviewFromPlace.stream()
+                        .map(r -> findById(r.getReviewId()))
+                        .toList();
+
+                return GetAccommodationRes.list(reviews).stream()
+                        .map(GetAccommodationRes::toReviewRes)
+                        .toList();
+            }
+
+            case TOURISTSPOT -> {
+
+            }
+        }
+
+        return null;
     }
 
     /**
