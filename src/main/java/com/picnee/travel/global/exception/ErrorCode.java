@@ -51,6 +51,8 @@ public enum ErrorCode {
     NOT_FOUND_COMMENT_EXCEPTION(NOT_FOUND, "G007", "존재하지 않는 댓글입니다."),
     NOT_FOUND_NOTIFICATION_EXCEPTION(NOT_FOUND, "G008", "존재하지 않는 알림입니다."),
     NOT_FOUND_REVIEW_EXCEPTION(NOT_FOUND, "G009", "존재하지 않는 리뷰입니다."),
+    NOT_FOUND_REVIEW_CATEGORY_EXCEPTION(NOT_FOUND, "G010", "존재하지 않는 리뷰 카테고리입니다."),
+    NOT_FOUND_PLACE_EXCEPTION(NOT_FOUND, "G010", "존재하지 않는 장소 입니다."),
 
     /**
      * 500

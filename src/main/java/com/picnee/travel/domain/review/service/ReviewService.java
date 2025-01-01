@@ -8,6 +8,7 @@ import com.picnee.travel.domain.postComment.exception.NotProvideCommentLikeExcep
 import com.picnee.travel.domain.review.dto.req.*;
 import com.picnee.travel.domain.review.dto.res.*;
 import com.picnee.travel.domain.review.entity.Review;
+import com.picnee.travel.domain.review.exception.NotFoundReviewCategoryException;
 import com.picnee.travel.domain.review.exception.NotFoundReviewException;
 import com.picnee.travel.domain.review.exception.NotReviewAuthorException;
 import com.picnee.travel.domain.review.repository.ReviewRepository;
@@ -154,15 +155,15 @@ public class ReviewService {
             case RESTAURANT -> {
                 return GetRestaurantRes.of(review);
             }
-//            case LODGING -> {
-//
-//            }
-//            case TOURISTSPOT -> {
-//
-//            }
+            case LODGING -> {
+                return GetAccommodationRes.of(review);
+            }
+            case TOURISTSPOT -> {
+                return GetTouristSpotRes.of(review);
+            }
         }
 
-        return null; // exception 설정
+        throw new NotFoundReviewCategoryException(NOT_FOUND_REVIEW_CATEGORY_EXCEPTION);
     }
 
     /**
@@ -177,12 +178,12 @@ public class ReviewService {
             case RESTAURANT -> {
                 return GetRestaurantRes.getReviewsPaging(reviews).map(review -> review);
             }
-//            case LODGING -> {
-//
-//            }
-//            case TOURISTSPOT -> {
-//
-//            }
+            case LODGING -> {
+
+            }
+            case TOURISTSPOT -> {
+
+            }
         }
         return null; // exception 설정
     }
@@ -291,7 +292,7 @@ public class ReviewService {
 
     public Review findById(UUID reviewId) {
         return reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
+                .orElseThrow(() -> new NotFoundReviewException(NOT_FOUND_REVIEW_EXCEPTION));
     }
 
     /**
