@@ -28,6 +28,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(review.isDeleted.isFalse());
+        builder.and(review.place.id.eq(place.getId()));
 
         JPAQuery<Review> query = jpaQueryFactory
                 .selectFrom(review)

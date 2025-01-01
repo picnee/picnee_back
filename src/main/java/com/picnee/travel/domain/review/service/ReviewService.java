@@ -179,13 +179,13 @@ public class ReviewService {
                 return GetRestaurantRes.getReviewsPaging(reviews).map(review -> review);
             }
             case LODGING -> {
-
+                return GetAccommodationRes.getReviewsPaging(reviews).map(review -> review);
             }
             case TOURISTSPOT -> {
-
+                return GetTouristSpotRes.getReviewsPaging(reviews).map(review -> review);
             }
         }
-        return null; // exception 설정
+        throw new NotFoundReviewCategoryException(NOT_FOUND_REVIEW_CATEGORY_EXCEPTION);
     }
 
     /**
