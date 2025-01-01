@@ -18,7 +18,6 @@ public class GetRestaurantRes implements GetReviewRes{
 
     private GetReviewResImpl restaurantRes;
     private GetRestaurantVoteRes restaurantVoteRes;
-    private boolean loginStatus;
 
     /**
      * 단건 조회

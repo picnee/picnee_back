@@ -19,7 +19,6 @@ public class GetTouristSpotRes implements GetReviewRes{
 
     private GetReviewResImpl touristSpotRes;
     private GetTouristSptVoteRes touristSptVoteRes;
-    private boolean loginStatus;
 
     public static GetTouristSpotRes of(Review review) {
         return GetTouristSpotRes.builder()
