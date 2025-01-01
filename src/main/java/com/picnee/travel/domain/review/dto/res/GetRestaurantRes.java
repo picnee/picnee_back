@@ -39,4 +39,20 @@ public class GetRestaurantRes implements GetReviewRes{
                 .collect(Collectors.toList());
         return new PageImpl<>(contents, reviews.getPageable(), reviews.getTotalElements());
     }
+
+    /**
+     * 인기 순위 음식점 리스트 변환
+     */
+    public static List<GetRestaurantRes>  list(List<Review> reviews) {
+        return reviews.stream()
+                .map(GetRestaurantRes::of)
+                .toList();
+    }
+
+    /**
+     * 타입 변환
+     */
+    public static GetReviewRes toReviewRes(GetRestaurantRes res) {
+        return res;
+    }
 }

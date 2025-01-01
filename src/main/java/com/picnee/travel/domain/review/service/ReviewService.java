@@ -243,7 +243,18 @@ public class ReviewService {
 
         switch (place.getTypes()) {
             case RESTAURANT -> {
-               // return reviewRepository.findByPopularRestaurantReviewFromPlace(place);
+                List<GetRestaurantQueryRes> popularRestaurantReviewFromPlace = reviewRepository.findByPopularRestaurantReviewFromPlace(place.getId());
+                if (popularRestaurantReviewFromPlace.isEmpty()) {
+                    return Collections.emptyList();
+                }
+
+                List<Review> reviews = popularRestaurantReviewFromPlace.stream()
+                        .map(r -> findById(r.getReviewId()))
+                        .toList();
+
+                return GetRestaurantRes.list(reviews).stream()
+                        .map(GetRestaurantRes::toReviewRes)
+                        .toList();
             }
 
             case LODGING -> {
@@ -261,7 +272,18 @@ public class ReviewService {
             }
 
             case TOURISTSPOT -> {
+                List<GetTouristSptQueryRes> popularTouristSpotReviewFromPlace = reviewRepository.findByPopularTouristSpotReviewFromPlace(place.getId());
+                if (popularTouristSpotReviewFromPlace.isEmpty()) {
+                    return Collections.emptyList();
+                }
 
+                List<Review> reviews = popularTouristSpotReviewFromPlace.stream()
+                        .map(r -> findById(r.getReviewId()))
+                        .toList();
+
+                return GetTouristSpotRes.list(reviews).stream()
+                        .map(GetTouristSpotRes::toReviewRes)
+                        .toList();
             }
         }
 
