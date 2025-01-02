@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "posts/comments", description = "postComment API")
+@Tag(name = "revies", description = "review API")
 public interface ReviewApi {
 
     @Operation(summary = "음식점 리뷰 생성", description = "음식점 리뷰를 생성한다.")
