@@ -11,10 +11,10 @@ import lombok.Getter;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Region {
     OSAKA("오사카"),          // 오사카
-    KYOTO("교토"),         // 교토
-    KOBO("고베"),          // 고베
-    FUKUOKA("후쿠오카"),        // 후쿠오카
-    TOKYO("도쿄"),         // 도쿄
+    KYOTO("교토"),           // 교토
+    KOBE("고베"),            // 고베
+    FUKUOKA("후쿠오카"),      // 후쿠오카
+    TOKYO("도쿄"),           // 도쿄
     SAPPORO("삿포로");        // 삿포로
 
     private final String description;
@@ -33,7 +33,7 @@ public enum Region {
         return switch (category) {
             case "오사카" -> Region.OSAKA;
             case "교토" -> Region.KYOTO;
-            case "고베" -> Region.KOBO;
+            case "고베" -> Region.KOBE;
             case "후쿠오카" -> Region.FUKUOKA;
             case "도쿄" -> Region.TOKYO;
             case "삿포로" -> Region.SAPPORO;
