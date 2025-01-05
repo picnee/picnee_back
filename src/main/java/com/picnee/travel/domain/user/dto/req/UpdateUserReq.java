@@ -1,7 +1,6 @@
 package com.picnee.travel.domain.user.dto.req;
 
 import com.picnee.travel.domain.user.entity.Gender;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -9,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UpdateUser {
+public class UpdateUserReq {
 
     @Pattern(regexp = "^(?=.*[A-Za-z가-힣])[A-Za-z\\d가-힣]{2,20}$", message = "닉네임은 2자 이상 20자 이하이며, 영어와 한글이 반드시 하나 이상은 포함되어야 합니다.")
     private String nickname;
