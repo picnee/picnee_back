@@ -87,9 +87,7 @@ public class PostCommentService {
         validOwner(postComment, user);
 
         // 부모 댓글과 자식댓글 삭제
-        List<PostComment> childComments = postCommentRepository.findChildrenByParentId(postComment.getId());
-        postComment.softDelete();
-        childComments.forEach(PostComment::softDelete);
+        postCommentRepository.findChildrenByParentId(postComment.getId());
     }
 
     /**
@@ -113,6 +111,9 @@ public class PostCommentService {
         return postCommentRepository.save(CreatePostCommentReq.toEntityCoComment(post, postComment, user, dto));
     }
 
+    /**
+     * 댓글 좋아요
+     */
     @Transactional
     public void toggleLike(UUID postId, UUID commentId, AuthenticatedUserReq auth) {
         // 로그인한 사용자만 가능

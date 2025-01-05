@@ -6,8 +6,6 @@ import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
 import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
-import com.picnee.travel.domain.user.dto.res.UserRes;
-import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +24,7 @@ public interface UserApi {
     public ResponseEntity<String> updateNickname(AuthenticatedUserReq auth, UpdateUserNicknameReq dto);
 
     @Operation(summary = "내 정보 수정", description = "마이페이지에서 내 정보를 수정한다.")
-    public ResponseEntity<String> updateUser(AuthenticatedUserReq auth, UpdateUser dto);
+    public ResponseEntity<String> updateUser(AuthenticatedUserReq auth, UpdateUserReq dto);
   
     @Operation(summary = "이메일 중복 확인", description = "이메일이 중복인지 확인한다.")
     public ResponseEntity<CheckDuplicateRes> checkEmailDuplicate(String email);

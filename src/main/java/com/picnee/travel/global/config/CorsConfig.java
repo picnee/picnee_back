@@ -16,6 +16,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("http://localhost:3000");
+        config.addAllowedOriginPattern("http://www.picknee.co.kr");
+        config.addAllowedOriginPattern("http://www.picknee.co.kr:8080");
         config.addAllowedHeader("*");
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
         config.addExposedHeader("Accesstoken, Refreshtoken");

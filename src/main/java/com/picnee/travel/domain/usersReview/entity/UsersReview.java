@@ -4,6 +4,7 @@ import com.picnee.travel.domain.base.entity.BaseEntity;
 import com.picnee.travel.domain.base.entity.SoftDeleteBaseEntity;
 import com.picnee.travel.domain.review.entity.Review;
 import com.picnee.travel.domain.user.entity.User;
+import com.picnee.travel.domain.usersReview.dto.req.EvaluateReviewReq;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -35,12 +36,35 @@ public class UsersReview extends BaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "user_review_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @Column(name = "score")
-    private int score;
+    @Column(name = "good_and_bad")
+    private Boolean goodAndBad;
+    @Column(name = "is_liked")
+    private Boolean isLiked;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
+
+    /**
+     * 좋아요
+     */
+    public void like() {
+        this.isLiked = true;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    public void dislike() {
+        this.isLiked = false;
+    }
+
+    /**
+     * 리뷰 평가
+     */
+    public void updateEvaluation(EvaluateReviewReq dto) {
+        this.goodAndBad = dto.isGoodAndBad();
+    }
 }

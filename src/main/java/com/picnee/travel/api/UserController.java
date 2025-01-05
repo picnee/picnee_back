@@ -7,14 +7,11 @@ import com.picnee.travel.domain.user.dto.req.CreateUserReq;
 import com.picnee.travel.domain.user.dto.req.LoginUserReq;
 import com.picnee.travel.domain.user.dto.req.UpdateUserNicknameReq;
 import com.picnee.travel.domain.user.dto.res.CheckDuplicateRes;
-import com.picnee.travel.domain.user.dto.res.UserRes;
 import com.picnee.travel.domain.user.entity.User;
 import com.picnee.travel.domain.user.service.UserService;
-import com.picnee.travel.global.jwt.dto.res.AccessTokenRes;
 import com.picnee.travel.global.jwt.dto.res.JwtTokenRes;
 import com.picnee.travel.global.redis.service.RedisService;
 import com.picnee.travel.global.security.annotation.AuthenticatedUser;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +40,7 @@ public class UserController implements UserApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtTokenRes> loginUser(@RequestBody LoginUserReq dto, HttpServletResponse response) {
+    public ResponseEntity<JwtTokenRes> loginUser(@Valid @RequestBody LoginUserReq dto, HttpServletResponse response) {
         JwtTokenRes res = userService.login(dto);
 
         ResponseCookie accessTokenCookie = ResponseCookie.from("ACCESS_TOKEN", res.getAccessToken())
@@ -77,7 +74,7 @@ public class UserController implements UserApi {
 
     @PatchMapping
     public ResponseEntity<String> updateUser(@AuthenticatedUser AuthenticatedUserReq auth,
-                                             @Valid @RequestBody UpdateUser dto) {
+                                             @Valid @RequestBody UpdateUserReq dto) {
         User user = userService.updateUser(auth, dto);
         return ResponseEntity.status(OK).body(user.getId().toString());
     }
