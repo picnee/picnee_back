@@ -2,6 +2,7 @@ package com.picnee.travel.api;
 
 import com.picnee.travel.api.in.PlaceApi;
 import com.picnee.travel.domain.place.dto.req.CreatePlaceReq;
+import com.picnee.travel.domain.place.dto.res.FilterPlaceRes;
 import com.picnee.travel.domain.place.dto.res.FindPlaceRes;
 import com.picnee.travel.domain.place.service.PlaceService;
 import com.picnee.travel.domain.user.dto.req.*;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -36,5 +40,14 @@ public class PlaceController implements PlaceApi {
         FindPlaceRes res = placeService.getPlace(placeId);
 
         return ResponseEntity.status(OK).body(res);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FilterPlaceRes>> getPlaces(@RequestParam(value = "region") String region,
+                                                         @RequestParam(value = "type") String type,
+                                                         @RequestParam(value = "sort", defaultValue = "review") String sort)
+//                                                         @RequestParam(required = false) Map<String, Boolean> filters) {
+    {
+            return ResponseEntity.ok(placeService.getPlaces(region, type, sort, null));
     }
 }

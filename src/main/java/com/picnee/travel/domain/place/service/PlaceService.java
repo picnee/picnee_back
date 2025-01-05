@@ -1,6 +1,7 @@
 package com.picnee.travel.domain.place.service;
 
 import com.picnee.travel.domain.place.dto.req.CreatePlaceReq;
+import com.picnee.travel.domain.place.dto.res.FilterPlaceRes;
 import com.picnee.travel.domain.place.dto.res.FindPlaceRes;
 import com.picnee.travel.domain.place.entity.OpeningHours;
 import com.picnee.travel.domain.place.entity.Place;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.picnee.travel.global.exception.ErrorCode.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -40,5 +44,8 @@ public class PlaceService {
         return placeRepository.findById(placeId)
                 .orElseThrow(() -> new NotFoundPlaceException(NOT_FOUND_PLACE_EXCEPTION));
     }
-    
+
+    public List<FilterPlaceRes> getPlaces(String region, String type, String sort, Map<String, Boolean> filters) {
+        return placeRepository.filterPlaces(region, type, sort, filters);
+    }
 }
