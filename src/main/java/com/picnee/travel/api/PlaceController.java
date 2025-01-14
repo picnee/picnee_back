@@ -45,9 +45,9 @@ public class PlaceController implements PlaceApi {
     @GetMapping
     public ResponseEntity<List<FilterPlaceRes>> getPlaces(@RequestParam(value = "region") String region,
                                                          @RequestParam(value = "type") String type,
-                                                         @RequestParam(value = "sort", defaultValue = "review") String sort)
-//                                                         @RequestParam(required = false) Map<String, Boolean> filters) {
-    {
-            return ResponseEntity.ok(placeService.getPlaces(region, type, sort, null));
+                                                         @RequestParam(value = "sort", defaultValue = "review") String sort,
+                                                         @RequestParam(required = false) Map<String, Boolean> filters) {
+        List<FilterPlaceRes> places = placeService.getPlaces(region, type, sort, filters);
+        return ResponseEntity.status(OK).body(places);
     }
 }
