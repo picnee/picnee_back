@@ -1,8 +1,10 @@
 package com.picnee.travel.domain.place.repository;
 
 import com.picnee.travel.domain.place.dto.res.FilterPlaceRes;
+import com.picnee.travel.domain.place.entity.PlaceType;
 import com.picnee.travel.domain.place.entity.QOpeningHours;
 import com.picnee.travel.domain.place.entity.QPlace;
+import com.picnee.travel.domain.place.entity.Region;
 import com.picnee.travel.domain.review.entity.QReview;
 import com.picnee.travel.domain.usersReview.entity.QUsersReview;
 import com.querydsl.core.Tuple;
@@ -87,15 +89,23 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
             .leftJoin(openingHours).on(openingHours.place.id.eq(place.id))
             .leftJoin(review).on(review.place.id.eq(place.id))
             .leftJoin(bestReview).on(bestReview.place.id.eq(place.id).and(bestReview.id.in(scorestest)))
-            .groupBy(place.id)
+            .groupBy(place.id, bestReview.id)
             .orderBy(review.id.countDistinct().desc());
 
-        // 정렬 조건 추가
-//        if ("review".equals(sort)) {
-//            query.orderBy(review.id.count().desc());
-//        } else if ("rating".equals(sort)) {
-//            query.orderBy(review.rating.avg().desc());
-//        }
+        // 인기순과 평점순으로 정렬
+        if ("review".equals(sort)) {
+            query.orderBy(review.id.count().desc());
+        } else if ("rating".equals(sort)) {
+            query.orderBy(review.rating.avg().desc());
+        }
+
+        // 지역 필터링
+        Optional.ofNullable(region)
+                .ifPresent(r -> query.where(review.place.region.eq(Region.valueOf(r.toUpperCase()))));
+
+        // 타입 필터링
+        Optional.ofNullable(type)
+                .ifPresent(r -> query.where(review.place.types.eq(PlaceType.valueOf(r.toUpperCase()))));
 
         return query.fetch();
     }
