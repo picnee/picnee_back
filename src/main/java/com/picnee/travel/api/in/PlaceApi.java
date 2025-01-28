@@ -19,5 +19,5 @@ public interface PlaceApi {
     public ResponseEntity<FindPlaceRes> getPlace(String placeId);
 
     @Operation(summary = "Place 목록 조회", description = "조건(지역, 정렬 방식, 필터링)에 부합하는 Place 목록을 조회한다.")
-    public ResponseEntity<List<FilterPlaceRes>> getPlaces(String region, String type, String sort, Map<String, Boolean> filters);
+    public ResponseEntity<List<FilterPlaceRes>> getPlaces(String region, String type, String sort, Map<String, String> allParams);
 }

@@ -6,11 +6,14 @@ import com.picnee.travel.domain.place.entity.QOpeningHours;
 import com.picnee.travel.domain.place.entity.QPlace;
 import com.picnee.travel.domain.place.entity.Region;
 import com.picnee.travel.domain.review.entity.QReview;
+import com.picnee.travel.domain.review.entity.QReviewVoteAccommodation;
+import com.picnee.travel.domain.review.entity.QReviewVoteRestaurant;
+import com.picnee.travel.domain.review.entity.QReviewVoteTouristspot;
 import com.picnee.travel.domain.usersReview.entity.QUsersReview;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,12 +21,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +38,76 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
         QReview review = QReview.review;
         QUsersReview usersReview = QUsersReview.usersReview;
         QReview bestReview = new QReview("bestReview");
+        QReviewVoteRestaurant reviewVoteRestaurant = QReviewVoteRestaurant.reviewVoteRestaurant;
+        QReviewVoteAccommodation reviewVoteAccommodation = QReviewVoteAccommodation.reviewVoteAccommodation;
+        QReviewVoteTouristspot reviewVoteTouristspot = QReviewVoteTouristspot.reviewVoteTouristspot;
+
+        List<String> filterList = new ArrayList<>();
+
+        // vote 필터링
+        if ( !filters.isEmpty() ) {
+            JPAQuery<Tuple> filterQuery = new JPAQuery<>(entityManager);
+            filterQuery.from(place)
+                    .innerJoin(review).on(place.id.eq(review.place.id))
+                    .where(place.region.eq(Region.valueOf(region.toUpperCase()))
+                            .and(place.types.eq(PlaceType.valueOf(type.toUpperCase()))));
+
+            List<Expression<?>> filterExpression = new ArrayList<>();
+            filterExpression.add(place.id);
+
+            switch(type.toUpperCase()) {
+                case "RESTAURANT" :
+                    filterQuery.innerJoin(reviewVoteRestaurant).on(review.id.eq(reviewVoteRestaurant.id));
+                    addFilterExperssion(reviewVoteRestaurant, filters, filterExpression);
+                    break;
+                case "ACCOMODATION" :
+                    filterQuery.innerJoin(reviewVoteAccommodation).on(review.id.eq(reviewVoteAccommodation.id));
+                    addFilterExperssion(reviewVoteAccommodation, filters, filterExpression);
+                    break;
+                case "TOURISTSPOT" :
+                    filterQuery.innerJoin(reviewVoteTouristspot).on(review.id.eq(reviewVoteTouristspot.id));
+                    addFilterExperssion(reviewVoteTouristspot, filters, filterExpression);
+                    break;
+            }
+
+            filterQuery.select(filterExpression.toArray(new Expression[0]))
+                      .groupBy(place.id);
+
+            List<Tuple> filterQueryResult = filterQuery.fetch();
+
+            // Tuple을 필터링 점수에 따라 true/false 판별해서 대상 place_id만 List로 만들기
+            // 0점인 경우는 제외하기
+            // key를 전부 순회하면서 하나라도 안 맞으면 List에 넣지 않기 => Tuple의 index는 1부터 시작해서 키의 개수만큼 외부 for문에 선언
+
+            for (Tuple tuple : filterQueryResult) {
+                int index = 1;
+                boolean target = false;
+
+                for (Map.Entry<String, Boolean> entry : filters.entrySet()) {
+                    String key = entry.getKey();
+                    Boolean value = entry.getValue();
+                    Integer sumValue = tuple.get(index, Integer.class);
+
+                    if ( value ) {
+                        target = sumValue != null && sumValue > 0;
+                    } else {
+                        target = sumValue != null && sumValue < 0;
+                    }
+
+                    if ( !target ) break;
+
+                    index++;
+                }
+
+                if ( target ) {
+                    filterList.add(tuple.get(0, String.class));
+                }
+            }
+
+            log.info("@@@@@filterList = {}", filterList);
+        }
+
+        BooleanExpression filterCondition = filters.isEmpty() ? null : review.place.id.in(filterList);
 
         List<Tuple> subQuery = jpaQueryFactory
                 .select(
@@ -56,6 +125,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
                 )
                 .from(review)
                 .leftJoin(usersReview).on(usersReview.review.id.eq(review.id))
+                .where(filterCondition)
                 .groupBy(review.id, review.place.id)
                 .fetch();
 
@@ -89,6 +159,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
             .leftJoin(openingHours).on(openingHours.place.id.eq(place.id))
             .leftJoin(review).on(review.place.id.eq(place.id))
             .leftJoin(bestReview).on(bestReview.place.id.eq(place.id).and(bestReview.id.in(scorestest)))
+            .where(filterCondition)
             .groupBy(place.id, bestReview.id)
             .orderBy(review.id.countDistinct().desc());
 
@@ -110,59 +181,29 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
         return query.fetch();
     }
 
-//    private BooleanExpression getFilterByType(String type, String key, Boolean expectedValue, QPlace place, QReview review) {
-//        switch (type) {
-//            case "restaurants":
-//                return getRestaurantFilter(key, expectedValue, review);
-//            case "tourist-spots":
-//                return getTouristSpotFilter(key, expectedValue, review);
-//            case "accommodations":
-//                return getAccommodationFilter(key, expectedValue, review);
-//            default:
-//                throw new IllegalArgumentException("Unsupported type: " + type);
-//        }
-//    }
-//
-//    private BooleanExpression getRestaurantFilter(String key, Boolean expectedValue, QReview review) {
-//        switch (key) {
-//            case "has_kiosk":
-//                return createAggregateCondition(review.kiosk, expectedValue);
-//            case "has_card_payment":
-//                return createAggregateCondition(review.cardPayment, expectedValue);
-//            case "has_smoking_area":
-//                return createAggregateCondition(review.smokingArea, expectedValue);
-//            default:
-//                return null;
-//        }
-//    }
-//
-//    private BooleanExpression getTouristSpotFilter(String key, Boolean expectedValue, QReview review) {
-//        switch (key) {
-//            case "has_parking":
-//                return createAggregateCondition(review.parking, expectedValue);
-//            case "has_reservations":
-//                return createAggregateCondition(review.reservations, expectedValue);
-//            default:
-//                return null;
-//        }
-//    }
-//
-//    private BooleanExpression getAccommodationFilter(String key, Boolean expectedValue, QReview review) {
-//        switch (key) {
-//            case "has_self_check_in_out":
-//                return createAggregateCondition(review.selfCheckInOut, expectedValue);
-//            case "has_24hr_service":
-//                return createAggregateCondition(review.service24Hr, expectedValue);
-//            default:
-//                return null;
-//        }
-//    }
-//
-//    private BooleanExpression createAggregateCondition(BooleanPath reviewColumn, Boolean expectedValue) {
-//        return JPAExpressions.select(reviewColumn.count())
-//                .from(QReview.review)
-//                .where(reviewColumn.eq(expectedValue))
-//                .groupBy(QReview.review.place.id)
-//                .having(reviewColumn.count().gt(0)); // 기본 조건: true가 많은 경우 반환
-//    }
+    private <T> void addFilterExperssion(T voteEntity, Map<String, Boolean> filters, List<Expression<?>> filterExpression) {
+        for( Map.Entry<String, Boolean> entry : filters.entrySet() ) {
+            String key = entry.getKey();
+
+            Boolean value = entry.getValue();
+
+            BooleanPath field = (BooleanPath) getField(voteEntity, key);
+
+            NumberExpression<Integer> caseExpression = new CaseBuilder()
+                    .when(field.eq(true)).then(1)
+                    .otherwise(-1)
+                    .sum()
+                    .as(key);
+
+            filterExpression.add(caseExpression);
+        }
+    }
+
+    private Object getField(Object entity, String fieldName) {
+        try {
+            return entity.getClass().getDeclaredField(fieldName).get(entity);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Field not found: " + fieldName, e);
+        }
+    }
 }

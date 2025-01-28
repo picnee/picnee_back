@@ -15,8 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -46,8 +48,18 @@ public class PlaceController implements PlaceApi {
     public ResponseEntity<List<FilterPlaceRes>> getPlaces(@RequestParam(value = "region", required = false) String region,
                                                          @RequestParam(value = "type", required = false) String type,
                                                          @RequestParam(value = "sort", required = false, defaultValue = "review") String sort,
-                                                         @RequestParam(required = false) Map<String, Boolean> filters) {
-        List<FilterPlaceRes> places = placeService.getPlaces(region, type, sort, null);
+                                                         @RequestParam(required = false) Map<String, String> allParams) {
+
+        Map<String, Boolean> filters = allParams.entrySet().stream()
+            .filter(entry -> !List.of("region", "type", "sort").contains(entry.getKey()))
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> Boolean.parseBoolean(entry.getValue()),
+                    (oldValue, newValue) -> oldValue,
+                    LinkedHashMap::new
+            ));
+
+        List<FilterPlaceRes> places = placeService.getPlaces(region, type, sort, filters);
         return ResponseEntity.status(OK).body(places);
     }
 }
