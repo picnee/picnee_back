@@ -25,6 +25,7 @@ CREATE TABLE `users` (
     `nickname` VARCHAR(255) NOT NULL UNIQUE,
     `gender` VARCHAR(10),
     `social_root` VARCHAR(20),
+    `report_sanction_count` INT NOT NULL DEFAULT 0,
     `password_count` INT NOT NULL DEFAULT 0,
     `account_lock` BOOLEAN NOT NULL,
     `last_password_expired` TIMESTAMP NOT NULL,
@@ -84,6 +85,7 @@ CREATE TABLE `post` (
     `title` VARCHAR(255) NOT NULL,
     `content` VARCHAR(255) NOT NULL,
     `viewed` BIGINT DEFAULT 0,
+    `report_sanction_count` INT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL,
     `modified_at` TIMESTAMP NOT NULL,
     `deleted_at` TIMESTAMP NULL,
@@ -97,6 +99,7 @@ CREATE TABLE `post_comment` (
     `post_comment_id`	    VARCHAR(36)	NOT NULL,
 	`content`	        LONGTEXT	NOT NULL,
     `likes`             BIGINT DEFAULT 0,
+    `report_sanction_count` INT NOT NULL DEFAULT 0,
 	`created_at`	    TIMESTAMP	NOT NULL,
 	`modified_at`	    TIMESTAMP	NOT NULL,
 	`deleted_at`	    TIMESTAMP	NULL,
@@ -179,6 +182,7 @@ CREATE TABLE `review` (
     `place_tips`              LONGTEXT       NULL,
     `rating`                  DOUBLE         NOT NULL,
     `likes`                   BIGINT DEFAULT 0,
+    `report_sanction_count`   INT            NOT NULL DEFAULT 0,
 	`created_at`              TIMESTAMP      NOT NULL,
 	`modified_at`             TIMESTAMP      NOT NULL,
 	`deleted_at`              TIMESTAMP      NULL,
@@ -230,7 +234,7 @@ CREATE TABLE `review_vote_accommodation` (
     `has_good_soundproofing`      BOOLEAN         NOT NULL,
     `has_delicious_breakfast`     BOOLEAN         NOT NULL,
     `has_friendly_service`        BOOLEAN         NOT NULL,
-    `is_easy_public_transport`    BOOLEAN         NOT NULL
+    `is_easy_public_transport`    BOOLEAN         NOT NULL,
     PRIMARY KEY (`review_id`),
     FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
 );
@@ -238,7 +242,7 @@ CREATE TABLE `review_vote_accommodation` (
 CREATE TABLE `review_vote_touristspot` (
 	`review_id`                 VARCHAR(36)     NOT NULL,
     `is_paid_entry`               BOOLEAN         NOT NULL,
-    `is_reservation_required`     BOOLEAN         NOT NULL,
+    `is_reservation_required`     BOOLEAN   ``      NOT NULL,
     `is_korean_guide_available`   BOOLEAN         NOT NULL,
     `is_bike_parking_available`   BOOLEAN         NOT NULL,
     `is_car_parking_available`    BOOLEAN         NOT NULL,
@@ -251,7 +255,7 @@ CREATE TABLE `review_vote_touristspot` (
     `has_experience_programs`     BOOLEAN         NOT NULL,
     `has_clean_restrooms`         BOOLEAN         NOT NULL,
     `is_easy_public_transport`    BOOLEAN         NOT NULL,
-    `is_quiet_and_peaceful`       BOOLEAN         NOT NULL
+    `is_quiet_and_peaceful`       BOOLEAN         NOT NULL,
     PRIMARY KEY (`review_id`),
     FOREIGN KEY (`review_id`) REFERENCES `review`(`review_id`)
 );

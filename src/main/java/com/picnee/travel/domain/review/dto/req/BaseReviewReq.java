@@ -26,6 +26,7 @@ public abstract class BaseReviewReq {
                 .placeTips(dto.getPlaceTips())
                 .rating(dto.getRating())
                 .likes(0L)
+                .reportSanctionCount(0)
                 .user(user)
                 .place(place)
                 .build();

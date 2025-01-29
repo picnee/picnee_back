@@ -9,6 +9,4 @@ import java.util.UUID;
 public interface ReportRepositoryCustom {
 
     Page<Report> findReports(String targetId, String reportTargetType, String reportType, String isVisible, String sort, Pageable pageable);
-
-    Report processReport(UUID reportTargetId);
 }

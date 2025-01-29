@@ -60,9 +60,9 @@ public class ReportController implements ReportApi {
     }
 
     @PatchMapping("/{reportId}")
-    public ResponseEntity<String> processReport(@PathVariable("reportId") UUID reportTargetId,
+    public ResponseEntity<String> processReport(@PathVariable("reportId") UUID reportId,
                                                 @AuthenticatedUser AuthenticatedUserReq auth) {
-        reportService.processReport(reportTargetId, auth);
+        reportService.processReport(reportId, auth);
         return ResponseEntity.status(OK).build();
     }
 

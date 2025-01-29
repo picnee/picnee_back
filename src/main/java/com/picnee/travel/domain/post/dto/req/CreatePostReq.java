@@ -33,6 +33,7 @@ public class CreatePostReq {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .viewed(0L)
+                .reportSanctionCount(0)
                 .user(user)
                 .board(board)
                 .build();

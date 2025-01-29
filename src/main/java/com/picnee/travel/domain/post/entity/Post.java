@@ -43,6 +43,8 @@ public class Post extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "viewed")
     private Long viewed;
+    @Column(name = "report_sanction_count")
+    private Integer reportSanctionCount;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -74,5 +76,19 @@ public class Post extends SoftDeleteBaseEntity {
      */
     public void incrementViewCount() {
         this.viewed++;
+    }
+
+    /**
+     * 신고 횟수 누적
+     */
+    public void reportSanctionCountPlus(){
+        this.reportSanctionCount++;
+    }
+
+    /**
+     * 게시글 제재 가능여부 확인
+     */
+    public boolean isRequiringSanctions() {
+        return this.reportSanctionCount >= 5;
     }
 }

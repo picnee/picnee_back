@@ -47,4 +47,8 @@ public class Report extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void softDelete() {
+        this.isVisible = true;
+    }
 }

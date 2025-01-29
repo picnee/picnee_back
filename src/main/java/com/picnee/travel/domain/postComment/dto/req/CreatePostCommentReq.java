@@ -27,6 +27,7 @@ public class CreatePostCommentReq {
                 .user(user)
                 .content(dto.content)
                 .likes(0L)
+                .reportSanctionCount(0)
                 .post(post)
                 .build();
     }
@@ -36,6 +37,7 @@ public class CreatePostCommentReq {
                 .user(user)
                 .content(dto.content)
                 .likes(0L)
+                .reportSanctionCount(0)
                 .commentParent(postComment)
                 .post(post)
                 .build();

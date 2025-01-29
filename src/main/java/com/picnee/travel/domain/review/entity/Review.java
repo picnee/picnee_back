@@ -45,6 +45,8 @@ public class Review extends SoftDeleteBaseEntity {
     private String placeTips;
     @Column(name = "likes")
     private Long likes;
+    @Column(name = "report_sanction_count")
+    private Integer reportSanctionCount;
     @Column(name = "rating")
     private Double rating;
     @ManyToOne(fetch = LAZY)
@@ -94,5 +96,19 @@ public class Review extends SoftDeleteBaseEntity {
      */
     public void deleteLike() {
         this.likes--;
+    }
+
+    /**
+     * 신고 횟수 누적
+     */
+    public void reportSanctionCountPlus(){
+        this.reportSanctionCount++;
+    }
+
+    /**
+     * 리뷰 제재 가능여부 확인
+     */
+    public boolean isRequiringSanctions() {
+        return this.reportSanctionCount >= 5;
     }
 }

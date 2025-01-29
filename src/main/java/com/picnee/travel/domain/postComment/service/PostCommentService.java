@@ -189,8 +189,14 @@ public class PostCommentService {
      * 신고된 댓글 제재
      */
     @Transactional
-    public void sanction(UUID reportTargetId) {
+    public User sanction(UUID reportTargetId) {
         PostComment postComment = findById(reportTargetId);
-        postComment.softDelete();
+
+        postComment.reportSanctionCountPlus();
+        if(postComment.isRequiringSanctions()){
+            postComment.softDelete();
+        }
+
+        return postComment.getUser();
     }
 }

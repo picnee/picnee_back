@@ -323,4 +323,19 @@ public class ReviewService {
     private boolean isUserAuthenticated(AuthenticatedUserReq auth) {
         return auth == null;
     }
+
+    /**
+     * 신고된 리뷰 제재
+     */
+    @Transactional
+    public User sanction(UUID reportTargetId) {
+        Review review = findByIdNotDeletedReview(reportTargetId);
+
+        review.reportSanctionCountPlus();
+        if(review.isRequiringSanctions()){
+            review.softDelete();
+        }
+
+        return review.getUser();
+    }
 }

@@ -61,29 +61,6 @@ public class ReportRepositoryImpl implements ReportRepositoryCustom {
         return new PageImpl<>(reports, pageable, total);
     }
 
-    @Override
-    public Report processReport(UUID reportTargetId) {
-        QReport report = QReport.report;
-
-        // 신고하기 위한 targetId가 같은 reportId 목록을 선 조회
-        List<UUID> reportIds = jpaQueryFactory
-                .select(report.id)
-                .from(report)
-                .where(report.targetId.eq(reportTargetId))
-                .fetch();
-
-        // isVisible 업데이트 처리
-        if (!reportIds.isEmpty()) {
-            jpaQueryFactory
-                    .update(report)
-                    .set(report.isVisible, true)
-                    .where(report.id.in(reportIds))
-                    .execute();
-        }
-
-        return jpaQueryFactory.selectFrom(report).fetchFirst();
-    }
-
     // 조건 빌딩
     private BooleanBuilder buildCondition(QReport report, String targetId, String reportTargetType, String reportType, String isVisible) {
         BooleanBuilder builder = new BooleanBuilder();

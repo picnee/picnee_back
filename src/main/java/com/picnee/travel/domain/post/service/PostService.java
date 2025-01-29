@@ -166,11 +166,16 @@ public class PostService {
      * 신고된 댓글 제재
      */
     @Transactional
-    public void sanction(UUID reportTargetId) {
+    public User sanction(UUID reportTargetId) {
         Post post = postRepository.findById(reportTargetId)
                 .orElseThrow(() -> new NotFoundPostException(NOT_FOUND_POST_EXCEPTION));
 
-        post.softDelete();
-        boardService.delete(post);
+        post.reportSanctionCountPlus();
+        if(post.isRequiringSanctions()){
+            post.softDelete();
+            boardService.delete(post);
+        }
+
+        return post.getUser();
     }
 }
