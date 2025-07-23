@@ -33,7 +33,6 @@ public class Report extends BaseEntity {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "report_id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-    @UuidGenerator(style = RANDOM)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(name = "target_id", columnDefinition = "VARCHAR(36)")
     private UUID targetId;
@@ -48,4 +47,8 @@ public class Report extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void softDelete() {
+        this.isVisible = true;
+    }
 }

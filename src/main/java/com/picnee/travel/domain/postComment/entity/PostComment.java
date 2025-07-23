@@ -42,6 +42,8 @@ public class PostComment extends SoftDeleteBaseEntity {
     private String content;
     @Column(name = "likes")
     private Long likes;
+    @Column(name = "report_sanction_count")
+    private Integer reportSanctionCount;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_comment_parent_id")
     private PostComment commentParent;
@@ -74,5 +76,26 @@ public class PostComment extends SoftDeleteBaseEntity {
      */
     public void deleteLike() {
         this.likes--;
+    }
+
+    /**
+     * 댓글 삭제
+     */
+    public void softDelete() {
+        super.delete();
+    }
+
+    /**
+     * 신고 횟수 누적
+     */
+    public void reportSanctionCountPlus(){
+        this.reportSanctionCount++;
+    }
+
+    /**
+     * 댓글 제재 가능여부 확인
+     */
+    public boolean isRequiringSanctions() {
+        return this.reportSanctionCount >= 5;
     }
 }

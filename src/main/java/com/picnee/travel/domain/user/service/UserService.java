@@ -47,6 +47,7 @@ public class UserService {
                 .nickname(dto.getNickname())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .passwordCount(0)
+                .reportSanctionCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
                 .profileImage(null)
@@ -165,6 +166,10 @@ public class UserService {
 
         if (user.getState() == LOCKED) {
             throw new LoginLockedException(LOGIN_LOCKED_EXCEPTION);
+        }
+
+        if(user.getState() == BLOCKED) {
+            throw new LoginLockedException(LOGIN_BLOCKED_EXCEPTION);
         }
     }
 }

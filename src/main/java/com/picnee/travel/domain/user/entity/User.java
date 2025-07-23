@@ -50,6 +50,8 @@ public class User extends SoftDeleteBaseEntity {
     private Gender gender;
     @Column(name = "social_root")
     private String socialRoot;
+    @Column(name = "report_sanction_count")
+    private Integer reportSanctionCount;
     @JsonProperty("password_count")
     @Column(name = "password_count")
     private Integer passwordCount;
@@ -83,8 +85,20 @@ public class User extends SoftDeleteBaseEntity {
         this.passwordCount = 0;
     }
 
+    public void reportSanctionCountPlus(){
+        this.reportSanctionCount++;
+    }
+
+    public boolean isRequiringSanctions() {
+        return this.reportSanctionCount >= 5;
+    }
+
     public void updateLockedStatus() {
         this.state = State.LOCKED;
+    }
+
+    public void updateBlockedStatus() {
+        this.state = State.BLOCKED;
     }
 
     public void changeNullState() {

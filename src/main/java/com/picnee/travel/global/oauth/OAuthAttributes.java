@@ -49,6 +49,7 @@ public class OAuthAttributes {
                 .isDefaultNickname(isDefaultNickname)
                 .socialRoot(socialRoot)
                 .passwordCount(0)
+                .reportSanctionCount(0)
                 .accountLock(false)
                 .lastPasswordExpired(LocalDateTime.now())
                 .profileImage(null)

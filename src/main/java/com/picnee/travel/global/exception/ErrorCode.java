@@ -21,16 +21,18 @@ public enum ErrorCode {
      */
     LOGIN_FAILED_EXCEPTION(UNAUTHORIZED, "G001", "회 로그인에 실패했습니다. 5회 실패 시 계정이 차단됩니다."),
     LOGIN_LOCKED_EXCEPTION(UNAUTHORIZED, "G002", "비밀번호를 오입력으로 계정이 잠겼습니다. 비밀번호를 변경해주세요."),
-    NOT_POST_AUTHOR_EXCEPTION(UNAUTHORIZED, "G003", "게시글의 작성자가 아닙니다. 본인이 작성한 게시글만 수정/삭제가 가능합니다."),
-    NOT_LOGIN_EXCEPTION(UNAUTHORIZED, "G004", "로그인이 필요한 서비스입니다."),
-    NOT_VALID_REFRESH_TOKEN_EXCEPTION(UNAUTHORIZED, "005", "유효하지 않은 토큰입니다."),
-    NOT_VALID_OWNER_EXCEPTION(UNAUTHORIZED, "G006", "작성자만 삭제/수정이 가능합니다."),
-    NOT_NOTIFICATION_RECIPIENT_EXCEPTION(UNAUTHORIZED, "G007", "알림 수신자가 아닙니다. 본인의 알림만 읽을 수 있습니다."),
-    NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G008", "올바르지 않은 소셜 로그인입니다."),
-    NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G009", "댓글 좋아요는 로그인시 가능합니다."),
-    NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G010", "로그인한 유저만 접근가능합니다."),
-    NOT_REVIEW_AUTHOR_EXCEPTION(UNAUTHORIZED, "G011", "리뷰의 작성자가 아닙니다. 본인이 작성한 리뷰만 수정/삭제가 가능합니다."),
-    EXISTS_ALREADY_REVIEW_EXCEPTION(UNAUTHORIZED, "G012", "이미 해당 리뷰에 평가를 하였습니다."),
+    LOGIN_BLOCKED_EXCEPTION(UNAUTHORIZED, "G003", "누적된 신고로 계정이 잠겼습니다."),
+    NOT_POST_AUTHOR_EXCEPTION(UNAUTHORIZED, "G004", "게시글의 작성자가 아닙니다. 본인이 작성한 게시글만 수정/삭제가 가능합니다."),
+    NOT_LOGIN_EXCEPTION(UNAUTHORIZED, "G005", "로그인이 필요한 서비스입니다."),
+    NOT_VALID_REFRESH_TOKEN_EXCEPTION(UNAUTHORIZED, "006", "유효하지 않은 토큰입니다."),
+    NOT_VALID_OWNER_EXCEPTION(UNAUTHORIZED, "G007", "작성자만 삭제/수정이 가능합니다."),
+    NOT_NOTIFICATION_RECIPIENT_EXCEPTION(UNAUTHORIZED, "G008", "알림 수신자가 아닙니다. 본인의 알림만 읽을 수 있습니다."),
+    NOT_PROVIDE_OAUTH_EXCEPTION(UNAUTHORIZED, "G009", "올바르지 않은 소셜 로그인입니다."),
+    NOT_PROVIDE_COMMENT_LIKE_EXCEPTION(UNAUTHORIZED, "G010", "댓글 좋아요는 로그인시 가능합니다."),
+    NOT_AUTH_EXCEPTION(UNAUTHORIZED, "G011", "로그인한 유저만 접근가능합니다."),
+    NOT_REVIEW_AUTHOR_EXCEPTION(UNAUTHORIZED, "G012", "리뷰의 작성자가 아닙니다. 본인이 작성한 리뷰만 수정/삭제가 가능합니다."),
+    EXISTS_ALREADY_REVIEW_EXCEPTION(UNAUTHORIZED, "G013", "이미 해당 리뷰에 평가를 하였습니다."),
+    NOT_ADMIN_EXCEPTION(UNAUTHORIZED, "G014", "어드민 권한이 아닙니다"),
 
     /**
      * 403
@@ -52,7 +54,8 @@ public enum ErrorCode {
     NOT_FOUND_NOTIFICATION_EXCEPTION(NOT_FOUND, "G008", "존재하지 않는 알림입니다."),
     NOT_FOUND_REVIEW_EXCEPTION(NOT_FOUND, "G009", "존재하지 않는 리뷰입니다."),
     NOT_FOUND_REVIEW_CATEGORY_EXCEPTION(NOT_FOUND, "G010", "존재하지 않는 리뷰 카테고리입니다."),
-    NOT_FOUND_PLACE_EXCEPTION(NOT_FOUND, "G010", "존재하지 않는 장소 입니다."),
+    NOT_FOUND_PLACE_EXCEPTION(NOT_FOUND, "G011", "존재하지 않는 장소 입니다."),
+    NOT_FOUND_REPORT_EXCEPTION(NOT_FOUND, "G012", "존재하지 않는 리뷰 입니다."),
 
     /**
      * 500
